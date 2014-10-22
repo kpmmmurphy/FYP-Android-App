@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--App theme Colors-->
+    <color name="primary">@color/blue_standard</color>
+    <color name="primaryDark">@color/blue_light</color>
+
+    <!--App Text Colors-->
+    <color name="text_primary">#EFEFE6</color>
+
+    <!--Blues-->
+    <color name="blue_standard">#0B61A4</color>
+    <color name="blue_light">#3F92D2</color>
+    <color name="blue_lightest">#66A3D2</color>
+    <color name="blue_darkest">#25567b</color>
+    <color name="blue_dark">#033E6B</color>
+</resources>
