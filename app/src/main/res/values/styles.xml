@@ -8,13 +8,32 @@
     <style name="MyActionBar"
         parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:background">@color/blue_standard</item>
-        <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
+        <item name="android:titleTextStyle">@style/Text_ActionBarTitle</item>
     </style>
 
     <!-- ActionBar title text -->
-    <style name="MyActionBarTitleText" parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
+    <style name="Text_ActionBarTitle" parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@color/text_primary</item>
+    </style>
+    
+    <!--Text Appearance-->
+
+    <!--SENSOR GRID ITEM-->
+    <style name="Text_GridItemOutput" parent="android:TextAppearance.DeviceDefault.Large">
+        <item name="android:textSize">94sp</item>
+        <item name="android:textColor">@color/blue_lightest</item>
+    </style>
+
+    <style name="Text_GridItemMeasurement" parent="android:TextAppearance.DeviceDefault.Large">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/blue_darkest</item>
+    </style>
+
+    <style name="Text_GridItemName" parent="android:TextAppearance.DeviceDefault.Large">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/output_normal</item>
     </style>
 
 
 </resources>
+    

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="256dp"
+    android:layout_height="256dp"
+    style="@style/GridItem"
+    android:background="@android:drawable/dialog_holo_light_frame"
+    android:id="@+id/e">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_sensor_output_level"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        style="@style/Text_GridItemOutput"
+        tools:text="100"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_sensor_measurement"
+        style="@style/Text_GridItemMeasurement"
+        android:layout_alignRight="@id/tv_sensor_output_level"
+        android:layout_below="@id/tv_sensor_output_level"
+        android:layout_marginTop="-24dp"
+        tools:text="ppm"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_sensor_name"
+        style="@style/Text_GridItemName"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/tv_sensor_output_level"
+        android:gravity="bottom"
+        android:layout_margin="12dp"
+        tools:text="Carbon Dioxide"/>
+
+</RelativeLayout>

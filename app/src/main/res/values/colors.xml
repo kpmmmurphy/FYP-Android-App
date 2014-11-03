@@ -11,6 +11,14 @@
     <color name="blue_standard">#0B61A4</color>
     <color name="blue_light">#3F92D2</color>
     <color name="blue_lightest">#66A3D2</color>
-    <color name="blue_darkest">#25567b</color>
-    <color name="blue_dark">#033E6B</color>
+    <color name="blue_dark">#25567b</color>
+    <color name="blue_darkest">#033E6B</color>
+
+    <!--Grays-->
+    <color name="gray">#909090</color>
+
+    <!--Grid Item Colors-->
+    <color name="output_normal">@color/gray</color>
+    <color name="output_warning">#ff3232</color>
+    <color name="output_alert">#e50000</color>
 </resources>
