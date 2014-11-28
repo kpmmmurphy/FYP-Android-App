@@ -26,4 +26,10 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3'
     compile 'com.mcxiaoke.volley:library:1.0.7'
     compile 'com.squareup.retrofit:retrofit:1.7.1'
+
+    //Animation
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.daimajia.easing:library:1.0.0@aar'
+    compile 'com.daimajia.androidanimations:library:1.1.2@aar'
+
 }

@@ -8,6 +8,9 @@
     <string name="title_section2">Image</string>
     <string name="title_section3">Control</string>
 
+    <!--Action Bar Menu Items-->
+    <string name="menu_item_wifi_direct">Wifi Direct</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>

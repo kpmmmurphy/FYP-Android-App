@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -62,6 +63,7 @@ public class TabsAdaptor extends FragmentPagerAdapter implements ActionBar.TabLi
     public Fragment getItem(int position) {
         Utils.methodDebug(LOGTAG);
         TabInfo info = mTabs.get(position);
+        Log.e(LOGTAG, info.clss.getName());
         return Fragment.instantiate(mContext, info.clss.getName(), info.args);
     }
 

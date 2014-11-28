@@ -1,18 +1,21 @@
 package ie.ucc.cs1.fyp;
 
 import android.app.ActionBar;
-import android.app.Activity;
-import android.app.Fragment;
+import android.content.Context;
+import android.content.IntentFilter;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Adapter.TabsAdaptor;
+import ie.ucc.cs1.fyp.WifiDirect.WifiDirectBroadcastReceiver;
+import ie.ucc.cs1.fyp.WifiDirect.WifiDirector;
 
 
 public class MainActivity extends FragmentActivity {
@@ -28,13 +31,18 @@ public class MainActivity extends FragmentActivity {
     protected ViewPager mViewPager;
     protected TabsAdaptor mTabsAdapter;
 
+    //Wifi Direct Objects
+    protected WifiP2pManager              mManager;
+    protected WifiP2pManager.Channel      mChannel;
+    protected WifiDirectBroadcastReceiver mWifiDirectReceiver;
+    protected IntentFilter                mIntentFilter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         ButterKnife.inject(this);
-        mViewPager = new ViewPager(this);
+
         mViewPager.setId(R.id.view_pager);
         mViewPager.setAdapter(mTabsAdapter);
 
@@ -44,23 +52,53 @@ public class MainActivity extends FragmentActivity {
 
         mTabsAdapter = new TabsAdaptor(this, getSupportFragmentManager(), getActionBar(), mViewPager);
         mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section1)), SensorFragment.class, null);
+        mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section2)), CameraFragment.class, null);
+        mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section3)), ControlFragment.class, null);
+
+        //Setup Wifi Direct
+        mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+        mChannel = mManager.initialize(this, getMainLooper(), null);
+
+        mIntentFilter = WifiDirector.createP2PIntentFilter();
+
+
 
         if (savedInstanceState != null) {
             bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));
         }
-//    public void onSectionAttached(int number) {
-//        switch (number) {
-//            case 1:
-//                mTitle = getString(R.string.title_section1);
-//                break;
-//            case 2:
-//                mTitle = getString(R.string.title_section2);
-//                break;
-//            case 3:
-//                mTitle = getString(R.string.title_section3);
-//                break;
-//        }
-//    }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mWifiDirectReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
+        registerReceiver(mWifiDirectReceiver, mIntentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mWifiDirectReceiver);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.global, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.action_bar_menu_wifi_direct:
+                WifiDirector.detectPeers(mManager, mChannel);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void restoreActionBar() {
@@ -68,46 +106,6 @@ public class MainActivity extends FragmentActivity {
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
-        }
-
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            //((MainActivity) activity).onSectionAttached(
-                    //getArguments().getInt(ARG_SECTION_NUMBER));
-        }
     }
 
 }

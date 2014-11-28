@@ -11,6 +11,8 @@
         <item name="android:titleTextStyle">@style/Text_ActionBarTitle</item>
     </style>
 
+    <style name="AppTheme.ExtendedActionBar"></style>
+
     <!-- ActionBar title text -->
     <style name="Text_ActionBarTitle" parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@color/text_primary</item>

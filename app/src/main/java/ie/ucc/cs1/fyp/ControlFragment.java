@@ -5,32 +5,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
-
-import java.util.ArrayList;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
-import ie.ucc.cs1.fyp.Adapter.GridTileAdapter;
-import ie.ucc.cs1.fyp.Model.SensorOutput;
-import ie.ucc.cs1.fyp.WifiDirect.WifiDirectBroadcastReceiver;
 
 /**
- * Created by kpmmmurphy on 30/10/14.
+ * Created by kpmmmurphy on 04/11/14.
  */
-public class SensorFragment extends Fragment {
+public class ControlFragment extends Fragment{
 
-    private static String LOGTAG = "__SensorFragment";
+    private static String LOGTAG = "__CAMERA_FRAGMENT";
 
-    @InjectView(R.id.gv_sensor)
-    GridView mGridView;
-    private GridTileAdapter gridTileAdapter;
-
-    private WifiDirectBroadcastReceiver wifiDirectBroadcastReciever;
-
-    private ArrayList<SensorOutput> sensorOutputs;
-
-    public SensorFragment() {
+    public ControlFragment() {
         Utils.methodDebug(LOGTAG);
     }
 
@@ -44,7 +29,7 @@ public class SensorFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Utils.methodDebug(LOGTAG);
 
-        View view = inflater.inflate(R.layout.fragment_sensor, container, false);
+        View view = inflater.inflate(R.layout.fragment_control, container, false);
         ButterKnife.inject(this, view);
         return view;
     }
@@ -53,11 +38,6 @@ public class SensorFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Utils.methodDebug(LOGTAG);
-
-        mGridView.setAdapter(new GridTileAdapter(getActivity().getApplicationContext(), Utils.randomSensorOutput()));
-
-        //wifiDirectBroadcastReciever = new WifiDirectBroadcastReceiver();
-
     }
 
     @Override

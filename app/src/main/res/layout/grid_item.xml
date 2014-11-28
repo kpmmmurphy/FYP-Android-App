@@ -2,8 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="256dp"
-    android:layout_height="256dp"
+    android:layout_width="@dimen/grid_item_width"
+    android:layout_height="@dimen/grid_item_height"
     style="@style/GridItem"
     android:background="@android:drawable/dialog_holo_light_frame"
     android:id="@+id/e">

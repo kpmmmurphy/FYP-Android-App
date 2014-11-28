@@ -1,12 +1,14 @@
 package ie.ucc.cs1.fyp.Adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 
 import java.util.ArrayList;
 
@@ -43,12 +45,13 @@ public class GridTileAdapter extends BaseAdapter {
         return 0;
     }
 
+    int fade = 10;
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         Holder holder;
         if (view == null) {
             // inflate the layout
-            LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
+            LayoutInflater inflater = LayoutInflater.from(mContext);
             view = inflater.inflate(R.layout.grid_item, viewGroup, false);
             holder = new Holder(view);
             view.setTag(holder);
@@ -56,9 +59,11 @@ public class GridTileAdapter extends BaseAdapter {
             holder = (Holder) view.getTag();
         }
 
-        holder.name.setText(getItem(i).getName());
-        holder.outputLevel.setText(getItem(i).getValue());
-        holder.measurement.setText(getItem(i).getName());
+        holder.name.setText(String.valueOf(getItem(i).getName()));
+        holder.outputLevel.setText(String.valueOf(getItem(i).getValue()));
+        holder.measurement.setText(String.valueOf(getItem(i).getMeasurement()));
+
+        YoYo.with(Techniques.FadeIn).delay(fade*2).playOn(view);
 
         return view;
     }
