@@ -5,6 +5,9 @@ package ie.ucc.cs1.fyp;
  */
 public interface Constants {
 
+    //General
+    public static final String LOGTAG = "FYP";
+
     //Sensor Names
     public static final String SENSOR_NAME_MQ7         = "Carbon Dioxide";
     public static final String SENSOR_NAME_MQ2         = "Flammable Gas";
@@ -18,6 +21,19 @@ public interface Constants {
     //SocketManager
     public static final String SOCKET_MULTICAST_GROUP_IP = "224.1.1.1";
     public static final int SOCKET_MULTICAST_PORT        = 5007;
+    public static final int SOCKET_SERVER_PORT           = 5008;
+
+    //Socket Json Keys
+    public static final String JSON_KEY_SERVICE = "service";
+
+    //Socket Json Values
+    public static final String SERVICE_CONNECT      = "connect";
+    public static final String SERVICE_CONFIG       = "config";
+    public static final String SERVICE_SENSOR_DATA  = "sensor_data";
+
+    //Pi Response Values
+    public static final int CONNECT_SUCCESS  = 200;
+
 
 
 }

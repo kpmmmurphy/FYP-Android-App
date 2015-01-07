@@ -5,47 +5,85 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 import java.net.NetworkInterface;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Enumeration;
+import java.util.Arrays;
 
+import ie.ucc.cs1.fyp.BuildConfig;
 import ie.ucc.cs1.fyp.Constants;
+import ie.ucc.cs1.fyp.Model.PiResponse;
+import ie.ucc.cs1.fyp.Utils;
 
 /**
  * Created by kpmmmurphy on 07/01/15.
  */
 public class SocketManager {
 
+    private Boolean DEBUG = true;
     private static String LOGTAG = "__SocketManager";
     private Context mContext;
 
-    private MulticastSocket clientSocket;
+    private InetAddress multicastGroup;
+    private MulticastSocket multicastSocket;
+    private ServerSocket serverSocket;
+    private DatagramPacket  multicastPacket;
+    private DatagramPacket  sendacket;
+    private DatagramPacket  recvacket;
+    private String recievedString;
     private int PACKET_MAX_SIZE = 1024;
 
     public SocketManager(Context context){
         this.mContext = context;
+        try {
+            multicastGroup  = InetAddress.getByName(Constants.SOCKET_MULTICAST_GROUP_IP);
+            multicastSocket = createMulticastSocket(mContext);
+            serverSocket    = createServerSocket();
+
+        }catch (UnknownHostException e){
+            e.printStackTrace();
+        }catch (SocketException e) {
+            e.printStackTrace();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void connectToPi(final Session session){
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    //clientSocket= new DatagramSocket(Constants.SOCKET_MULTICAST_PORT);
-                    clientSocket = createMulticastSocket(mContext);
-                    byte[] receivedata = new byte[PACKET_MAX_SIZE];
+                    byte[] connectPacket = PacketFactory.newConnectPacket(session);
                     while(true) {
-                        DatagramPacket recv_packet = new DatagramPacket(receivedata, receivedata.length);
-                        Log.d("UDP", "S: Receiving...");
-                        clientSocket.receive(recv_packet);
-                        String receivedstring = new String(recv_packet.getData());
-                        Log.d("UDP", " Received String: " + receivedstring);
-                        InetAddress ipaddress = recv_packet.getAddress();
-                        int port = recv_packet.getPort();
-                        Log.d("UDP", "IPAddress : " + ipaddress.toString());
-                        Log.d("UDP", "Port : " + Integer.toString(port));
+                        multicastPacket = new DatagramPacket(connectPacket, connectPacket.length, multicastGroup, Constants.SOCKET_MULTICAST_PORT);
+                        multicastSocket.send(multicastPacket);
+                        //Now wait for ACK
+                        Socket ackSocket = serverSocket.accept();
+                        DataInputStream din = new DataInputStream(ackSocket.getInputStream());
+                        recievedString = din.readUTF();
+                        if(BuildConfig.DEBUG){
+                            Log.d(LOGTAG, recievedString);
+                        }
+                        PiResponse piResponse = (PiResponse)Utils.fromJson(recievedString, new PiResponse());
+                        if(piResponse.getStatus_code() == Constants.CONNECT_SUCCESS){
+                            //Set session to connected
+                        }
+                        recievedString = new String(trimPacket(multicastPacket.getData()));
+                        if(BuildConfig.DEBUG){
+                            Log.d("UDP", " Received String: " + recievedString);
+                            InetAddress ipaddress = multicastPacket.getAddress();
+                            int port = multicastPacket.getPort();
+                            Log.d("UDP", "IPAddress : " + ipaddress.toString());
+                            Log.d("UDP", "Port : " + Integer.toString(port));
+                        }
                     }
                 } catch (SocketException e) {
                     Log.e("UDP", "Socket Error", e);
@@ -56,52 +94,75 @@ public class SocketManager {
         }).start();
     }
 
-    public static MulticastSocket createMulticastSocket(Context context)
+    /*private void createMulticastServerThread(){
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    clientSocket = createMulticastSocket(mContext);
+                    byte[] receivedata = new byte[PACKET_MAX_SIZE];
+                    while(true) {
+                        multicastPacket = new DatagramPacket(receivedata, receivedata.length);
+                        clientSocket.receive(multicastPacket);
+                        recievedString = new String(trimPacket(multicastPacket.getData()));
+                        if(DEBUG){
+                            Log.d("UDP", " Received String: " + recievedString);
+                            InetAddress ipaddress = multicastPacket.getAddress();
+                            int port = multicastPacket.getPort();
+                            Log.d("UDP", "IPAddress : " + ipaddress.toString());
+                            Log.d("UDP", "Port : " + Integer.toString(port));
+                        }
+                    }
+                } catch (SocketException e) {
+                    Log.e("UDP", "Socket Error", e);
+                } catch (IOException e) {
+                    Log.e("UDP", "IO Error", e);
+                }
+            }
+        }).start();
+    }*/
+
+    private MulticastSocket createMulticastSocket(Context context)
             throws UnknownHostException, SocketException, IOException {
+        Utils.methodDebug(LOGTAG);
+
         MulticastSocket multicastSocket = new MulticastSocket(Constants.SOCKET_MULTICAST_PORT);
-        Enumeration<NetworkInterface> enumeration = NetworkInterface.getNetworkInterfaces();
-        NetworkInterface eth0 = null;
-        while (enumeration.hasMoreElements()) {
-            eth0 = enumeration.nextElement();
-            Log.e(LOGTAG, eth0.getName());
-        }
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 
-        /*if (connectedToEthernet(context)) {
-
-            if (netIf != null)
-                multicastSocket.setNetworkInterface(netIf);
-        }*/
-        //else if (isWirelessDirect(context)) {
-            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         if(wifiManager != null){
-            WifiManager.MulticastLock lock = wifiManager.createMulticastLock("Log_Tag");
+            WifiManager.MulticastLock lock = wifiManager.createMulticastLock(LOGTAG);
             lock.acquire();
-            Log.e(LOGTAG, "Lock Aquired");
         }
-            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-            int intaddr = wifiInfo.getIpAddress();
-            byte[] byteaddr = new byte[] {
-                    (byte) (intaddr & 0xff),
-                    (byte) (intaddr >> 8 & 0xff),
-                    (byte) (intaddr >> 16 & 0xff),
-                    (byte) (intaddr >> 24 & 0xff)};
-            InetAddress addr = InetAddress.getByAddress(byteaddr);
-            NetworkInterface netIf = NetworkInterface.getByInetAddress(addr);
-        Log.e(LOGTAG, netIf.toString());
-
-            //multicastSocket.setNetworkInterface(netIf);
-            //multicastSocket.joinGroup(InetAddress.getByName(Constants.SOCKET_MULTICAST_GROUP_IP));
-            multicastSocket.joinGroup(new InetSocketAddress(InetAddress.getByName(Constants.SOCKET_MULTICAST_GROUP_IP), Constants.SOCKET_MULTICAST_PORT), netIf);
-        Log.e(LOGTAG, "Creating Multicast Socket");
-        //}
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        int intaddr = wifiInfo.getIpAddress();
+        byte[] byteaddr = new byte[] {
+                (byte) (intaddr & 0xff),
+                (byte) (intaddr >> 8 & 0xff),
+                (byte) (intaddr >> 16 & 0xff),
+                (byte) (intaddr >> 24 & 0xff)};
+        InetAddress addr = InetAddress.getByAddress(byteaddr);
+        NetworkInterface netIf = NetworkInterface.getByInetAddress(addr);
+        multicastSocket.joinGroup(new InetSocketAddress(InetAddress.getByName(Constants.SOCKET_MULTICAST_GROUP_IP), Constants.SOCKET_MULTICAST_PORT), netIf);
         multicastSocket.setTimeToLive(33);
         return multicastSocket;
     }
 
-    /*public static boolean isWirelessDirect(Context context) {
-        ConnectivityManager connManager =
+    private ServerSocket createServerSocket(){
+        try {
+            ServerSocket serverSocket = new ServerSocket(Constants.SOCKET_MULTICAST_PORT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return serverSocket;
+    }
 
-
-
-    }*/
+    private byte[] trimPacket(byte[] packet){
+        int count = 0;
+        for(byte charr : packet){
+            if(charr == 0){
+                break;
+            }
+            ++count;
+        }
+        return Arrays.copyOf(packet, count);
+    }
 }

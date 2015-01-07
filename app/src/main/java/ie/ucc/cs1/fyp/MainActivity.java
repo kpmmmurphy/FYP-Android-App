@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Adapter.TabsAdaptor;
+import ie.ucc.cs1.fyp.Socket.Session;
 import ie.ucc.cs1.fyp.Socket.SocketManager;
 import ie.ucc.cs1.fyp.WifiDirect.WifiDirectBroadcastReceiver;
 
@@ -38,6 +39,7 @@ public class MainActivity extends FragmentActivity {
 
     //SocketManager Objects
     private SocketManager socketManager;
+    private Session session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +59,9 @@ public class MainActivity extends FragmentActivity {
         mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section2)), CameraFragment.class, null);
         mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section3)), ControlFragment.class, null);
 
+        session = Session.getInstance(getApplicationContext());
         socketManager = new SocketManager(getApplicationContext());
+        socketManager.connectToPi(session);
 
         //Setup Wifi Direct
         //mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
