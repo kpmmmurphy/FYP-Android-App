@@ -1,7 +1,6 @@
 package ie.ucc.cs1.fyp;
 
 import android.app.ActionBar;
-import android.content.Context;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
@@ -14,8 +13,8 @@ import android.view.MenuItem;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Adapter.TabsAdaptor;
+import ie.ucc.cs1.fyp.Socket.SocketManager;
 import ie.ucc.cs1.fyp.WifiDirect.WifiDirectBroadcastReceiver;
-import ie.ucc.cs1.fyp.WifiDirect.WifiDirector;
 
 
 public class MainActivity extends FragmentActivity {
@@ -37,6 +36,9 @@ public class MainActivity extends FragmentActivity {
     protected WifiDirectBroadcastReceiver mWifiDirectReceiver;
     protected IntentFilter                mIntentFilter;
 
+    //SocketManager Objects
+    private SocketManager socketManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,13 +57,13 @@ public class MainActivity extends FragmentActivity {
         mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section2)), CameraFragment.class, null);
         mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section3)), ControlFragment.class, null);
 
+        socketManager = new SocketManager(getApplicationContext());
+
         //Setup Wifi Direct
-        mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-        mChannel = mManager.initialize(this, getMainLooper(), null);
+        //mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+        //mChannel = mManager.initialize(this, getMainLooper(), null);
 
-        mIntentFilter = WifiDirector.createP2PIntentFilter();
-
-
+        //mIntentFilter = WifiDirector.createP2PIntentFilter();
 
         if (savedInstanceState != null) {
             bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));
@@ -71,14 +73,14 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mWifiDirectReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
-        registerReceiver(mWifiDirectReceiver, mIntentFilter);
+        //mWifiDirectReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
+        //registerReceiver(mWifiDirectReceiver, mIntentFilter);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(mWifiDirectReceiver);
+        //unregisterReceiver(mWifiDirectReceiver);
     }
 
     @Override
@@ -94,7 +96,7 @@ public class MainActivity extends FragmentActivity {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.action_bar_menu_wifi_direct:
-                WifiDirector.detectPeers(mManager, mChannel);
+                //WifiDirector.detectPeers(mManager, mChannel);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

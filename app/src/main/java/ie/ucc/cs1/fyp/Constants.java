@@ -15,4 +15,9 @@ public interface Constants {
     public static final String SENSOR_MEASUREMENT_PPM     = "ppm";
     public static final String SENSOR_MEASUREMENT_CELCIUS = "celcius";
 
+    //SocketManager
+    public static final String SOCKET_MULTICAST_GROUP_IP = "224.1.1.1";
+    public static final int SOCKET_MULTICAST_PORT        = 5007;
+
+
 }

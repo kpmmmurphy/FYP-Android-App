@@ -32,8 +32,6 @@ public class WifiDirector  {
 
             @Override
             public void onFailure(int reasonCode) {
-                // Code for when the discovery initiation fails goes here.
-                // Alert the user that something went wrong.
                 Utils.methodDebug(LOGTAG);
             }
         });
