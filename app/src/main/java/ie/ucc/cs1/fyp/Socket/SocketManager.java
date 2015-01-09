@@ -3,10 +3,12 @@ package ie.ucc.cs1.fyp.Socket;
 import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.util.Log;
 
-import java.io.DataInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -20,7 +22,6 @@ import java.util.Arrays;
 
 import ie.ucc.cs1.fyp.BuildConfig;
 import ie.ucc.cs1.fyp.Constants;
-import ie.ucc.cs1.fyp.Model.PiResponse;
 import ie.ucc.cs1.fyp.Utils;
 
 /**
@@ -39,6 +40,9 @@ public class SocketManager {
     private DatagramPacket  sendacket;
     private DatagramPacket  recvacket;
     private String recievedString;
+
+    private BufferedReader bufferedReader;
+    private InputStreamReader inputStreamReader;
     private int PACKET_MAX_SIZE = 1024;
 
     public SocketManager(Context context){
@@ -46,7 +50,6 @@ public class SocketManager {
         try {
             multicastGroup  = InetAddress.getByName(Constants.SOCKET_MULTICAST_GROUP_IP);
             multicastSocket = createMulticastSocket(mContext);
-            serverSocket    = createServerSocket();
 
         }catch (UnknownHostException e){
             e.printStackTrace();
@@ -58,23 +61,49 @@ public class SocketManager {
     }
 
     public void connectToPi(final Session session){
+        Utils.methodDebug(LOGTAG);
+        serverSocket    = createServerSocket(session);
         new Thread(new Runnable() {
             public void run() {
                 try {
                     byte[] connectPacket = PacketFactory.newConnectPacket(session);
                     while(true) {
-                        multicastPacket = new DatagramPacket(connectPacket, connectPacket.length, multicastGroup, Constants.SOCKET_MULTICAST_PORT);
-                        multicastSocket.send(multicastPacket);
+                        //Socket client = new Socket(InetAddress.getByName("192.168.42.1"), 5007);
+                        multicastPacket = new DatagramPacket(connectPacket, connectPacket.length, new InetSocketAddress(multicastGroup, Constants.SOCKET_MULTICAST_PORT));
+                        //OutputStream outputStream =  client.getOutputStream();
+                        //DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+                        //outputStream.write("Did it work".getBytes());
+                        multicastSocket.setTimeToLive(30);
+
+                        //multicastSocket.send(multicastPacket);
+                        Log.e(LOGTAG, "Sending Multicast");
+                        Thread.sleep(2000);
+
                         //Now wait for ACK
-                        Socket ackSocket = serverSocket.accept();
-                        DataInputStream din = new DataInputStream(ackSocket.getInputStream());
-                        recievedString = din.readUTF();
-                        if(BuildConfig.DEBUG){
-                            Log.d(LOGTAG, recievedString);
+                        while(true) {
+                            Log.e(LOGTAG, "Trying to recv data");
+                            Thread.sleep(2000);
+                            Socket ackSocket = serverSocket.accept();
+                            if (BuildConfig.DEBUG){
+                                Log.d(LOGTAG, ackSocket.toString());
+                            }
+                            bufferedReader = new BufferedReader(new InputStreamReader(ackSocket.getInputStream()));
+                            //DataInputStream din = new DataInputStream(ackSocket.getInputStream());
+                            //recievedString = din.readUTF();
+                            String s = null;
+                            while((s=bufferedReader.readLine()) != null){
+                                Log.e(LOGTAG, "Got ::" + s);
+                            }
+                            if (BuildConfig.DEBUG) {
+                                //Log.d(LOGTAG, recievedString);
+                            }
+                            bufferedReader.close();
+                            Thread.sleep(2000);
                         }
-                        PiResponse piResponse = (PiResponse)Utils.fromJson(recievedString, new PiResponse());
+                        /*PiResponse piResponse = (PiResponse)Utils.fromJson(recievedString, new PiResponse());
                         if(piResponse.getStatus_code() == Constants.CONNECT_SUCCESS){
                             //Set session to connected
+                            Log.e(LOGTAG, "It Worked!!!");
                         }
                         recievedString = new String(trimPacket(multicastPacket.getData()));
                         if(BuildConfig.DEBUG){
@@ -83,22 +112,39 @@ public class SocketManager {
                             int port = multicastPacket.getPort();
                             Log.d("UDP", "IPAddress : " + ipaddress.toString());
                             Log.d("UDP", "Port : " + Integer.toString(port));
-                        }
+                        }*/
                     }
                 } catch (SocketException e) {
                     Log.e("UDP", "Socket Error", e);
                 } catch (IOException e) {
                     Log.e("UDP", "IO Error", e);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }).start();
     }
 
-    /*private void createMulticastServerThread(){
+    private class ConnectToPi extends AsyncTask<Session, Void, Void>{
+
+        @Override
+        protected Void doInBackground(Session... sessions) {
+            Utils.methodDebug("vdkvbgdrvndrvgn");
+            connectToPi(sessions[0]);
+            return null;
+        }
+    }
+
+    public void startConnectionToPi(Session session){
+        new ConnectToPi().execute(session);
+    }
+
+    public void createMulticastServerThread(){
+        Utils.methodDebug(LOGTAG);
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    clientSocket = createMulticastSocket(mContext);
+                    MulticastSocket clientSocket = createMulticastSocket(mContext);
                     byte[] receivedata = new byte[PACKET_MAX_SIZE];
                     while(true) {
                         multicastPacket = new DatagramPacket(receivedata, receivedata.length);
@@ -119,7 +165,7 @@ public class SocketManager {
                 }
             }
         }).start();
-    }*/
+    }
 
     private MulticastSocket createMulticastSocket(Context context)
             throws UnknownHostException, SocketException, IOException {
@@ -146,9 +192,14 @@ public class SocketManager {
         return multicastSocket;
     }
 
-    private ServerSocket createServerSocket(){
+    private ServerSocket createServerSocket(Session session){
+        ServerSocket serverSocket = null;
         try {
-            ServerSocket serverSocket = new ServerSocket(Constants.SOCKET_MULTICAST_PORT);
+            serverSocket = new ServerSocket(Constants.SOCKET_SERVER_PORT,0,InetAddress.getByName(session.getIp_address()));
+            //serverSocket.bind(new InetSocketAddress(, ));
+            if(BuildConfig.DEBUG){
+                Log.d(LOGTAG, serverSocket.toString());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

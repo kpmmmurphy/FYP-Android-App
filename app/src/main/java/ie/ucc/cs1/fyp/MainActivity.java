@@ -61,7 +61,7 @@ public class MainActivity extends FragmentActivity {
 
         session = Session.getInstance(getApplicationContext());
         socketManager = new SocketManager(getApplicationContext());
-        socketManager.connectToPi(session);
+        socketManager.startConnectionToPi(session);
 
         //Setup Wifi Direct
         //mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);

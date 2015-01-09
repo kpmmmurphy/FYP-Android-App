@@ -20,8 +20,8 @@ public interface Constants {
 
     //SocketManager
     public static final String SOCKET_MULTICAST_GROUP_IP = "224.1.1.1";
+    public static final int SOCKET_SERVER_PORT           = 5006;
     public static final int SOCKET_MULTICAST_PORT        = 5007;
-    public static final int SOCKET_SERVER_PORT           = 5008;
 
     //Socket Json Keys
     public static final String JSON_KEY_SERVICE = "service";
