@@ -16,15 +16,15 @@ import java.util.Calendar;
  */
 public class Session {
 
-    private volatile Boolean DEBUG = true;
-    private static String LOGTAG = "__Session";
+    private transient Boolean DEBUG = true;
+    private transient static String LOGTAG = "__Session";
     private static Session __instance = null;
 
     //Fields to be serialised
     protected String time_stamp;
     protected String ip_address;
     protected String device_id;
-    protected volatile boolean connected = false;
+    protected transient boolean connected = false;
 
     private Session(Context context){
         WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);

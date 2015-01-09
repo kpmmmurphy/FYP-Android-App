@@ -51,80 +51,71 @@ public class SocketManager {
 
     public SocketManager(Context context){
         this.mContext = context;
-        try {
-            multicastGroup  = InetAddress.getByName(Constants.SOCKET_MULTICAST_GROUP_IP);
-            multicastSocket = createMulticastSocket(mContext);
-
-        }catch (UnknownHostException e){
-            e.printStackTrace();
-        }catch (SocketException e) {
-            e.printStackTrace();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    public void connectToPi(final Session session){
-        Utils.methodDebug(LOGTAG);
-        serverSocket    = createServerSocket(session);
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    byte[] connectPacket = PacketFactory.newConnectPacket(session);
 
-                    //Socket client = new Socket(InetAddress.getByName("192.168.42.1"), 5007);
-                    multicastPacket = new DatagramPacket(connectPacket, connectPacket.length, new InetSocketAddress(multicastGroup, Constants.SOCKET_MULTICAST_PORT));
-                    //OutputStream outputStream =  client.getOutputStream();
-                    //DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
-                    //outputStream.write("Did it work".getBytes());
-                    multicastSocket.setTimeToLive(30);
+    private class ConnectToPi extends AsyncTask<Session, Void, Boolean>{
 
-                    multicastSocket.send(multicastPacket);
-                    if (BuildConfig.DEBUG){
-                        Log.e(LOGTAG, "Sending Multicast");
-                    }
-
-                    //Now wait for ACK
-                    Socket ackSocket = serverSocket.accept();
-                    if (BuildConfig.DEBUG){
-                        Log.d(LOGTAG, ackSocket.toString());
-                    }
-
-                    String receivedString = readPacket(ackSocket.getInputStream());
-                    if (BuildConfig.DEBUG) {
-                        Log.d(LOGTAG, "Received Packet :: " + receivedString);
-                    }
-
-                    PiResponse piResponse = (PiResponse)new Gson().fromJson(receivedString, PiResponse.class);
-                    if(piResponse.getService().equals(Constants.SERVICE_PAIRED) && piResponse.getStatus_code() == Constants.CONNECT_SUCCESS){
-                        //Set session to connected
-                        Log.e(LOGTAG, "It Worked!!!");
-                    }
-                    recievedString = new String(trimPacket(multicastPacket.getData()));
-                    if(BuildConfig.DEBUG){
-                        Log.d("UDP", " Received String: " + recievedString);
-                        InetAddress ipaddress = multicastPacket.getAddress();
-                        int port = multicastPacket.getPort();
-                        Log.d("UDP", "IPAddress : " + ipaddress.toString());
-                        Log.d("UDP", "Port : " + Integer.toString(port));
-                    }
-
-                } catch (SocketException e) {
-                    Log.e("UDP", "Socket Error", e);
-                } catch (IOException e) {
-                    Log.e("UDP", "IO Error", e);
-                }
-            }
-        }).start();
-    }
-
-    private class ConnectToPi extends AsyncTask<Session, Void, Void>{
+        private String LOGTAG = "__ConnectToPi";
 
         @Override
-        protected Void doInBackground(Session... sessions) {
-            Utils.methodDebug("vdkvbgdrvndrvgn");
-            connectToPi(sessions[0]);
-            return null;
+        protected Boolean doInBackground(Session... sessions) {
+            Utils.methodDebug(LOGTAG);
+            Session session = sessions[0];
+            serverSocket    = createServerSocket(session);
+            try {
+                byte[] connectPacket = PacketFactory.newConnectPacket(session);
+
+                multicastSocket = createMulticastSocket(mContext);
+                multicastGroup  = InetAddress.getByName(Constants.SOCKET_MULTICAST_GROUP_IP);
+                multicastPacket = new DatagramPacket(connectPacket, connectPacket.length, new InetSocketAddress(multicastGroup, Constants.SOCKET_MULTICAST_PORT));
+                multicastSocket.setTimeToLive(30);
+                multicastSocket.send(multicastPacket);
+
+                if (BuildConfig.DEBUG){
+                    Log.e(LOGTAG, "Sending Multicast Packet");
+                }
+
+                //Now wait for ACK
+                Socket ackSocket = serverSocket.accept();
+                if (BuildConfig.DEBUG){
+                    Log.d(LOGTAG, "Created ACK Socket :: " + ackSocket.toString());
+                }
+
+                String receivedString = readPacket(ackSocket.getInputStream());
+                if (BuildConfig.DEBUG) {
+                    Log.d(LOGTAG, "Received Packet :: " + receivedString);
+                }
+
+                PiResponse piResponse = new Gson().fromJson(receivedString, PiResponse.class);
+                if(piResponse.getService().equals(Constants.SERVICE_PAIRED) && piResponse.getStatus_code() == Constants.CONNECT_SUCCESS){
+                    //Set session to connected
+                    if(BuildConfig.DEBUG){
+                        Log.e(LOGTAG, "Connected to Pi");
+                    }
+                    session.setConnected(true);
+                }
+
+            } catch (SocketException e) {
+                Log.e("UDP", "Socket Error", e);
+            } catch (IOException e) {
+                Log.e("UDP", "IO Error", e);
+            }finally {
+                multicastSocket.close();
+
+            }
+            return session.isConnected();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean connected) {
+            Utils.methodDebug(LOGTAG);
+            //Send broadcast to Main Activity
+            if(connected){
+                if(BuildConfig.DEBUG){
+                    Log.d(LOGTAG, "Sending Broadcast to MainActivity");
+                }
+            }
         }
     }
 
