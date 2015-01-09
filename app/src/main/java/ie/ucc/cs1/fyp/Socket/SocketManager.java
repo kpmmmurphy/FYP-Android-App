@@ -6,8 +6,11 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -22,6 +25,7 @@ import java.util.Arrays;
 
 import ie.ucc.cs1.fyp.BuildConfig;
 import ie.ucc.cs1.fyp.Constants;
+import ie.ucc.cs1.fyp.Model.PiResponse;
 import ie.ucc.cs1.fyp.Utils;
 
 /**
@@ -67,59 +71,48 @@ public class SocketManager {
             public void run() {
                 try {
                     byte[] connectPacket = PacketFactory.newConnectPacket(session);
-                    while(true) {
-                        //Socket client = new Socket(InetAddress.getByName("192.168.42.1"), 5007);
-                        multicastPacket = new DatagramPacket(connectPacket, connectPacket.length, new InetSocketAddress(multicastGroup, Constants.SOCKET_MULTICAST_PORT));
-                        //OutputStream outputStream =  client.getOutputStream();
-                        //DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
-                        //outputStream.write("Did it work".getBytes());
-                        multicastSocket.setTimeToLive(30);
 
-                        //multicastSocket.send(multicastPacket);
+                    //Socket client = new Socket(InetAddress.getByName("192.168.42.1"), 5007);
+                    multicastPacket = new DatagramPacket(connectPacket, connectPacket.length, new InetSocketAddress(multicastGroup, Constants.SOCKET_MULTICAST_PORT));
+                    //OutputStream outputStream =  client.getOutputStream();
+                    //DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+                    //outputStream.write("Did it work".getBytes());
+                    multicastSocket.setTimeToLive(30);
+
+                    multicastSocket.send(multicastPacket);
+                    if (BuildConfig.DEBUG){
                         Log.e(LOGTAG, "Sending Multicast");
-                        Thread.sleep(2000);
-
-                        //Now wait for ACK
-                        while(true) {
-                            Log.e(LOGTAG, "Trying to recv data");
-                            Thread.sleep(2000);
-                            Socket ackSocket = serverSocket.accept();
-                            if (BuildConfig.DEBUG){
-                                Log.d(LOGTAG, ackSocket.toString());
-                            }
-                            bufferedReader = new BufferedReader(new InputStreamReader(ackSocket.getInputStream()));
-                            //DataInputStream din = new DataInputStream(ackSocket.getInputStream());
-                            //recievedString = din.readUTF();
-                            String s = null;
-                            while((s=bufferedReader.readLine()) != null){
-                                Log.e(LOGTAG, "Got ::" + s);
-                            }
-                            if (BuildConfig.DEBUG) {
-                                //Log.d(LOGTAG, recievedString);
-                            }
-                            bufferedReader.close();
-                            Thread.sleep(2000);
-                        }
-                        /*PiResponse piResponse = (PiResponse)Utils.fromJson(recievedString, new PiResponse());
-                        if(piResponse.getStatus_code() == Constants.CONNECT_SUCCESS){
-                            //Set session to connected
-                            Log.e(LOGTAG, "It Worked!!!");
-                        }
-                        recievedString = new String(trimPacket(multicastPacket.getData()));
-                        if(BuildConfig.DEBUG){
-                            Log.d("UDP", " Received String: " + recievedString);
-                            InetAddress ipaddress = multicastPacket.getAddress();
-                            int port = multicastPacket.getPort();
-                            Log.d("UDP", "IPAddress : " + ipaddress.toString());
-                            Log.d("UDP", "Port : " + Integer.toString(port));
-                        }*/
                     }
+
+                    //Now wait for ACK
+                    Socket ackSocket = serverSocket.accept();
+                    if (BuildConfig.DEBUG){
+                        Log.d(LOGTAG, ackSocket.toString());
+                    }
+
+                    String receivedString = readPacket(ackSocket.getInputStream());
+                    if (BuildConfig.DEBUG) {
+                        Log.d(LOGTAG, "Received Packet :: " + receivedString);
+                    }
+
+                    PiResponse piResponse = (PiResponse)new Gson().fromJson(receivedString, PiResponse.class);
+                    if(piResponse.getService().equals(Constants.SERVICE_PAIRED) && piResponse.getStatus_code() == Constants.CONNECT_SUCCESS){
+                        //Set session to connected
+                        Log.e(LOGTAG, "It Worked!!!");
+                    }
+                    recievedString = new String(trimPacket(multicastPacket.getData()));
+                    if(BuildConfig.DEBUG){
+                        Log.d("UDP", " Received String: " + recievedString);
+                        InetAddress ipaddress = multicastPacket.getAddress();
+                        int port = multicastPacket.getPort();
+                        Log.d("UDP", "IPAddress : " + ipaddress.toString());
+                        Log.d("UDP", "Port : " + Integer.toString(port));
+                    }
+
                 } catch (SocketException e) {
                     Log.e("UDP", "Socket Error", e);
                 } catch (IOException e) {
                     Log.e("UDP", "IO Error", e);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
             }
         }).start();
@@ -204,6 +197,19 @@ public class SocketManager {
             e.printStackTrace();
         }
         return serverSocket;
+    }
+
+    private String readPacket(InputStream inputStream){
+        String s = "";
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            s = bufferedReader.readLine();
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return s;
     }
 
     private byte[] trimPacket(byte[] packet){

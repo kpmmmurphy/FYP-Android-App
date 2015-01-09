@@ -2,7 +2,6 @@ package ie.ucc.cs1.fyp;
 
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
@@ -40,12 +39,6 @@ public class Utils {
     public static String toJson(Object obj){
         return new GsonBuilder().create().toJson(obj);
     }
-
-    public static Object fromJson(String json, Object clazz){
-        return new Gson().fromJson(json, clazz.getClass());
-    }
-
-
 
     public static int randomInRange(int min, int max) {
         return min + (int) (Math.random() * max);
