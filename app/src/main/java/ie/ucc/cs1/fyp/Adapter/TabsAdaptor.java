@@ -10,7 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
-import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 import ie.ucc.cs1.fyp.Utils;
 
@@ -24,7 +24,7 @@ public class TabsAdaptor extends FragmentPagerAdapter implements ActionBar.TabLi
     private final Context mContext;
     private final ActionBar mActionBar;
     private final ViewPager mViewPager;
-    private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
+    private final ConcurrentHashMap<Integer, TabInfo> mTabs = new ConcurrentHashMap<Integer, TabInfo>();
 
     public TabsAdaptor(Context mContext, FragmentManager fm, ActionBar mActionBar, ViewPager mViewPager) {
         super(fm);
@@ -42,8 +42,17 @@ public class TabsAdaptor extends FragmentPagerAdapter implements ActionBar.TabLi
         TabInfo info = new TabInfo(clss, args);
         tab.setTag(info);
         tab.setTabListener(this);
-        mTabs.add(info);
+        mTabs.put(mTabs.size(), info);
         mActionBar.addTab(tab);
+        notifyDataSetChanged();
+    }
+
+    public void updateTab(ActionBar.Tab tab, Class<?> clss, Bundle args){
+        Utils.methodDebug(LOGTAG);
+        TabInfo info = new TabInfo(clss, args);
+        tab.setTag(info);
+        tab.setTabListener(this);
+        mTabs.put(mTabs.size(), info);
         notifyDataSetChanged();
     }
 
@@ -95,8 +104,8 @@ public class TabsAdaptor extends FragmentPagerAdapter implements ActionBar.TabLi
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         Utils.methodDebug(LOGTAG);
         Object tag = tab.getTag();
-        for (int i=0; i<mTabs.size(); i++) {
-            if (mTabs.get(i) == tag) {
+        for (int i=0; i< mTabs.size(); i++) {
+            if (mTabs.get(i).equals(tag)) {
                 mViewPager.setCurrentItem(i);
             }
         }
@@ -112,4 +121,11 @@ public class TabsAdaptor extends FragmentPagerAdapter implements ActionBar.TabLi
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         Utils.methodDebug(LOGTAG);
     }
+
+    //----Custom Methods
+    public void clearTabInfo(){
+        mTabs.clear();
+    }
+
+
 }

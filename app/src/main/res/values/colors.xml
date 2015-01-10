@@ -4,6 +4,9 @@
     <color name="primary">@color/blue_standard</color>
     <color name="primaryDark">@color/blue_light</color>
 
+    <!--Fragments-->
+    <color name="fragment_background">#F3F3F3</color>
+
     <!--App Text Colors-->
     <color name="text_primary">#EFEFE6</color>
 

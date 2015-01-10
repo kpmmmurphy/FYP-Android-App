@@ -7,5 +7,6 @@
         <!--   theme UI controls like checkboxes and text fields -->
         <item name="android:colorAccent">@color/blue_lightest</item>
         <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:progressBarStyle">@android:style/Widget.Material.ProgressBar</item>
     </style>
 </resources>

@@ -9,11 +9,15 @@
     <string name="title_section3">Control</string>
 
     <!--Action Bar Menu Items-->
-    <string name="menu_item_wifi_direct">Wifi Direct</string>
+    <string name="action_bar_menu_pair">Pair</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
+
+    <!--Toasts Msgs-->
+    <string name="connected_to_pi_success">Connected to Pi</string>
+    <string name="connected_to_pi_failed">Connected to Pi Failed</string>
 
 </resources>

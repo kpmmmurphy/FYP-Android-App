@@ -44,12 +44,12 @@ public class SocketManager {
     private MulticastSocket multicastSocket;
     private ServerSocket serverSocket;
     private Thread sensorValueThread;
-    private Socket       sensorValuesSocket;
+    private Socket       piDirectSocket;
     private DatagramPacket  multicastPacket;
     private String recievedString;
 
-    private BufferedReader bufferedReader;
-    private InputStreamReader inputStreamReader;
+    private int ACK_SOCKET_TIMEOUT = 10000;
+    private int MULTICAST_TIMEOUT = 10000;
     private int PACKET_MAX_SIZE = 1024;
 
     public SocketManager(Context context){
@@ -65,7 +65,16 @@ public class SocketManager {
         protected Boolean doInBackground(Session... sessions) {
             Utils.methodDebug(LOGTAG);
             Session session = sessions[0];
-            serverSocket    = createServerSocket(session);
+
+            if(serverSocket == null){
+                serverSocket    = createServerSocket(Session.getInstance(mContext));
+                try {
+                    serverSocket.setSoTimeout(ACK_SOCKET_TIMEOUT);
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                }
+            }
+
             try {
                 byte[] connectPacket = PacketFactory.newConnectPacket(session);
 
@@ -86,18 +95,18 @@ public class SocketManager {
                 }
 
                 String receivedString = readPacket(ackSocket.getInputStream());
+                ackSocket.close();
                 if (BuildConfig.DEBUG) {
                     Log.d(LOGTAG, "Received Packet :: " + receivedString);
                 }
 
                 PiResponse piResponse = new Gson().fromJson(receivedString, PiResponse.class);
-                if(piResponse.getService().equals(Constants.SERVICE_PAIRED) && piResponse.getStatus_code() == Constants.CONNECT_SUCCESS){
+                if(piResponse != null && piResponse.getService().equals(Constants.SERVICE_PAIRED) && piResponse.getStatus_code() == Constants.CONNECT_SUCCESS){
                     //Set session to connected
                     if(BuildConfig.DEBUG){
                         Log.d(LOGTAG, "Connected to Pi");
                     }
                     session.setConnectedToPi(true);
-
                 }
 
             } catch (SocketException e) {
@@ -106,7 +115,6 @@ public class SocketManager {
                 Log.e("UDP", "IO Error", e);
             }finally {
                 multicastSocket.close();
-
             }
             return session.isConnectedToPi();
         }
@@ -115,14 +123,10 @@ public class SocketManager {
         protected void onPostExecute(Boolean connected) {
             Utils.methodDebug(LOGTAG);
             //Send broadcast to Main Activity
-            if(connected){
-                if(BuildConfig.DEBUG){
-                    Log.d(LOGTAG, "Sending Broadcast to MainActivity");
-                }
-                sendConnectedBroadcast();
-            }else{
-                //Send not connected
+            if(BuildConfig.DEBUG){
+                Log.d(LOGTAG, "Sending Broadcast to MainActivity");
             }
+            sendConnectedBroadcast();
         }
     }
 
@@ -130,21 +134,20 @@ public class SocketManager {
         new ConnectToPi().execute(session);
     }
 
-    public void startSensorValueThread(){
+    public void startPiDirectThread(){
         sensorValueThread = new Thread(){
             @Override
             public void run() {
-                Log.e(LOGTAG, "Threading!!!");
                 try {
                     while (!this.isInterrupted()){
-                        sensorValuesSocket = serverSocket.accept();
-                        String currentSensorValues = readPacket(sensorValuesSocket.getInputStream());
+                        piDirectSocket = serverSocket.accept();
+                        String currentSensorValues = readPacket(piDirectSocket.getInputStream());
                         if(BuildConfig.DEBUG){
-                            Log.d(LOGTAG, currentSensorValues);
+                            Log.d(LOGTAG,"Recieved Sensor Values -> " +  currentSensorValues);
                         }
                         SensorManager.getInstance().updateSensorOutputs(currentSensorValues);
                     }
-                    sensorValuesSocket.close();
+                    piDirectSocket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -248,6 +251,7 @@ public class SocketManager {
             Log.d(LOGTAG, "Sending Connected to Pi Intent");
         }
         Intent connectedIntent = new Intent(Constants.INTENT_CONNECTED_TO_PI);
+        connectedIntent.putExtra(Constants.SERVICE_PAIRED, Session.getInstance(mContext).isConnectedToPi());
         LocalBroadcastManager.getInstance(mContext).sendBroadcast(connectedIntent);
     }
 }

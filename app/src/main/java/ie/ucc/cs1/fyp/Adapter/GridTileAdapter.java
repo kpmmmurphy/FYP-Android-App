@@ -7,9 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
-
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
@@ -62,9 +59,6 @@ public class GridTileAdapter extends BaseAdapter {
         holder.name.setText(String.valueOf(getItem(i).getName()));
         holder.outputLevel.setText(String.valueOf(getItem(i).getValue()));
         holder.measurement.setText(String.valueOf(getItem(i).getMeasurement()));
-
-        YoYo.with(Techniques.FadeIn).delay(fade*2).playOn(view);
-
         return view;
     }
 

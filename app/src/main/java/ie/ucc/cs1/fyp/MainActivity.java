@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -66,19 +67,11 @@ public class MainActivity extends FragmentActivity {
         mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section2)), CameraFragment.class, null);
         mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section3)), ControlFragment.class, null);
 
-
         connectedToPiReceiver = new ConnectedToPiReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(connectedToPiReceiver, new IntentFilter(Constants.INTENT_CONNECTED_TO_PI));
 
 
         socketManager = new SocketManager(this);
-        socketManager.startConnectionToPi(Session.getInstance(this));
-
-        //Setup Wifi Direct
-        //mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-        //mChannel = mManager.initialize(this, getMainLooper(), null);
-
-        //mIntentFilter = WifiDirector.createP2PIntentFilter();
 
         if (savedInstanceState != null) {
             bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));
@@ -116,7 +109,8 @@ public class MainActivity extends FragmentActivity {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.action_bar_menu_wifi_direct:
-                //WifiDirector.detectPeers(mManager, mChannel);
+                hideFragments();
+                socketManager.startConnectionToPi(Session.getInstance(this));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -136,8 +130,29 @@ public class MainActivity extends FragmentActivity {
             if(BuildConfig.DEBUG){
                 Log.d(LOGTAG, "Connected to Pi");
             }
-            socketManager.startSensorValueThread();
+            boolean isConnected = intent.getBooleanExtra(Constants.SERVICE_PAIRED, false);
+            if(isConnected){
+                socketManager.startPiDirectThread();
+                Toast.makeText(getApplicationContext(), getString(R.string.connected_to_pi_success), Toast.LENGTH_SHORT).show();
+                updateFragments();
+            }else{
+                Toast.makeText(getApplicationContext(), getString(R.string.connected_to_pi_failed), Toast.LENGTH_SHORT).show();
+                updateFragments();
+            }
         }
+    }
+
+    private void hideFragments(){
+        mViewPager.removeAllViews();
+    }
+    private void updateFragments(){
+
+        mViewPager.setAdapter(null);
+        mViewPager.setAdapter(mTabsAdapter);
+        mTabsAdapter.clearTabInfo();
+        mTabsAdapter.updateTab(getActionBar().newTab().setText(getString(R.string.title_section1)), SensorFragment.class, null);
+        mTabsAdapter.updateTab(getActionBar().newTab().setText(getString(R.string.title_section2)), CameraFragment.class, null);
+        mTabsAdapter.updateTab(getActionBar().newTab().setText(getString(R.string.title_section3)), ControlFragment.class, null);
     }
 
 }

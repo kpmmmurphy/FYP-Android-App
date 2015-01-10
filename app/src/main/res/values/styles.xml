@@ -36,6 +36,11 @@
         <item name="android:textColor">@color/output_normal</item>
     </style>
 
+    <!--Default Fragment Style-->
+    <style name="Default_Fragment">
+        <item name="android:background">@color/fragment_background</item>
+    </style>
+
 
 </resources>
     
