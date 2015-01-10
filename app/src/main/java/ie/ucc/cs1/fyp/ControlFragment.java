@@ -5,11 +5,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import ie.ucc.cs1.fyp.Model.Config;
+import ie.ucc.cs1.fyp.Model.Sensor;
 import ie.ucc.cs1.fyp.Socket.Session;
 
 /**
@@ -23,7 +26,7 @@ public class ControlFragment extends Fragment{
     @InjectView(R.id.et_system_config_name)
     EditText systemName;
     @InjectView(R.id.et_system_config_location)
-    EditText location;
+    EditText systemLocation;
     @InjectView(R.id.et_system_config_gps_lat)
     EditText systemLat;
     @InjectView(R.id.et_system_config_gps_lng)
@@ -45,7 +48,7 @@ public class ControlFragment extends Fragment{
 
     /*API Manager*/
     @InjectView(R.id.et_api_manager_camera_image_upload_rate)
-    EditText imageUploadRate;
+    EditText cameraUploadRate;
     @InjectView(R.id.et_api_manager_sensor_value_upload_rate)
     EditText sensorValueUploadRate;
     @InjectView(R.id.et_api_manager_system_config_request_rate)
@@ -96,6 +99,9 @@ public class ControlFragment extends Fragment{
     @InjectView(R.id.et_motion_priority)
     EditText motionPriority;
 
+    @InjectView(R.id.btn_submit)
+    Button submit;
+
     public ControlFragment() {
         Utils.methodDebug(LOGTAG);
     }
@@ -135,5 +141,54 @@ public class ControlFragment extends Fragment{
     public void onPause() {
         super.onPause();
         Utils.methodDebug(LOGTAG);
+    }
+
+    private void gatherInput(){
+        Config config = Session.getInstance(getActivity()).getConfig();
+
+        /*System Details*/
+        config.getSystemDetailsManager().setName(systemName.getText().toString());
+        config.getSystemDetailsManager().setLocation(systemLocation.getText().toString());
+        config.getSystemDetailsManager().setGps_lat(systemLat.getText().toString());
+        config.getSystemDetailsManager().setGps_lng(systemLng.getText().toString());
+
+        /*API Manager*/
+        config.getApiManager().setCamera_image_upload_rate(Integer.valueOf(cameraUploadRate.getText().toString()));
+        config.getApiManager().setSensor_value_upload_rate(Integer.valueOf(sensorValueUploadRate.getText().toString()));
+        config.getApiManager().setSys_config_request_rate(Integer.valueOf(systemConfigRate.getText().toString()));
+
+        /*SensorManager*/
+        config.getSensorManager().setCollection_priority(Integer.valueOf(collectionPriorty.getText().toString()));
+        config.getSensorManager().setCollection_rate(Integer.valueOf(collectionRate.getText().toString()));
+
+        /*Access Point Manager*/
+        config.getWifiDirectManager().setSensor_value_send_rate(Integer.valueOf(sensorValueSendRate.getText().toString()));
+
+        /*Alert Manager*/
+        config.getAlertManager().setBuzzer_on(buzzerOn.isChecked());
+        config.getAlertManager().setCamera_on(camereOn.isChecked());
+        config.getAlertManager().setVideo_mode(videoMode.isChecked());
+
+        /*----SENSORS----*/
+        for(Sensor sensor : config.getSensors()){
+            if(sensor.getName().equals(Constants.SENSOR_NAME_MQ7)){
+                sensor.setAlert_threshold(Integer.valueOf(mq7AlertThreshold.getText().toString()));
+                sensor.setIs_active(mq7IsActive.isChecked());
+                sensor.setProbe_rate(Integer.valueOf(mq7ProbeRate.getText().toString()));
+                sensor.setPriority(Integer.valueOf(mq7Priority.getText().toString()));
+            }else if(sensor.getName().equals(Constants.SENSOR_NAME_MQ2)){
+                sensor.setAlert_threshold(Integer.valueOf(mq2AlertThreshold.getText().toString()));
+                sensor.setIs_active(mq2IsActive.isChecked());
+                sensor.setProbe_rate(Integer.valueOf(mq2ProbeRate.getText().toString()));
+                sensor.setPriority(Integer.valueOf(mq2Priority.getText().toString()));
+            }else if(sensor.getName().equals(Constants.SENSOR_NAME_THERMISTOR)){
+                sensor.setAlert_threshold(Integer.valueOf(thermistorAlertThreshold.getText().toString()));
+                sensor.setIs_active(thermistorIsActive.isChecked());
+                sensor.setProbe_rate(Integer.valueOf(thermistorProbeRate.getText().toString()));
+                sensor.setPriority(Integer.valueOf(thermistorPriority.getText().toString()));
+            }else if(sensor.getName().equals(Constants.SENSOR_NAME_SMOKE)){
+
+            }
+        }
     }
 }

@@ -12,8 +12,8 @@
 
 
         <TableLayout
-            style="@style/Config_Section"
             android:id="@+id/table_system_details"
+            style="@style/Config_Section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:stretchColumns="2">
@@ -76,8 +76,8 @@
 
 
         <TableLayout
-            style="@style/Config_Section"
             android:id="@+id/table_sensor_manager"
+            style="@style/Config_Section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/table_system_details"
@@ -119,8 +119,8 @@
         </TableLayout>
 
         <TableLayout
-            style="@style/Config_Section"
             android:id="@+id/table_alert_manager"
+            style="@style/Config_Section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/table_sensor_manager"
@@ -156,7 +156,7 @@
 
                 <Switch
                     android:id="@+id/switch_alert_manager_video_mode"
-                    style="@style/Config_Switch"/>
+                    style="@style/Config_Switch" />
             </TableRow>
 
             <TableRow style="@style/Config_Item">
@@ -167,13 +167,13 @@
 
                 <Switch
                     android:id="@+id/switch_alert_manager_buzzer_on"
-                    style="@style/Config_Switch"/>
+                    style="@style/Config_Switch" />
             </TableRow>
         </TableLayout>
 
         <TableLayout
-            style="@style/Config_Section"
             android:id="@+id/table_api_manager"
+            style="@style/Config_Section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/table_alert_manager"
@@ -191,25 +191,33 @@
             <View style="@style/Config_Divider" />
 
             <TableRow style="@style/Config_Item">
+
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_api_manager_sensor_value_upload_rate" />
+
                 <EditText
                     android:id="@+id/et_api_manager_sensor_value_upload_rate"
                     style="@style/Config_Item_Edit_Text_Numeric" />
             </TableRow>
+
             <TableRow style="@style/Config_Item">
+
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_api_manager_camera_image_upload_rate" />
+
                 <EditText
                     android:id="@+id/et_api_manager_camera_image_upload_rate"
                     style="@style/Config_Item_Edit_Text_Numeric" />
             </TableRow>
+
             <TableRow style="@style/Config_Item">
+
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_api_manager_system_config_request_rate" />
+
                 <EditText
                     android:id="@+id/et_api_manager_system_config_request_rate"
                     style="@style/Config_Item_Edit_Text_Numeric" />
@@ -217,14 +225,15 @@
         </TableLayout>
 
         <TableLayout
-            style="@style/Config_Section"
             android:id="@+id/table_access_point_manager"
+            style="@style/Config_Section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/table_api_manager"
             android:stretchColumns="2">
 
             <TableRow>
+
                 <TextView
                     style="@style/Config_Section_Title"
                     android:layout_width="match_parent"
@@ -235,9 +244,11 @@
             <View style="@style/Config_Divider" />
 
             <TableRow style="@style/Config_Item">
+
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_api_manager_sensor_value_upload_rate" />
+
                 <EditText
                     android:id="@+id/et_access_point_manager_sensor_value_send_rate"
                     style="@style/Config_Item_Edit_Text_Numeric" />
@@ -245,28 +256,29 @@
         </TableLayout>
 
         <TextView
-            android:layout_below="@id/table_access_point_manager"
             android:id="@+id/config_sensor_section_title"
             style="@style/Config_Sensor_Section_Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/config_sensors"/>
+            android:layout_below="@id/table_access_point_manager"
+            android:text="@string/config_sensors" />
 
         <View
-            android:layout_below="@id/config_sensor_section_title"
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_below="@id/config_sensor_section_title"
             android:background="@color/primary" />
 
         <TableLayout
-            style="@style/Config_Section"
             android:id="@+id/table_sensor_mq7"
+            style="@style/Config_Section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/config_sensor_section_title"
             android:stretchColumns="2">
 
             <TableRow>
+
                 <TextView
                     style="@style/Config_Section_Title"
                     android:layout_width="match_parent"
@@ -277,34 +289,44 @@
             <View style="@style/Config_Divider" />
 
             <TableRow style="@style/Config_Item">
+
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_sensor_is_active" />
+
                 <Switch
                     android:id="@+id/switch_mq7_is_active"
-                    style="@style/Config_Switch"/>
+                    style="@style/Config_Switch" />
             </TableRow>
 
             <TableRow style="@style/Config_Item">
+
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_sensor_alert_threshold" />
+
                 <EditText
                     android:id="@+id/et_mq7_alert_threshold"
                     style="@style/Config_Item_Edit_Text_Numeric" />
             </TableRow>
+
             <TableRow style="@style/Config_Item">
+
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_sensor_probe_rate" />
+
                 <EditText
                     android:id="@+id/et_mq7_probe_rate"
                     style="@style/Config_Item_Edit_Text_Numeric" />
             </TableRow>
+
             <TableRow style="@style/Config_Item">
+
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_sensor_priority" />
+
                 <EditText
                     android:id="@+id/et_mq7_priority"
                     style="@style/Config_Item_Edit_Text_Numeric" />
@@ -312,14 +334,15 @@
         </TableLayout>
 
         <TableLayout
-            style="@style/Config_Section"
             android:id="@+id/table_sensor_mq2"
+            style="@style/Config_Section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/table_sensor_mq7"
             android:stretchColumns="2">
 
             <TableRow>
+
                 <TextView
                     style="@style/Config_Section_Title"
                     android:layout_width="match_parent"
@@ -330,48 +353,60 @@
             <View style="@style/Config_Divider" />
 
             <TableRow style="@style/Config_Item">
+
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_sensor_is_active" />
+
                 <Switch
                     android:id="@+id/switch_mq2_is_active"
-                    style="@style/Config_Switch"/>
+                    style="@style/Config_Switch" />
             </TableRow>
 
             <TableRow style="@style/Config_Item">
+
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_sensor_alert_threshold" />
+
                 <EditText
                     android:id="@+id/et_mq2_alert_threshold"
                     style="@style/Config_Item_Edit_Text_Numeric" />
             </TableRow>
+
             <TableRow style="@style/Config_Item">
+
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_sensor_probe_rate" />
+
                 <EditText
                     android:id="@+id/et_mq2_probe_rate"
                     style="@style/Config_Item_Edit_Text_Numeric" />
             </TableRow>
+
             <TableRow style="@style/Config_Item">
+
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_sensor_priority" />
+
                 <EditText
                     android:id="@+id/et_mq2_priority"
                     style="@style/Config_Item_Edit_Text_Numeric" />
             </TableRow>
         </TableLayout>
+
         <TableLayout
-            style="@style/Config_Section"
             android:id="@+id/table_sensor_temperature"
+            style="@style/Config_Section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/table_sensor_mq2"
             android:stretchColumns="2">
 
             <TableRow>
+
                 <TextView
                     style="@style/Config_Section_Title"
                     android:layout_width="match_parent"
@@ -382,48 +417,60 @@
             <View style="@style/Config_Divider" />
 
             <TableRow style="@style/Config_Item">
+
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_sensor_is_active" />
+
                 <Switch
                     android:id="@+id/switch_thermistor_is_active"
-                    style="@style/Config_Switch"/>
+                    style="@style/Config_Switch" />
             </TableRow>
 
             <TableRow style="@style/Config_Item">
+
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_sensor_alert_threshold" />
+
                 <EditText
                     android:id="@+id/et_thermistor_alert_threshold"
                     style="@style/Config_Item_Edit_Text_Numeric" />
             </TableRow>
+
             <TableRow style="@style/Config_Item">
+
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_sensor_probe_rate" />
+
                 <EditText
                     android:id="@+id/et_thermistor_probe_rate"
                     style="@style/Config_Item_Edit_Text_Numeric" />
             </TableRow>
+
             <TableRow style="@style/Config_Item">
+
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_sensor_priority" />
+
                 <EditText
                     android:id="@+id/et_thermistor_priority"
                     style="@style/Config_Item_Edit_Text_Numeric" />
             </TableRow>
         </TableLayout>
+
         <TableLayout
-            style="@style/Config_Section"
             android:id="@+id/table_sensor_motion"
+            style="@style/Config_Section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/table_sensor_temperature"
             android:stretchColumns="2">
 
             <TableRow>
+
                 <TextView
                     style="@style/Config_Section_Title"
                     android:layout_width="match_parent"
@@ -434,34 +481,44 @@
             <View style="@style/Config_Divider" />
 
             <TableRow style="@style/Config_Item">
+
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_sensor_is_active" />
+
                 <Switch
                     android:id="@+id/switch_motion_is_active"
-                    style="@style/Config_Switch"/>
+                    style="@style/Config_Switch" />
             </TableRow>
 
             <TableRow style="@style/Config_Item">
+
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_sensor_alert_threshold" />
+
                 <EditText
                     android:id="@+id/et_motion_alert_threshold"
                     style="@style/Config_Item_Edit_Text_Numeric" />
             </TableRow>
+
             <TableRow style="@style/Config_Item">
+
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_sensor_probe_rate" />
+
                 <EditText
                     android:id="@+id/et_motion_probe_rate"
                     style="@style/Config_Item_Edit_Text_Numeric" />
             </TableRow>
+
             <TableRow style="@style/Config_Item">
+
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_sensor_priority" />
+
                 <EditText
                     android:id="@+id/et_motion_priority"
                     style="@style/Config_Item_Edit_Text_Numeric" />
@@ -469,7 +526,13 @@
         </TableLayout>
 
         <Button
+            android:id="@+id/btn_submit"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_below="@id/table_sensor_motion"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="8dp"
+            android:padding="12dp"
+            android:text="Submit" />
     </RelativeLayout>
 </ScrollView>
