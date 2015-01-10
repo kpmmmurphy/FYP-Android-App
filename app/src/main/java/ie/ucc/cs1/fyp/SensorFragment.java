@@ -13,7 +13,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Adapter.GridTileAdapter;
 import ie.ucc.cs1.fyp.Model.SensorOutput;
-import ie.ucc.cs1.fyp.WifiDirect.WifiDirectBroadcastReceiver;
+import ie.ucc.cs1.fyp.Socket.Session;
 
 /**
  * Created by kpmmmurphy on 30/10/14.
@@ -21,12 +21,11 @@ import ie.ucc.cs1.fyp.WifiDirect.WifiDirectBroadcastReceiver;
 public class SensorFragment extends Fragment {
 
     private static String LOGTAG = "__SensorFragment";
+    private Thread sensorValueReadThread;
 
     @InjectView(R.id.gv_sensor)
     GridView mGridView;
     private GridTileAdapter gridTileAdapter;
-
-    private WifiDirectBroadcastReceiver wifiDirectBroadcastReciever;
 
     private ArrayList<SensorOutput> sensorOutputs;
 
@@ -53,18 +52,38 @@ public class SensorFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Utils.methodDebug(LOGTAG);
-
-        mGridView.setAdapter(new GridTileAdapter(getActivity().getApplicationContext(), Utils.randomSensorOutput()));
-
-        //wifiDirectBroadcastReciever = new WifiDirectBroadcastReceiver();
-
+        gridTileAdapter = new GridTileAdapter(getActivity().getApplicationContext(), Utils.randomSensorOutput());
+        mGridView.setAdapter(gridTileAdapter);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         Utils.methodDebug(LOGTAG);
-
+        if(Session.getInstance(getActivity()).isConnectedToPi()){
+            sensorValueReadThread = new Thread(){
+                @Override
+                public void run() {
+                    while (!this.isInterrupted()){
+                        getActivity().runOnUiThread( new Runnable() {
+                            @Override
+                            public void run() {
+                                gridTileAdapter.setSensorOutputs(SensorManager.getInstance().getCurrentSensorOutputsList());
+                                gridTileAdapter.notifyDataSetChanged();
+                            }
+                        });
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };
+            sensorValueReadThread.start();
+        }else{
+            //Networking Stuff
+        }
     }
 
     @Override

@@ -35,6 +35,9 @@ public interface Constants {
     //Pi Response Values
     public static final int CONNECT_SUCCESS  = 200;
 
+    //Custom Intents
+    public static final String INTENT_CONNECTED_TO_PI = "INTENT_CONNECTED_TO_PI";
+
 
 
 }

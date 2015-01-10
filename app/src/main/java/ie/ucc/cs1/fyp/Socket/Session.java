@@ -24,7 +24,7 @@ public class Session {
     protected String time_stamp;
     protected String ip_address;
     protected String device_id;
-    protected transient boolean connected = false;
+    protected transient boolean connectedToPi = false;
 
     private Session(Context context){
         WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
@@ -65,11 +65,11 @@ public class Session {
         this.device_id = device_id;
     }
 
-    public boolean isConnected() {
-        return connected;
+    public boolean isConnectedToPi() {
+        return connectedToPi;
     }
 
-    public void setConnected(boolean connected) {
-        this.connected = connected;
+    public void setConnectedToPi(boolean connected) {
+        this.connectedToPi = connected;
     }
 }

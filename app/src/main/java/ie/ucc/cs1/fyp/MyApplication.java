@@ -10,7 +10,6 @@ public class MyApplication extends Application {
 
     private static String LOGTAG = "__Application";
     private static Application mInstance;
-
     @Override
     public void onCreate(){
         super.onCreate();

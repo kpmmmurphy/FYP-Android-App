@@ -80,4 +80,8 @@ public class GridTileAdapter extends BaseAdapter {
             ButterKnife.inject(this, view);
         }
     }
+
+    public void setSensorOutputs(ArrayList<SensorOutput> sensorOutputs) {
+        this.sensorOutputs = sensorOutputs;
+    }
 }

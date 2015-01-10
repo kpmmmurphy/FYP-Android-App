@@ -1,11 +1,16 @@
 package ie.ucc.cs1.fyp;
 
 import android.app.ActionBar;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,6 +46,8 @@ public class MainActivity extends FragmentActivity {
     private SocketManager socketManager;
     private Session session;
 
+    private ConnectedToPiReceiver connectedToPiReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,9 +66,13 @@ public class MainActivity extends FragmentActivity {
         mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section2)), CameraFragment.class, null);
         mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section3)), ControlFragment.class, null);
 
-        session = Session.getInstance(getApplicationContext());
-        socketManager = new SocketManager(getApplicationContext());
-        socketManager.startConnectionToPi(session);
+
+        connectedToPiReceiver = new ConnectedToPiReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(connectedToPiReceiver, new IntentFilter(Constants.INTENT_CONNECTED_TO_PI));
+
+
+        socketManager = new SocketManager(this);
+        socketManager.startConnectionToPi(Session.getInstance(this));
 
         //Setup Wifi Direct
         //mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
@@ -77,14 +88,19 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //mWifiDirectReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
-        //registerReceiver(mWifiDirectReceiver, mIntentFilter);
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //unregisterReceiver(mWifiDirectReceiver);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(connectedToPiReceiver);
     }
 
     @Override
@@ -112,6 +128,16 @@ public class MainActivity extends FragmentActivity {
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
+    }
+
+    public class ConnectedToPiReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(BuildConfig.DEBUG){
+                Log.d(LOGTAG, "Connected to Pi");
+            }
+            socketManager.startSensorValueThread();
+        }
     }
 
 }

@@ -1,9 +1,11 @@
 package ie.ucc.cs1.fyp.Socket;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -26,6 +28,7 @@ import java.util.Arrays;
 import ie.ucc.cs1.fyp.BuildConfig;
 import ie.ucc.cs1.fyp.Constants;
 import ie.ucc.cs1.fyp.Model.PiResponse;
+import ie.ucc.cs1.fyp.SensorManager;
 import ie.ucc.cs1.fyp.Utils;
 
 /**
@@ -40,9 +43,9 @@ public class SocketManager {
     private InetAddress multicastGroup;
     private MulticastSocket multicastSocket;
     private ServerSocket serverSocket;
+    private Thread sensorValueThread;
+    private Socket       sensorValuesSocket;
     private DatagramPacket  multicastPacket;
-    private DatagramPacket  sendacket;
-    private DatagramPacket  recvacket;
     private String recievedString;
 
     private BufferedReader bufferedReader;
@@ -73,7 +76,7 @@ public class SocketManager {
                 multicastSocket.send(multicastPacket);
 
                 if (BuildConfig.DEBUG){
-                    Log.e(LOGTAG, "Sending Multicast Packet");
+                    Log.d(LOGTAG, "Sending Multicast Packet");
                 }
 
                 //Now wait for ACK
@@ -91,9 +94,10 @@ public class SocketManager {
                 if(piResponse.getService().equals(Constants.SERVICE_PAIRED) && piResponse.getStatus_code() == Constants.CONNECT_SUCCESS){
                     //Set session to connected
                     if(BuildConfig.DEBUG){
-                        Log.e(LOGTAG, "Connected to Pi");
+                        Log.d(LOGTAG, "Connected to Pi");
                     }
-                    session.setConnected(true);
+                    session.setConnectedToPi(true);
+
                 }
 
             } catch (SocketException e) {
@@ -104,7 +108,7 @@ public class SocketManager {
                 multicastSocket.close();
 
             }
-            return session.isConnected();
+            return session.isConnectedToPi();
         }
 
         @Override
@@ -115,12 +119,38 @@ public class SocketManager {
                 if(BuildConfig.DEBUG){
                     Log.d(LOGTAG, "Sending Broadcast to MainActivity");
                 }
+                sendConnectedBroadcast();
+            }else{
+                //Send not connected
             }
         }
     }
 
     public void startConnectionToPi(Session session){
         new ConnectToPi().execute(session);
+    }
+
+    public void startSensorValueThread(){
+        sensorValueThread = new Thread(){
+            @Override
+            public void run() {
+                Log.e(LOGTAG, "Threading!!!");
+                try {
+                    while (!this.isInterrupted()){
+                        sensorValuesSocket = serverSocket.accept();
+                        String currentSensorValues = readPacket(sensorValuesSocket.getInputStream());
+                        if(BuildConfig.DEBUG){
+                            Log.d(LOGTAG, currentSensorValues);
+                        }
+                        SensorManager.getInstance().updateSensorOutputs(currentSensorValues);
+                    }
+                    sensorValuesSocket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        sensorValueThread.start();
     }
 
     public void createMulticastServerThread(){
@@ -180,7 +210,6 @@ public class SocketManager {
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(Constants.SOCKET_SERVER_PORT,0,InetAddress.getByName(session.getIp_address()));
-            //serverSocket.bind(new InetSocketAddress(, ));
             if(BuildConfig.DEBUG){
                 Log.d(LOGTAG, serverSocket.toString());
             }
@@ -212,5 +241,13 @@ public class SocketManager {
             ++count;
         }
         return Arrays.copyOf(packet, count);
+    }
+
+    private void sendConnectedBroadcast(){
+        if(BuildConfig.DEBUG){
+            Log.d(LOGTAG, "Sending Connected to Pi Intent");
+        }
+        Intent connectedIntent = new Intent(Constants.INTENT_CONNECTED_TO_PI);
+        LocalBroadcastManager.getInstance(mContext).sendBroadcast(connectedIntent);
     }
 }
