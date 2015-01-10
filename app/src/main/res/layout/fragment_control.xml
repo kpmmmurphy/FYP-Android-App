@@ -143,10 +143,9 @@
                     style="@style/Config_Item_Label"
                     android:text="@string/config_alert_manager_camera_on" />
 
-                <Spinner
-                    android:id="@+id/spinner_alert_manager_camera_on"
-                    style="@style/Config_Spinner"
-                    android:entries="@array/boolean_array" />
+                <Switch
+                    android:id="@+id/switch_alert_manager_camera_on"
+                    style="@style/Config_Switch" />
             </TableRow>
 
             <TableRow style="@style/Config_Item">
@@ -155,10 +154,9 @@
                     style="@style/Config_Item_Label"
                     android:text="@string/config_alert_manager_video_mode" />
 
-                <Spinner
-                    android:id="@+id/spinner_alert_manager_video_mode"
-                    style="@style/Config_Spinner"
-                    android:entries="@array/boolean_array" />
+                <Switch
+                    android:id="@+id/switch_alert_manager_video_mode"
+                    style="@style/Config_Switch"/>
             </TableRow>
 
             <TableRow style="@style/Config_Item">
@@ -167,10 +165,9 @@
                     style="@style/Config_Item_Label"
                     android:text="@string/config_alert_manager_buzzer_on" />
 
-                <Spinner
-                    android:id="@+id/spinner_alert_manager_buzzer_on"
-                    style="@style/Config_Spinner"
-                    android:entries="@array/boolean_array" />
+                <Switch
+                    android:id="@+id/switch_alert_manager_buzzer_on"
+                    style="@style/Config_Switch"/>
             </TableRow>
         </TableLayout>
 
@@ -283,10 +280,9 @@
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_sensor_is_active" />
-                <Spinner
-                    android:id="@+id/spinner_mq7_is_active"
-                    style="@style/Config_Spinner"
-                    android:entries="@array/boolean_array"/>
+                <Switch
+                    android:id="@+id/switch_mq7_is_active"
+                    style="@style/Config_Switch"/>
             </TableRow>
 
             <TableRow style="@style/Config_Item">
@@ -337,10 +333,9 @@
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_sensor_is_active" />
-                <Spinner
-                    android:id="@+id/spinner_mq2_is_active"
-                    style="@style/Config_Spinner"
-                    android:entries="@array/boolean_array"/>
+                <Switch
+                    android:id="@+id/switch_mq2_is_active"
+                    style="@style/Config_Switch"/>
             </TableRow>
 
             <TableRow style="@style/Config_Item">
@@ -390,10 +385,9 @@
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_sensor_is_active" />
-                <Spinner
-                    android:id="@+id/spinner_thermistor_is_active"
-                    style="@style/Config_Spinner"
-                    android:entries="@array/boolean_array"/>
+                <Switch
+                    android:id="@+id/switch_thermistor_is_active"
+                    style="@style/Config_Switch"/>
             </TableRow>
 
             <TableRow style="@style/Config_Item">
@@ -443,10 +437,9 @@
                 <TextView
                     style="@style/Config_Item_Label"
                     android:text="@string/config_sensor_is_active" />
-                <Spinner
-                    android:id="@+id/spinner_motion_is_active"
-                    style="@style/Config_Spinner"
-                    android:entries="@array/boolean_array"/>
+                <Switch
+                    android:id="@+id/switch_motion_is_active"
+                    style="@style/Config_Switch"/>
             </TableRow>
 
             <TableRow style="@style/Config_Item">
@@ -474,5 +467,9 @@
                     style="@style/Config_Item_Edit_Text_Numeric" />
             </TableRow>
         </TableLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </RelativeLayout>
 </ScrollView>
