@@ -20,4 +20,39 @@
     <string name="connected_to_pi_success">Connected to Pi</string>
     <string name="connected_to_pi_failed">Connected to Pi Failed</string>
 
+    <!--Sensors-->
+    <string name="sensor_mq7">Carbon Monoxide</string>
+    <string name="sensor_mq2">Flammable Gas</string>
+    <string name="sensor_temperature">Temperature</string>
+    <string name="sensor_motion">Motion</string>
+
+    <!--Config Fragment-->
+    <string name="config_title_system_details">System Details</string>
+    <string name="config_system_details_name">name</string>
+    <string name="config_system_details_location">location</string>
+    <string name="config_system_details_gps_lat">gps_lat</string>
+    <string name="config_system_details_gps_lng">gps_lng</string>
+    <string name="config_title_sensor_manager">Sensor Manager</string>
+    <string name="config_sensor_manager_collection_rate">Data Collection Rate</string>
+    <string name="config_sensor_manager_collection_priority">Data Collection Priority</string>
+    <string name="config_title_alert_manager">Alert Manager</string>
+    <string name="config_alert_manager_camera_on">Camera On</string>
+    <string name="config_alert_manager_video_mode">Video Mode</string>
+    <string name="config_alert_manager_buzzer_on">Alert Buzzer On</string>
+    <string name="config_title_api_manager">API Manager</string>
+    <string name="config_api_manager_sensor_value_upload_rate">Sensor Value Upload Rate</string>
+    <string name="config_api_manager_camera_image_upload_rate">Camera Image Upload Rate</string>
+    <string name="config_api_manager_system_config_request_rate">System Config Reguest Rate</string>
+    <string name="config_title_access_point_manager">Access Point Manager</string>
+    <string name="config_sensors">Sensors</string>
+    <string name="config_sensor_is_active">Is Active</string>
+    <string name="config_sensor_alert_threshold">Alert Threshold</string>
+    <string name="config_sensor_probe_rate">Probe Rate</string>
+    <string name="config_sensor_priority">Priority</string>
+
+    <string-array name="boolean_array">
+        <item>On</item>
+        <item>Off</item>
+    </string-array>
+
 </resources>

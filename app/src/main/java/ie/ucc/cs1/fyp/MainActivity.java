@@ -134,11 +134,10 @@ public class MainActivity extends FragmentActivity {
             if(isConnected){
                 socketManager.startPiDirectThread();
                 Toast.makeText(getApplicationContext(), getString(R.string.connected_to_pi_success), Toast.LENGTH_SHORT).show();
-                updateFragments();
             }else{
                 Toast.makeText(getApplicationContext(), getString(R.string.connected_to_pi_failed), Toast.LENGTH_SHORT).show();
-                updateFragments();
             }
+            updateFragments();
         }
     }
 
@@ -146,7 +145,6 @@ public class MainActivity extends FragmentActivity {
         mViewPager.removeAllViews();
     }
     private void updateFragments(){
-
         mViewPager.setAdapter(null);
         mViewPager.setAdapter(mTabsAdapter);
         mTabsAdapter.clearTabInfo();

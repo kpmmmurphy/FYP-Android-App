@@ -1,9 +1,478 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/Default_Fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin">
 
-</RelativeLayout>
+
+        <TableLayout
+            style="@style/Config_Section"
+            android:id="@+id/table_system_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="2">
+
+            <TableRow>
+
+                <TextView
+                    style="@style/Config_Section_Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/config_title_system_details" />
+            </TableRow>
+
+            <View style="@style/Config_Divider" />
+
+            <TableRow style="@style/Config_Item">
+
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_system_details_name" />
+
+                <EditText
+                    android:id="@+id/et_system_config_name"
+                    style="@style/Config_Item_Edit_Text" />
+            </TableRow>
+
+            <TableRow style="@style/Config_Item">
+
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_system_details_location" />
+
+                <EditText
+                    android:id="@+id/et_system_config_location"
+                    style="@style/Config_Item_Edit_Text" />
+            </TableRow>
+
+            <TableRow style="@style/Config_Item">
+
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_system_details_gps_lat" />
+
+                <EditText
+                    android:id="@+id/et_system_config_gps_lat"
+                    style="@style/Config_Item_Edit_Text" />
+            </TableRow>
+
+            <TableRow style="@style/Config_Item">
+
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_system_details_gps_lng" />
+
+                <EditText
+                    android:id="@+id/et_system_config_gps_lng"
+                    style="@style/Config_Item_Edit_Text" />
+            </TableRow>
+        </TableLayout>
+
+
+        <TableLayout
+            style="@style/Config_Section"
+            android:id="@+id/table_sensor_manager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/table_system_details"
+            android:stretchColumns="2">
+
+            <TableRow>
+
+                <TextView
+                    style="@style/Config_Section_Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/config_title_sensor_manager" />
+            </TableRow>
+
+            <View style="@style/Config_Divider" />
+
+            <TableRow style="@style/Config_Item">
+
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_sensor_manager_collection_rate" />
+
+                <EditText
+                    android:id="@+id/et_sensor_manager_collection_rate"
+                    style="@style/Config_Item_Edit_Text_Numeric" />
+            </TableRow>
+
+            <TableRow style="@style/Config_Item">
+
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_sensor_manager_collection_priority" />
+
+                <EditText
+                    android:id="@+id/et_sensor_manager_collection_priority"
+                    style="@style/Config_Item_Edit_Text_Numeric" />
+            </TableRow>
+
+        </TableLayout>
+
+        <TableLayout
+            style="@style/Config_Section"
+            android:id="@+id/table_alert_manager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/table_sensor_manager"
+            android:stretchColumns="2">
+
+            <TableRow>
+
+                <TextView
+                    style="@style/Config_Section_Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/config_title_alert_manager" />
+            </TableRow>
+
+            <View style="@style/Config_Divider" />
+
+            <TableRow style="@style/Config_Item">
+
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_alert_manager_camera_on" />
+
+                <Spinner
+                    android:id="@+id/spinner_alert_manager_camera_on"
+                    style="@style/Config_Spinner"
+                    android:entries="@array/boolean_array" />
+            </TableRow>
+
+            <TableRow style="@style/Config_Item">
+
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_alert_manager_video_mode" />
+
+                <Spinner
+                    android:id="@+id/spinner_alert_manager_video_mode"
+                    style="@style/Config_Spinner"
+                    android:entries="@array/boolean_array" />
+            </TableRow>
+
+            <TableRow style="@style/Config_Item">
+
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_alert_manager_buzzer_on" />
+
+                <Spinner
+                    android:id="@+id/spinner_alert_manager_buzzer_on"
+                    style="@style/Config_Spinner"
+                    android:entries="@array/boolean_array" />
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            style="@style/Config_Section"
+            android:id="@+id/table_api_manager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/table_alert_manager"
+            android:stretchColumns="2">
+
+            <TableRow>
+
+                <TextView
+                    style="@style/Config_Section_Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/config_title_api_manager" />
+            </TableRow>
+
+            <View style="@style/Config_Divider" />
+
+            <TableRow style="@style/Config_Item">
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_api_manager_sensor_value_upload_rate" />
+                <EditText
+                    android:id="@+id/et_api_manager_sensor_value_upload_rate"
+                    style="@style/Config_Item_Edit_Text_Numeric" />
+            </TableRow>
+            <TableRow style="@style/Config_Item">
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_api_manager_camera_image_upload_rate" />
+                <EditText
+                    android:id="@+id/et_api_manager_camera_image_upload_rate"
+                    style="@style/Config_Item_Edit_Text_Numeric" />
+            </TableRow>
+            <TableRow style="@style/Config_Item">
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_api_manager_system_config_request_rate" />
+                <EditText
+                    android:id="@+id/et_api_manager_system_config_request_rate"
+                    style="@style/Config_Item_Edit_Text_Numeric" />
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            style="@style/Config_Section"
+            android:id="@+id/table_access_point_manager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/table_api_manager"
+            android:stretchColumns="2">
+
+            <TableRow>
+                <TextView
+                    style="@style/Config_Section_Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/config_title_access_point_manager" />
+            </TableRow>
+
+            <View style="@style/Config_Divider" />
+
+            <TableRow style="@style/Config_Item">
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_api_manager_sensor_value_upload_rate" />
+                <EditText
+                    android:id="@+id/et_access_point_manager_sensor_value_send_rate"
+                    style="@style/Config_Item_Edit_Text_Numeric" />
+            </TableRow>
+        </TableLayout>
+
+        <TextView
+            android:layout_below="@id/table_access_point_manager"
+            android:id="@+id/config_sensor_section_title"
+            style="@style/Config_Sensor_Section_Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/config_sensors"/>
+
+        <View
+            android:layout_below="@id/config_sensor_section_title"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/primary" />
+
+        <TableLayout
+            style="@style/Config_Section"
+            android:id="@+id/table_sensor_mq7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/config_sensor_section_title"
+            android:stretchColumns="2">
+
+            <TableRow>
+                <TextView
+                    style="@style/Config_Section_Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sensor_mq7" />
+            </TableRow>
+
+            <View style="@style/Config_Divider" />
+
+            <TableRow style="@style/Config_Item">
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_sensor_is_active" />
+                <Spinner
+                    android:id="@+id/spinner_mq7_is_active"
+                    style="@style/Config_Spinner"
+                    android:entries="@array/boolean_array"/>
+            </TableRow>
+
+            <TableRow style="@style/Config_Item">
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_sensor_alert_threshold" />
+                <EditText
+                    android:id="@+id/et_mq7_alert_threshold"
+                    style="@style/Config_Item_Edit_Text_Numeric" />
+            </TableRow>
+            <TableRow style="@style/Config_Item">
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_sensor_probe_rate" />
+                <EditText
+                    android:id="@+id/et_mq7_probe_rate"
+                    style="@style/Config_Item_Edit_Text_Numeric" />
+            </TableRow>
+            <TableRow style="@style/Config_Item">
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_sensor_priority" />
+                <EditText
+                    android:id="@+id/et_mq7_priority"
+                    style="@style/Config_Item_Edit_Text_Numeric" />
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            style="@style/Config_Section"
+            android:id="@+id/table_sensor_mq2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/table_sensor_mq7"
+            android:stretchColumns="2">
+
+            <TableRow>
+                <TextView
+                    style="@style/Config_Section_Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sensor_mq2" />
+            </TableRow>
+
+            <View style="@style/Config_Divider" />
+
+            <TableRow style="@style/Config_Item">
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_sensor_is_active" />
+                <Spinner
+                    android:id="@+id/spinner_mq2_is_active"
+                    style="@style/Config_Spinner"
+                    android:entries="@array/boolean_array"/>
+            </TableRow>
+
+            <TableRow style="@style/Config_Item">
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_sensor_alert_threshold" />
+                <EditText
+                    android:id="@+id/et_mq2_alert_threshold"
+                    style="@style/Config_Item_Edit_Text_Numeric" />
+            </TableRow>
+            <TableRow style="@style/Config_Item">
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_sensor_probe_rate" />
+                <EditText
+                    android:id="@+id/et_mq2_probe_rate"
+                    style="@style/Config_Item_Edit_Text_Numeric" />
+            </TableRow>
+            <TableRow style="@style/Config_Item">
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_sensor_priority" />
+                <EditText
+                    android:id="@+id/et_mq2_priority"
+                    style="@style/Config_Item_Edit_Text_Numeric" />
+            </TableRow>
+        </TableLayout>
+        <TableLayout
+            style="@style/Config_Section"
+            android:id="@+id/table_sensor_temperature"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/table_sensor_mq2"
+            android:stretchColumns="2">
+
+            <TableRow>
+                <TextView
+                    style="@style/Config_Section_Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sensor_temperature" />
+            </TableRow>
+
+            <View style="@style/Config_Divider" />
+
+            <TableRow style="@style/Config_Item">
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_sensor_is_active" />
+                <Spinner
+                    android:id="@+id/spinner_thermistor_is_active"
+                    style="@style/Config_Spinner"
+                    android:entries="@array/boolean_array"/>
+            </TableRow>
+
+            <TableRow style="@style/Config_Item">
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_sensor_alert_threshold" />
+                <EditText
+                    android:id="@+id/et_thermistor_alert_threshold"
+                    style="@style/Config_Item_Edit_Text_Numeric" />
+            </TableRow>
+            <TableRow style="@style/Config_Item">
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_sensor_probe_rate" />
+                <EditText
+                    android:id="@+id/et_thermistor_probe_rate"
+                    style="@style/Config_Item_Edit_Text_Numeric" />
+            </TableRow>
+            <TableRow style="@style/Config_Item">
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_sensor_priority" />
+                <EditText
+                    android:id="@+id/et_thermistor_priority"
+                    style="@style/Config_Item_Edit_Text_Numeric" />
+            </TableRow>
+        </TableLayout>
+        <TableLayout
+            style="@style/Config_Section"
+            android:id="@+id/table_sensor_motion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/table_sensor_temperature"
+            android:stretchColumns="2">
+
+            <TableRow>
+                <TextView
+                    style="@style/Config_Section_Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sensor_motion" />
+            </TableRow>
+
+            <View style="@style/Config_Divider" />
+
+            <TableRow style="@style/Config_Item">
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_sensor_is_active" />
+                <Spinner
+                    android:id="@+id/spinner_motion_is_active"
+                    style="@style/Config_Spinner"
+                    android:entries="@array/boolean_array"/>
+            </TableRow>
+
+            <TableRow style="@style/Config_Item">
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_sensor_alert_threshold" />
+                <EditText
+                    android:id="@+id/et_motion_alert_threshold"
+                    style="@style/Config_Item_Edit_Text_Numeric" />
+            </TableRow>
+            <TableRow style="@style/Config_Item">
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_sensor_probe_rate" />
+                <EditText
+                    android:id="@+id/et_motion_probe_rate"
+                    style="@style/Config_Item_Edit_Text_Numeric" />
+            </TableRow>
+            <TableRow style="@style/Config_Item">
+                <TextView
+                    style="@style/Config_Item_Label"
+                    android:text="@string/config_sensor_priority" />
+                <EditText
+                    android:id="@+id/et_motion_priority"
+                    style="@style/Config_Item_Edit_Text_Numeric" />
+            </TableRow>
+        </TableLayout>
+    </RelativeLayout>
+</ScrollView>
