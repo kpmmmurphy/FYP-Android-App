@@ -7,6 +7,11 @@ public class Packet {
     protected String service;
     protected String payload;
 
+    public Packet(String service, String payload) {
+        this.service = service;
+        this.payload = payload;
+    }
+
     public String getService() {
         return service;
     }

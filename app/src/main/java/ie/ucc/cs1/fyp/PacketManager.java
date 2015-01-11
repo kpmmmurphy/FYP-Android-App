@@ -52,8 +52,11 @@ public class PacketManager {
             }
             session.setConfig(gson.fromJson(currentPacket.getPayload(), Config.class));
         }else if(currentPacket.getService().equals(Constants.SERVICE_RESPONSE)){
+            if(BuildConfig.DEBUG){
+                Log.d(LOGTAG,"Response");
+            }
             PiResponse piResponse = gson.fromJson(currentPacket.getPayload(), PiResponse.class);
-            Toast.makeText(mContext, piResponse.getMsg_response(), Toast.LENGTH_SHORT);
+            Toast.makeText(mContext, piResponse.getMsg_response(), Toast.LENGTH_SHORT).show();
         }
     }
 }

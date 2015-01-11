@@ -4,7 +4,7 @@ import android.util.Log;
 
 import ie.ucc.cs1.fyp.BuildConfig;
 import ie.ucc.cs1.fyp.Constants;
-import ie.ucc.cs1.fyp.Model.ConnectPacket;
+import ie.ucc.cs1.fyp.Model.Packet;
 import ie.ucc.cs1.fyp.Utils;
 
 /**
@@ -13,7 +13,7 @@ import ie.ucc.cs1.fyp.Utils;
 public class PacketFactory {
 
     public static byte[] newConnectPacket(Session session){
-        ConnectPacket packet = new ConnectPacket(session);
+        Packet packet = new Packet(Constants.SERVICE_CONNECT,Utils.toJson(session));
         String json = Utils.toJson(packet);
         if(BuildConfig.DEBUG){
             Log.d(Constants.LOGTAG, json);

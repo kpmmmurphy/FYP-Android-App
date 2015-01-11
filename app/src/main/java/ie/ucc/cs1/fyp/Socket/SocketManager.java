@@ -15,7 +15,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.DatagramPacket;
@@ -31,6 +30,7 @@ import java.util.Arrays;
 
 import ie.ucc.cs1.fyp.BuildConfig;
 import ie.ucc.cs1.fyp.Constants;
+import ie.ucc.cs1.fyp.Model.Packet;
 import ie.ucc.cs1.fyp.Model.PiResponse;
 import ie.ucc.cs1.fyp.PacketManager;
 import ie.ucc.cs1.fyp.Utils;
@@ -42,7 +42,9 @@ public class SocketManager {
 
     private Boolean DEBUG = true;
     private static String LOGTAG = "__SocketManager";
+    private static SocketManager __instance;
     private Context mContext;
+    private Gson gson;
 
     private InetAddress multicastGroup;
     private MulticastSocket multicastSocket;
@@ -56,8 +58,16 @@ public class SocketManager {
     private int MULTICAST_TIMEOUT = 10000;
     private int PACKET_MAX_SIZE = 1024;
 
-    public SocketManager(Context context){
+    private SocketManager(Context context){
         this.mContext = context;
+        gson = new Gson();
+    }
+
+    public static SocketManager getInstance(Context context){
+        if(__instance == null){
+            __instance = new SocketManager(context);
+        }
+        return __instance;
     }
 
 
@@ -104,8 +114,10 @@ public class SocketManager {
                     Log.d(LOGTAG, "Received Packet :: " + receivedString);
                 }
 
-                PiResponse piResponse = new Gson().fromJson(receivedString, PiResponse.class);
-                if(piResponse != null && piResponse.getService().equals(Constants.SERVICE_PAIRED) && piResponse.getStatus_code() == Constants.CONNECT_SUCCESS){
+                Packet packet = gson.fromJson(receivedString, Packet.class);
+
+                PiResponse piResponse = gson.fromJson(packet.getPayload(), PiResponse.class);
+                if(piResponse != null && packet.getService().equals(Constants.SERVICE_PAIRED) && piResponse.getStatus_code() == Constants.CONNECT_SUCCESS){
                     //Set session to connected
                     if(BuildConfig.DEBUG){
                         Log.d(LOGTAG, "Connected to Pi");
@@ -119,7 +131,9 @@ public class SocketManager {
             } catch (IOException e) {
                 Log.e("UDP", "IO Error", e);
             }finally {
-                multicastSocket.close();
+                if (multicastSocket != null && !multicastSocket.isClosed()){
+                    multicastSocket.close();
+                }
             }
             return session.isConnectedToPi();
         }
@@ -147,7 +161,7 @@ public class SocketManager {
                     while (!this.isInterrupted()){
                         piDirectSocket = serverSocket.accept();
                         String currentPacket = readPacket(piDirectSocket.getInputStream());
-                        PacketManager.getInstance().deliverPacket(currentPacket);
+                        PacketManager.getInstance(mContext).deliverPacket(currentPacket);
                     }
                     piDirectSocket.close();
                 } catch (IOException e) {
@@ -159,10 +173,7 @@ public class SocketManager {
     }
 
     public void sendPacketToPi(String packet){
-        Thread sendConfigThread = new Thread(){
-
-        };
-        sendConfigThread.start();
+        new SendPacketToPi().execute(packet);
     }
 
     public class SendPacketToPi extends AsyncTask<String, Void, Void>{
@@ -177,12 +188,13 @@ public class SocketManager {
         @Override
         protected Void doInBackground(String... strings) {
             String packet = strings[0];
+            if (BuildConfig.DEBUG){
+                Log.d(LOGTAG, "Sending Packet to Pi ->" + packet);
+            }
             try {
-                Socket socket = new Socket(Session.getInstance(mContext).getPiIPAddress(), Constants.SOCKET_CLIENT_PORT);
-                OutputStream outputStream = socket.getOutputStream();
+                Socket socket   = new Socket(Session.getInstance(mContext).getPiIPAddress(), Constants.SOCKET_CLIENT_PORT);
                 PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
                 out.println(packet);
-
             } catch (IOException e) {
                 e.printStackTrace();
             }

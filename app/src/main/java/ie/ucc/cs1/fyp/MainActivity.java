@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
@@ -21,7 +20,6 @@ import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Adapter.TabsAdaptor;
 import ie.ucc.cs1.fyp.Socket.Session;
 import ie.ucc.cs1.fyp.Socket.SocketManager;
-import ie.ucc.cs1.fyp.WifiDirect.WifiDirectBroadcastReceiver;
 
 
 public class MainActivity extends FragmentActivity {
@@ -36,16 +34,6 @@ public class MainActivity extends FragmentActivity {
     @InjectView(R.id.view_pager)
     protected ViewPager mViewPager;
     protected TabsAdaptor mTabsAdapter;
-
-    //Wifi Direct Objects
-    protected WifiP2pManager              mManager;
-    protected WifiP2pManager.Channel      mChannel;
-    protected WifiDirectBroadcastReceiver mWifiDirectReceiver;
-    protected IntentFilter                mIntentFilter;
-
-    //SocketManager Objects
-    private SocketManager socketManager;
-    private Session session;
 
     private ConnectedToPiReceiver connectedToPiReceiver;
 
@@ -70,9 +58,6 @@ public class MainActivity extends FragmentActivity {
         connectedToPiReceiver = new ConnectedToPiReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(connectedToPiReceiver, new IntentFilter(Constants.INTENT_CONNECTED_TO_PI));
 
-
-        socketManager = new SocketManager(this);
-
         if (savedInstanceState != null) {
             bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));
         }
@@ -87,7 +72,6 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
     }
 
     @Override
@@ -110,7 +94,7 @@ public class MainActivity extends FragmentActivity {
         switch (item.getItemId()) {
             case R.id.action_bar_menu_wifi_direct:
                 hideFragments();
-                socketManager.startConnectionToPi(Session.getInstance(this));
+                SocketManager.getInstance(getApplicationContext()).startConnectionToPi(Session.getInstance(this));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -128,11 +112,11 @@ public class MainActivity extends FragmentActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if(BuildConfig.DEBUG){
-                Log.d(LOGTAG, "Connected to Pi");
+                Log.d(LOGTAG, "Broadcast received");
             }
             boolean isConnected = intent.getBooleanExtra(Constants.SERVICE_PAIRED, false);
             if(isConnected){
-                socketManager.startPiDirectThread();
+                SocketManager.getInstance(getApplicationContext()).startPiDirectThread();
                 Toast.makeText(getApplicationContext(), getString(R.string.connected_to_pi_success), Toast.LENGTH_SHORT).show();
             }else{
                 Toast.makeText(getApplicationContext(), getString(R.string.connected_to_pi_failed), Toast.LENGTH_SHORT).show();

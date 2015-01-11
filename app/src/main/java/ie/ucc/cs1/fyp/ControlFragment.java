@@ -13,8 +13,10 @@ import android.widget.Switch;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Model.Config;
+import ie.ucc.cs1.fyp.Model.Packet;
 import ie.ucc.cs1.fyp.Model.Sensor;
 import ie.ucc.cs1.fyp.Socket.Session;
+import ie.ucc.cs1.fyp.Socket.SocketManager;
 
 /**
  * Created by kpmmmurphy on 04/11/14.
@@ -124,7 +126,12 @@ public class ControlFragment extends Fragment{
             public void onClick(View view) {
                 if(BuildConfig.DEBUG){
                     Log.d(LOGTAG, "Submitting Config");
-                    gatherInput();
+                    if(!Session.getInstance(getActivity().getApplicationContext()).isConnectedToPi()){
+                        Packet configPacket = new Packet(Constants.SERVICE_CONFIG , gatherInput());
+                        SocketManager.getInstance(getActivity().getApplicationContext()).sendPacketToPi(Utils.toJson(configPacket));
+                    }else{
+                        //API...
+                    }
                 }
             }
         });
@@ -208,7 +215,7 @@ public class ControlFragment extends Fragment{
         }
     }
 
-    private void gatherInput(){
+    protected String gatherInput(){
         Config config = Session.getInstance(getActivity()).getConfig();
 
         /*System Details*/
@@ -259,6 +266,10 @@ public class ControlFragment extends Fragment{
             }
         }
 
-        Log.e(LOGTAG, Utils.toJson(config));
+        String configString = Utils.toJson(config);
+        if (BuildConfig.DEBUG){
+            Log.d(LOGTAG, configString);
+        }
+        return configString;
     }
 }
