@@ -11,9 +11,13 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -28,7 +32,7 @@ import java.util.Arrays;
 import ie.ucc.cs1.fyp.BuildConfig;
 import ie.ucc.cs1.fyp.Constants;
 import ie.ucc.cs1.fyp.Model.PiResponse;
-import ie.ucc.cs1.fyp.SensorManager;
+import ie.ucc.cs1.fyp.PacketManager;
 import ie.ucc.cs1.fyp.Utils;
 
 /**
@@ -95,7 +99,7 @@ public class SocketManager {
                 }
 
                 String receivedString = readPacket(ackSocket.getInputStream());
-                ackSocket.close();
+
                 if (BuildConfig.DEBUG) {
                     Log.d(LOGTAG, "Received Packet :: " + receivedString);
                 }
@@ -107,8 +111,9 @@ public class SocketManager {
                         Log.d(LOGTAG, "Connected to Pi");
                     }
                     session.setConnectedToPi(true);
+                    session.setPiIPAddress(ackSocket.getInetAddress());
                 }
-
+                ackSocket.close();
             } catch (SocketException e) {
                 Log.e("UDP", "Socket Error", e);
             } catch (IOException e) {
@@ -141,11 +146,8 @@ public class SocketManager {
                 try {
                     while (!this.isInterrupted()){
                         piDirectSocket = serverSocket.accept();
-                        String currentSensorValues = readPacket(piDirectSocket.getInputStream());
-                        if(BuildConfig.DEBUG){
-                            Log.d(LOGTAG,"Recieved Sensor Values -> " +  currentSensorValues);
-                        }
-                        SensorManager.getInstance().updateSensorOutputs(currentSensorValues);
+                        String currentPacket = readPacket(piDirectSocket.getInputStream());
+                        PacketManager.getInstance().deliverPacket(currentPacket);
                     }
                     piDirectSocket.close();
                 } catch (IOException e) {
@@ -154,6 +156,39 @@ public class SocketManager {
             }
         };
         sensorValueThread.start();
+    }
+
+    public void sendPacketToPi(String packet){
+        Thread sendConfigThread = new Thread(){
+
+        };
+        sendConfigThread.start();
+    }
+
+    public class SendPacketToPi extends AsyncTask<String, Void, Void>{
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (BuildConfig.DEBUG){
+                Log.d(LOGTAG, "Packet Sent to Pi");
+            }
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            String packet = strings[0];
+            try {
+                Socket socket = new Socket(Session.getInstance(mContext).getPiIPAddress(), Constants.SOCKET_CLIENT_PORT);
+                OutputStream outputStream = socket.getOutputStream();
+                PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+                out.println(packet);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
     }
 
     public void createMulticastServerThread(){

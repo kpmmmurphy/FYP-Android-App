@@ -9,9 +9,9 @@ public interface Constants {
     public static final String LOGTAG = "FYP";
 
     //Sensor Names
-    public static final String SENSOR_NAME_MQ7         = "Carbon Dioxide";
-    public static final String SENSOR_NAME_MQ2         = "Flammable Gas";
-    public static final String SENSOR_NAME_SMOKE       = "Smoke";
+    public static final String SENSOR_NAME_MQ7         = "Carbon_Monoxide";
+    public static final String SENSOR_NAME_MQ2         = "Flammable_Gas";
+    public static final String SENSOR_NAME_MOTION      = "Motion";
     public static final String SENSOR_NAME_THERMISTOR  = "Temperature";
 
     //Sensor Measurement
@@ -20,6 +20,7 @@ public interface Constants {
 
     //SocketManager
     public static final String SOCKET_MULTICAST_GROUP_IP = "224.1.1.1";
+    public static final int SOCKET_CLIENT_PORT           = 5005;
     public static final int SOCKET_SERVER_PORT           = 5006;
     public static final int SOCKET_MULTICAST_PORT        = 5007;
 
@@ -29,6 +30,7 @@ public interface Constants {
     //Socket Json Values
     public static final String SERVICE_CONNECT      = "connect";
     public static final String SERVICE_CONFIG       = "config";
+    public static final String SERVICE_RESPONSE     = "response";
     public static final String SERVICE_SENSOR_DATA  = "sensor_data";
     public static final String SERVICE_PAIRED       = "paired";
 
@@ -49,7 +51,7 @@ public interface Constants {
     public static final String CONFIG_MQ2    = "{'priority': 1, 'is_active': true, 'name': 'flammable_gas', 'alert_threshold': 50, 'probe_rate': 10}";
     public static final String CONFIG_MQ7 = "{'priority': 1, 'is_active': true, 'name': 'carbon_monoxide', 'alert_threshold': 50, 'probe_rate': 10}";
     public static final String CONFIG_THERMISTOR = "{'priority': 1, 'is_active': true, 'name': 'temperature', 'alert_threshold': 50, 'probe_rate': 10}";
-    public static final String CONFIG_DEFAULT = "{\"sensor_manager\": {\"collection_priority\": 1, \"collection_rate\": 15}, \"system_details_manager \": {\"gps_lat\": \"Not set\", \"gps_lng\": \"Not set\", \"name\": \"Security Centre\", \"location\": \"Where am I located?\"}, \"api_manager\": {\"sensor_value_upload_rate\": 10, \"camera_image_upload_rate\": 60, \"sys_config_request_rate\": 60}, \"wifi_direct_manager\": {\"sensor_value_send_rate\": 20}, \"database_manager\": null, \"sensors\": [{\"priority\": 1, \"is_active\": true, \"name\": \"motion\", \"alert_threshold\": 1, \"probe_rate\": 10}, {\"priority\": 1, \"is_active\": true, \"name\": \"flammable_gas\", \"alert_threshold\": 50, \"probe_rate\": 10}, {\"priority\": 1, \"is_active\": true, \"name\": \"carbon_monoxide\", \"alert_threshold\": 50, \"probe_rate\": 10}, {\"priority\": 1, \"is_active\": true, \"name\": \"temperature\", \"alert_threshold\": 50, \"probe_rate\": 10}], \"alert_manager\": {\"camera_on\": true, \"video_mode\": false, \"buzzer_on\": true}}";
+    public static final String CONFIG_DEFAULT = "{\"sensor_manager\": {\"collection_priority\": 1, \"collection_rate\": 15}, \"system_details_manager\": {\"gps_lat\": \"Not set\", \"gps_lng\": \"Not set\", \"name\": \"Security Centre\", \"location\": \"Where am I located?\"}, \"api_manager\": {\"sensor_value_upload_rate\": 10, \"camera_image_upload_rate\": 60, \"sys_config_request_rate\": 60}, \"wifi_direct_manager\": {\"sensor_value_send_rate\": 20}, \"database_manager\": null, \"sensors\": [{\"priority\": 1, \"is_active\": true, \"name\": \"motion\", \"alert_threshold\": 1, \"probe_rate\": 10}, {\"priority\": 1, \"is_active\": true, \"name\": \"flammable_gas\", \"alert_threshold\": 50, \"probe_rate\": 10}, {\"priority\": 1, \"is_active\": true, \"name\": \"carbon_monoxide\", \"alert_threshold\": 50, \"probe_rate\": 10}, {\"priority\": 1, \"is_active\": true, \"name\": \"temperature\", \"alert_threshold\": 50, \"probe_rate\": 10}], \"alert_manager\": {\"camera_on\": true, \"video_mode\": false, \"buzzer_on\": true}}";
 
 
 }

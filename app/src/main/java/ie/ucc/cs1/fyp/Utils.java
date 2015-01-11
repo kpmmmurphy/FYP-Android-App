@@ -30,7 +30,7 @@ public class Utils {
 
         sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_MQ7, Constants.SENSOR_MEASUREMENT_PPM, randomInRange(0, 1000)));
         sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_MQ2, Constants.SENSOR_MEASUREMENT_PPM, randomInRange(0, 1000)));
-        sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_SMOKE, Constants.SENSOR_MEASUREMENT_PPM, randomInRange(0, 1000)));
+        sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_MOTION, "", randomInRange(0, 1)));
         sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_THERMISTOR, Constants.SENSOR_MEASUREMENT_CELCIUS, randomInRange(0, 27)));
 
         return sensorOutputs;

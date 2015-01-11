@@ -43,7 +43,7 @@ public class SensorManager {
         if(currentSensorOutputs != null){
             sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_MQ7, Constants.SENSOR_MEASUREMENT_PPM, currentSensorOutputs.getCarbon_monoxide()));
             sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_MQ2, Constants.SENSOR_MEASUREMENT_PPM, currentSensorOutputs.getFlammable_gas()));
-            sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_SMOKE, Constants.SENSOR_MEASUREMENT_PPM, currentSensorOutputs.getMotion()));
+            sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_MOTION, "", currentSensorOutputs.getMotion()));
             sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_THERMISTOR, Constants.SENSOR_MEASUREMENT_CELCIUS, currentSensorOutputs.getTemperature()));
         }else{
             sensorOutputs = Utils.randomSensorOutput();

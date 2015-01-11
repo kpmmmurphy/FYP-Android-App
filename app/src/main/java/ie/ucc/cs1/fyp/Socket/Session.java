@@ -10,18 +10,12 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.net.InetAddress;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import ie.ucc.cs1.fyp.Constants;
-import ie.ucc.cs1.fyp.Model.APIManager;
-import ie.ucc.cs1.fyp.Model.AlertManager;
 import ie.ucc.cs1.fyp.Model.Config;
-import ie.ucc.cs1.fyp.Model.Sensor;
-import ie.ucc.cs1.fyp.Model.SystemDetailsManager;
-import ie.ucc.cs1.fyp.Model.WifiDirectManager;
-import ie.ucc.cs1.fyp.SensorManager;
 
 /**
  * Created by kpmmmurphy on 07/01/15.
@@ -33,6 +27,7 @@ public class Session {
     private static Session __instance = null;
 
     private transient Config config;
+    private transient InetAddress piIPAddress;
 
     //Fields to be serialised
     protected String time_stamp;
@@ -97,6 +92,14 @@ public class Session {
         this.config = config;
     }
 
+    public InetAddress getPiIPAddress() {
+        return piIPAddress;
+    }
+
+    public void setPiIPAddress(InetAddress piIPAddress) {
+        this.piIPAddress = piIPAddress;
+    }
+
     private class LoadConfigTask extends AsyncTask<Void, Void, Void>{
 
         @Override
@@ -104,30 +107,5 @@ public class Session {
             config = new Gson().fromJson(Constants.CONFIG_DEFAULT, Config.class);
             return null;
         }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            Log.e(LOGTAG, "sdrfvjn");
-            for(Sensor sensor : config.getSensors()){
-                Log.e(LOGTAG,sensor.getName());
-            }
-        }
-    }
-
-    private Config createDefaultConfig(){
-        Gson gson = new Gson();
-        ArrayList<Sensor> sensors = new ArrayList<Sensor>();
-        sensors.add(gson.fromJson(Constants.CONFIG_MOTION, Sensor.class));
-        sensors.add(gson.fromJson(Constants.CONFIG_THERMISTOR, Sensor.class));
-        sensors.add(gson.fromJson(Constants.CONFIG_MQ7, Sensor.class));
-        sensors.add(gson.fromJson(Constants.CONFIG_MQ2, Sensor.class));
-
-        SystemDetailsManager systemDetailsManager = gson.fromJson(Constants.CONFIG_SYSTEM_DETAILS_MANAGER, SystemDetailsManager.class);
-        APIManager apiManager = gson.fromJson(Constants.CONFIG_API_MANAGER, APIManager.class);
-        WifiDirectManager wifiDirectManager = gson.fromJson(Constants.CONFIG_WIFI_DIRECT_MANAGER, WifiDirectManager.class);
-        AlertManager alertManager = gson.fromJson(Constants.CONFIG_ALERT_MANAGER, AlertManager.class);
-        SensorManager sensorManager = gson.fromJson(Constants.CONFIG_SENSOR_MANAGER, SensorManager.class);
-
-        return null;
     }
 }

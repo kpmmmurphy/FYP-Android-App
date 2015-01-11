@@ -5,8 +5,13 @@ package ie.ucc.cs1.fyp.Model;
  */
 public class Packet {
     protected String service;
+    protected String payload;
 
     public String getService() {
         return service;
+    }
+
+    public String getPayload() {
+        return payload;
     }
 }
