@@ -5,9 +5,9 @@ package ie.ucc.cs1.fyp.Model;
  */
 public class Packet {
     protected String service;
-    protected String payload;
+    protected Payload payload;
 
-    public Packet(String service, String payload) {
+    public Packet(String service, Payload payload) {
         this.service = service;
         this.payload = payload;
     }
@@ -16,7 +16,7 @@ public class Packet {
         return service;
     }
 
-    public String getPayload() {
+    public Payload getPayload() {
         return payload;
     }
 }

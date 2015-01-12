@@ -14,6 +14,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Model.Config;
 import ie.ucc.cs1.fyp.Model.Packet;
+import ie.ucc.cs1.fyp.Model.Payload;
 import ie.ucc.cs1.fyp.Model.Sensor;
 import ie.ucc.cs1.fyp.Socket.Session;
 import ie.ucc.cs1.fyp.Socket.SocketManager;
@@ -127,7 +128,9 @@ public class ControlFragment extends Fragment{
                 if(BuildConfig.DEBUG){
                     Log.d(LOGTAG, "Submitting Config");
                     if(!Session.getInstance(getActivity().getApplicationContext()).isConnectedToPi()){
-                        Packet configPacket = new Packet(Constants.SERVICE_CONFIG , gatherInput());
+                        Payload payload =  new Payload();
+                        payload.setConfig(Session.getInstance(getActivity()).getConfig());
+                        Packet configPacket = new Packet(Constants.SERVICE_CONFIG , payload);
                         SocketManager.getInstance(getActivity().getApplicationContext()).sendPacketToPi(Utils.toJson(configPacket));
                     }else{
                         //API...

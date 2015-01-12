@@ -2,6 +2,7 @@ package ie.ucc.cs1.fyp.Network;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.util.LruCache;
 
 import com.android.volley.Request;
@@ -13,9 +14,9 @@ import com.android.volley.toolbox.Volley;
 import java.util.HashMap;
 import java.util.Map;
 
+import ie.ucc.cs1.fyp.BuildConfig;
 import ie.ucc.cs1.fyp.Constants;
-import ie.ucc.cs1.fyp.Model.CurrentSensorOutputs;
-import ie.ucc.cs1.fyp.SensorManager;
+import ie.ucc.cs1.fyp.Model.CurrentSensorValues;
 import ie.ucc.cs1.fyp.Utils;
 
 /**
@@ -62,7 +63,17 @@ public class API {
         Map<String, String> headers = new HashMap<String, String>();
         headers.put(Constants.API_REQUEST_HEADER_SERVICE, Constants.API_REQUEST_SERVICE_GET_SENSOR_VALUES);
 
-        GsonRequest sensorValueRequest = new GsonRequest(URL, CurrentSensorOutputs.class, headers, new SensorManager.NetworkResponseListener(),errorListener);
+        GsonRequest sensorValueRequest = new GsonRequest(URL, CurrentSensorValues.class, headers, new Response.Listener<CurrentSensorValues>(){
+
+            @Override
+            public void onResponse(CurrentSensorValues response) {
+                Utils.methodDebug(LOGTAG);
+                if(BuildConfig.DEBUG){
+                    Log.d(LOGTAG, Utils.toJson(response));
+                }
+                ie.ucc.cs1.fyp.SensorManager.getInstance().setCurrentSensorValues(response);
+            }
+        },errorListener);
         addToQueue(sensorValueRequest);
     }
 

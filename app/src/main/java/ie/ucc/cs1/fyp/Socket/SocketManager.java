@@ -31,7 +31,6 @@ import java.util.Arrays;
 import ie.ucc.cs1.fyp.BuildConfig;
 import ie.ucc.cs1.fyp.Constants;
 import ie.ucc.cs1.fyp.Model.Packet;
-import ie.ucc.cs1.fyp.Model.PiResponse;
 import ie.ucc.cs1.fyp.PacketManager;
 import ie.ucc.cs1.fyp.Utils;
 
@@ -54,7 +53,7 @@ public class SocketManager {
     private DatagramPacket  multicastPacket;
     private String recievedString;
 
-    private int ACK_SOCKET_TIMEOUT = 10000;
+    private int ACK_SOCKET_TIMEOUT = 30000;
     private int MULTICAST_TIMEOUT = 10000;
     private int PACKET_MAX_SIZE = 1024;
 
@@ -81,7 +80,7 @@ public class SocketManager {
             Session session = sessions[0];
 
             if(serverSocket == null){
-                serverSocket    = createServerSocket(Session.getInstance(mContext));
+                serverSocket = createServerSocket(Session.getInstance(mContext));
                 try {
                     serverSocket.setSoTimeout(ACK_SOCKET_TIMEOUT);
                 } catch (SocketException e) {
@@ -99,7 +98,7 @@ public class SocketManager {
                 multicastSocket.send(multicastPacket);
 
                 if (BuildConfig.DEBUG){
-                    Log.d(LOGTAG, "Sending Multicast Packet");
+                    Log.d(LOGTAG, "Sending Multicast Packet" + multicastPacket.toString());
                 }
 
                 //Now wait for ACK
@@ -107,7 +106,11 @@ public class SocketManager {
                 if (BuildConfig.DEBUG){
                     Log.d(LOGTAG, "Created ACK Socket :: " + ackSocket.toString());
                 }
-
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 String receivedString = readPacket(ackSocket.getInputStream());
 
                 if (BuildConfig.DEBUG) {
@@ -116,8 +119,7 @@ public class SocketManager {
 
                 Packet packet = gson.fromJson(receivedString, Packet.class);
 
-                PiResponse piResponse = gson.fromJson(packet.getPayload(), PiResponse.class);
-                if(piResponse != null && packet.getService().equals(Constants.SERVICE_PAIRED) && piResponse.getStatus_code() == Constants.CONNECT_SUCCESS){
+                if(packet.getPayload() != null && packet.getService().equals(Constants.SERVICE_PAIRED) && packet.getPayload().getStatus_code() == Constants.CONNECT_SUCCESS){
                     //Set session to connected
                     if(BuildConfig.DEBUG){
                         Log.d(LOGTAG, "Connected to Pi");
@@ -161,7 +163,10 @@ public class SocketManager {
                     while (!this.isInterrupted()){
                         piDirectSocket = serverSocket.accept();
                         String currentPacket = readPacket(piDirectSocket.getInputStream());
-                        PacketManager.getInstance(mContext).deliverPacket(currentPacket);
+                        if(BuildConfig.DEBUG){
+                            Log.d(LOGTAG, "Received :: " + currentPacket);
+                        }
+                        PacketManager.getInstance(mContext).deliverPacket(gson.fromJson(currentPacket, Packet.class));
                     }
                     piDirectSocket.close();
                 } catch (IOException e) {

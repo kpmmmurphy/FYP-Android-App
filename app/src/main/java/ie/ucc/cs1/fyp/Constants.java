@@ -31,7 +31,7 @@ public interface Constants {
     public static final String SERVICE_CONNECT      = "connect";
     public static final String SERVICE_CONFIG       = "config";
     public static final String SERVICE_RESPONSE     = "response";
-    public static final String SERVICE_SENSOR_DATA  = "sensor_data";
+    public static final String SERVICE_SENSOR_DATA  = "current_sensor_values";
     public static final String SERVICE_PAIRED       = "paired";
 
     //Pi Response Values

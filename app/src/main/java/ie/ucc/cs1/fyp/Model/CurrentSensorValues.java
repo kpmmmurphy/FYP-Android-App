@@ -3,7 +3,7 @@ package ie.ucc.cs1.fyp.Model;
 /**
  * Created by kpmmmurphy on 09/01/15.
  */
-public class CurrentSensorOutputs {
+public class CurrentSensorValues {
 
     protected int temperature;
     protected int carbon_monoxide;

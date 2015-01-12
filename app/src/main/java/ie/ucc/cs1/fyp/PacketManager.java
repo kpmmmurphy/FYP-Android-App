@@ -2,13 +2,10 @@ package ie.ucc.cs1.fyp;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import ie.ucc.cs1.fyp.Model.Config;
 import ie.ucc.cs1.fyp.Model.Packet;
-import ie.ucc.cs1.fyp.Model.PiResponse;
 import ie.ucc.cs1.fyp.Socket.Session;
 
 /**
@@ -35,28 +32,28 @@ public class PacketManager {
         return __instance;
     }
 
-    public void deliverPacket(String packet){
+    public void deliverPacket(Packet packet){
         if(BuildConfig.DEBUG){
             Log.d(LOGTAG, "Received Packet -> " + packet);
         }
-        Packet currentPacket = gson.fromJson(packet, Packet.class);
-
-        if (currentPacket.getService().equals(Constants.SERVICE_SENSOR_DATA)){
-            SensorManager.getInstance().updateSensorOutputs(currentPacket.getPayload());
-            if(BuildConfig.DEBUG){
-                Log.d(LOGTAG,"Sensor Data");
+        if(packet != null){
+            if (packet.getService().equals(Constants.SERVICE_SENSOR_DATA)){
+                SensorManager.getInstance().setCurrentSensorValues(packet.getPayload().getCurrentSensorOutputs());
+                if(BuildConfig.DEBUG){
+                    Log.d(LOGTAG,"Sensor Data");
+                }
+            }else if(packet.getService().equals(Constants.SERVICE_CONFIG)){
+                if(BuildConfig.DEBUG){
+                    Log.d(LOGTAG,"Config");
+                }
+                //session.setConfig(gson.fromJson(packet.getPayload(), Config.class));
+            }else if(packet.getService().equals(Constants.SERVICE_RESPONSE)){
+                if(BuildConfig.DEBUG){
+                    Log.d(LOGTAG,"Response");
+                }
+                //PiResponse piResponse = gson.fromJson(currentPacket.getPayload(), PiResponse.class);
+                //Toast.makeText(mContext, piResponse.getMsg_response(), Toast.LENGTH_SHORT).show();
             }
-        }else if(currentPacket.getService().equals(Constants.SERVICE_CONFIG)){
-            if(BuildConfig.DEBUG){
-                Log.d(LOGTAG,"Config");
-            }
-            session.setConfig(gson.fromJson(currentPacket.getPayload(), Config.class));
-        }else if(currentPacket.getService().equals(Constants.SERVICE_RESPONSE)){
-            if(BuildConfig.DEBUG){
-                Log.d(LOGTAG,"Response");
-            }
-            PiResponse piResponse = gson.fromJson(currentPacket.getPayload(), PiResponse.class);
-            Toast.makeText(mContext, piResponse.getMsg_response(), Toast.LENGTH_SHORT).show();
         }
     }
 }

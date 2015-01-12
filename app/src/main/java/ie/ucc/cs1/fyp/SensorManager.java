@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-import ie.ucc.cs1.fyp.Model.CurrentSensorOutputs;
+import ie.ucc.cs1.fyp.Model.CurrentSensorValues;
 import ie.ucc.cs1.fyp.Model.SensorOutput;
 import ie.ucc.cs1.fyp.Network.API;
 
@@ -19,7 +19,7 @@ public class SensorManager {
 
     private static SensorManager __instance = null;
     private ArrayList<SensorOutput> sensorOutputs;
-    private CurrentSensorOutputs currentSensorOutputs;
+    private CurrentSensorValues currentSensorValues;
 
     private Gson gson;
 
@@ -36,24 +36,24 @@ public class SensorManager {
     }
 
     public void updateSensorOutputs(String sensorOutputs){
-         currentSensorOutputs = gson.fromJson(sensorOutputs, CurrentSensorOutputs.class);
+         currentSensorValues = gson.fromJson(sensorOutputs, CurrentSensorValues.class);
     }
 
-    public void setCurrentSensorOutputs(CurrentSensorOutputs currentSensorOutputs) {
-        this.currentSensorOutputs = currentSensorOutputs;
+    public void setCurrentSensorValues(CurrentSensorValues currentSensorValues) {
+        this.currentSensorValues = currentSensorValues;
     }
 
-    public CurrentSensorOutputs getCurrentSensorOutputs() {
-        return currentSensorOutputs;
+    public CurrentSensorValues getCurrentSensorValues() {
+        return currentSensorValues;
     }
 
     public ArrayList<SensorOutput> getCurrentSensorOutputsList() {
         ArrayList<SensorOutput> sensorOutputs = new ArrayList<SensorOutput>();
-        if(currentSensorOutputs != null){
-            sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_MQ7, Constants.SENSOR_MEASUREMENT_PPM, currentSensorOutputs.getCarbon_monoxide()));
-            sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_MQ2, Constants.SENSOR_MEASUREMENT_PPM, currentSensorOutputs.getFlammable_gas()));
-            sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_MOTION, "", currentSensorOutputs.getMotion()));
-            sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_THERMISTOR, Constants.SENSOR_MEASUREMENT_CELCIUS, currentSensorOutputs.getTemperature()));
+        if(currentSensorValues != null){
+            sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_MQ7, Constants.SENSOR_MEASUREMENT_PPM, currentSensorValues.getCarbon_monoxide()));
+            sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_MQ2, Constants.SENSOR_MEASUREMENT_PPM, currentSensorValues.getFlammable_gas()));
+            sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_MOTION, "", currentSensorValues.getMotion()));
+            sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_THERMISTOR, Constants.SENSOR_MEASUREMENT_CELCIUS, currentSensorValues.getTemperature()));
         }else{
             sensorOutputs = Utils.randomSensorOutput();
         }
@@ -61,15 +61,15 @@ public class SensorManager {
         return sensorOutputs;
     }
 
-    public static class NetworkResponseListener implements Response.Listener<CurrentSensorOutputs> {
+    public static class NetworkResponseListener implements Response.Listener<CurrentSensorValues> {
 
         @Override
-        public void onResponse(CurrentSensorOutputs response) {
+        public void onResponse(CurrentSensorValues response) {
             Utils.methodDebug(LOGTAG);
             if(BuildConfig.DEBUG){
                 Log.d(LOGTAG, Utils.toJson(response));
             }
-            ie.ucc.cs1.fyp.SensorManager.getInstance().setCurrentSensorOutputs(response);
+            ie.ucc.cs1.fyp.SensorManager.getInstance().setCurrentSensorValues(response);
         }
     }
 }
