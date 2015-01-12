@@ -1,16 +1,21 @@
 package ie.ucc.cs1.fyp;
 
+import android.util.Log;
+
+import com.android.volley.Response;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
 import ie.ucc.cs1.fyp.Model.CurrentSensorOutputs;
 import ie.ucc.cs1.fyp.Model.SensorOutput;
+import ie.ucc.cs1.fyp.Network.API;
 
 /**
  * Created by kpmmmurphy on 09/01/15.
  */
 public class SensorManager {
+    private static final String LOGTAG = API.class.getSimpleName();
 
     private static SensorManager __instance = null;
     private ArrayList<SensorOutput> sensorOutputs;
@@ -34,6 +39,10 @@ public class SensorManager {
          currentSensorOutputs = gson.fromJson(sensorOutputs, CurrentSensorOutputs.class);
     }
 
+    public void setCurrentSensorOutputs(CurrentSensorOutputs currentSensorOutputs) {
+        this.currentSensorOutputs = currentSensorOutputs;
+    }
+
     public CurrentSensorOutputs getCurrentSensorOutputs() {
         return currentSensorOutputs;
     }
@@ -50,5 +59,17 @@ public class SensorManager {
         }
 
         return sensorOutputs;
+    }
+
+    public static class NetworkResponseListener implements Response.Listener<CurrentSensorOutputs> {
+
+        @Override
+        public void onResponse(CurrentSensorOutputs response) {
+            Utils.methodDebug(LOGTAG);
+            if(BuildConfig.DEBUG){
+                Log.d(LOGTAG, Utils.toJson(response));
+            }
+            ie.ucc.cs1.fyp.SensorManager.getInstance().setCurrentSensorOutputs(response);
+        }
     }
 }

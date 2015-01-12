@@ -13,6 +13,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Adapter.GridTileAdapter;
 import ie.ucc.cs1.fyp.Model.SensorOutput;
+import ie.ucc.cs1.fyp.Network.API;
 import ie.ucc.cs1.fyp.Socket.Session;
 
 /**
@@ -83,6 +84,9 @@ public class SensorFragment extends Fragment {
             sensorValueReadThread.start();
         }else{
             //Networking Stuff
+            API.getInstance(getActivity()).requestSensorValues(null);
+            gridTileAdapter.setSensorOutputs(SensorManager.getInstance().getCurrentSensorOutputsList());
+            gridTileAdapter.notifyDataSetChanged();
         }
     }
 
