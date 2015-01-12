@@ -26,7 +26,7 @@ import ie.ucc.cs1.fyp.Utils;
  */
 public class API {
     private static final String LOGTAG = API.class.getSimpleName();
-    private static final String URL = "https://cs1.ucc.ie/fyp/api/api_manager.php";
+    private static final String URL = "http://cs1.ucc.ie/~kpm2/fyp/api/api_manager.php";
 
     private static API __instance;
     private RequestQueue queue;

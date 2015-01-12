@@ -168,52 +168,53 @@ public class ControlFragment extends Fragment{
 
     private void fillFields(){
         Config config = Session.getInstance(getActivity()).getConfig();
-
-        /*System Details*/
-        systemName.setText(config.getSystemDetailsManager().getName());
-        systemLocation.setText(config.getSystemDetailsManager().getLocation());
-        systemLat.setText(config.getSystemDetailsManager().getGps_lat());
-        systemLng.setText(config.getSystemDetailsManager().getGps_lng());
+        if (config != null){
+            /*System Details*/
+            systemName.setText(config.getSystemDetailsManager().getName());
+            systemLocation.setText(config.getSystemDetailsManager().getLocation());
+            systemLat.setText(config.getSystemDetailsManager().getGps_lat());
+            systemLng.setText(config.getSystemDetailsManager().getGps_lng());
 
         /*API Manager*/
-        cameraUploadRate.setText(String.valueOf(config.getApiManager().getCamera_image_upload_rate()));
-        sensorValueUploadRate.setText(String.valueOf(config.getApiManager().getSensor_value_upload_rate()));
-        systemConfigRate.setText(String.valueOf(config.getApiManager().getSys_config_request_rate()));
+            cameraUploadRate.setText(String.valueOf(config.getApiManager().getCamera_image_upload_rate()));
+            sensorValueUploadRate.setText(String.valueOf(config.getApiManager().getSensor_value_upload_rate()));
+            systemConfigRate.setText(String.valueOf(config.getApiManager().getSys_config_request_rate()));
 
         /*Alert Manager*/
-        buzzerOn.setChecked(config.getAlertManager().isBuzzer_on());
-        camereOn.setChecked(config.getAlertManager().isCamera_on());
-        videoMode.setChecked(config.getAlertManager().isVideo_mode());
+            buzzerOn.setChecked(config.getAlertManager().isBuzzer_on());
+            camereOn.setChecked(config.getAlertManager().isCamera_on());
+            videoMode.setChecked(config.getAlertManager().isVideo_mode());
 
         /*Sensor Manager*/
-        collectionRate.setText(String.valueOf(config.getSensorManager().getCollection_rate()));
-        collectionPriorty.setText(String.valueOf(config.getSensorManager().getCollection_priority()));
+            collectionRate.setText(String.valueOf(config.getSensorManager().getCollection_rate()));
+            collectionPriorty.setText(String.valueOf(config.getSensorManager().getCollection_priority()));
 
         /*Access Point Manager*/
-        sensorValueSendRate.setText(String.valueOf(config.getWifiDirectManager().getSensor_value_send_rate()));
+            sensorValueSendRate.setText(String.valueOf(config.getWifiDirectManager().getSensor_value_send_rate()));
 
         /*----SENSORS----*/
-        for(Sensor sensor : config.getSensors()){
-            if(sensor.getName().equalsIgnoreCase(Constants.SENSOR_NAME_MQ7)){
-                mq7AlertThreshold.setText(String.valueOf(sensor.getAlert_threshold()));
-                mq7IsActive.setChecked(sensor.isIs_active());
-                mq7Priority.setText(String.valueOf(sensor.getPriority()));
-                mq7ProbeRate.setText(String.valueOf(sensor.getProbe_rate()));
-            }else if(sensor.getName().equalsIgnoreCase(Constants.SENSOR_NAME_MQ2)){
-                mq2AlertThreshold.setText(String.valueOf(sensor.getAlert_threshold()));
-                mq2IsActive.setChecked(sensor.isIs_active());
-                mq2Priority.setText(String.valueOf(sensor.getPriority()));
-                mq2ProbeRate.setText(String.valueOf(sensor.getProbe_rate()));
-            }else if(sensor.getName().equalsIgnoreCase(Constants.SENSOR_NAME_THERMISTOR)){
-                thermistorAlertThreshold.setText(String.valueOf(sensor.getAlert_threshold()));
-                thermistorIsActive.setChecked(sensor.isIs_active());
-                thermistorPriority.setText(String.valueOf(sensor.getPriority()));
-                thermistorProbeRate.setText(String.valueOf(sensor.getProbe_rate()));
-            }else if(sensor.getName().equalsIgnoreCase(Constants.SENSOR_NAME_MOTION)){
-                motionAlertThreshold.setText(String.valueOf(sensor.getAlert_threshold()));
-                motionIsActive.setChecked(sensor.isIs_active());
-                motionPriority.setText(String.valueOf(sensor.getPriority()));
-                motionProbeRate.setText(String.valueOf(sensor.getProbe_rate()));
+            for(Sensor sensor : config.getSensors()){
+                if(sensor.getName().equalsIgnoreCase(Constants.SENSOR_NAME_MQ7)){
+                    mq7AlertThreshold.setText(String.valueOf(sensor.getAlert_threshold()));
+                    mq7IsActive.setChecked(sensor.isIs_active());
+                    mq7Priority.setText(String.valueOf(sensor.getPriority()));
+                    mq7ProbeRate.setText(String.valueOf(sensor.getProbe_rate()));
+                }else if(sensor.getName().equalsIgnoreCase(Constants.SENSOR_NAME_MQ2)){
+                    mq2AlertThreshold.setText(String.valueOf(sensor.getAlert_threshold()));
+                    mq2IsActive.setChecked(sensor.isIs_active());
+                    mq2Priority.setText(String.valueOf(sensor.getPriority()));
+                    mq2ProbeRate.setText(String.valueOf(sensor.getProbe_rate()));
+                }else if(sensor.getName().equalsIgnoreCase(Constants.SENSOR_NAME_THERMISTOR)){
+                    thermistorAlertThreshold.setText(String.valueOf(sensor.getAlert_threshold()));
+                    thermistorIsActive.setChecked(sensor.isIs_active());
+                    thermistorPriority.setText(String.valueOf(sensor.getPriority()));
+                    thermistorProbeRate.setText(String.valueOf(sensor.getProbe_rate()));
+                }else if(sensor.getName().equalsIgnoreCase(Constants.SENSOR_NAME_MOTION)){
+                    motionAlertThreshold.setText(String.valueOf(sensor.getAlert_threshold()));
+                    motionIsActive.setChecked(sensor.isIs_active());
+                    motionPriority.setText(String.valueOf(sensor.getPriority()));
+                    motionProbeRate.setText(String.valueOf(sensor.getProbe_rate()));
+                }
             }
         }
     }

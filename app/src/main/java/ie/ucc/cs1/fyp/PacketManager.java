@@ -46,7 +46,7 @@ public class PacketManager {
                 if(BuildConfig.DEBUG){
                     Log.d(LOGTAG,"Config");
                 }
-                //session.setConfig(gson.fromJson(packet.getPayload(), Config.class));
+                session.setConfig(packet.getPayload().getConfig());
             }else if(packet.getService().equals(Constants.SERVICE_RESPONSE)){
                 if(BuildConfig.DEBUG){
                     Log.d(LOGTAG,"Response");
