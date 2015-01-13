@@ -41,7 +41,7 @@ public class Session {
         device_id = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
         time_stamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
 
-        new LoadConfigTask().execute();
+        //new LoadConfigTask().execute();
     }
 
     public static Session getInstance(Context context){

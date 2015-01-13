@@ -78,7 +78,6 @@ public class TabsAdaptor extends FragmentPagerAdapter implements ActionBar.TabLi
 
     @Override
     public int getCount() {
-        Utils.methodDebug(LOGTAG);
         return mTabs.size();
     }
 

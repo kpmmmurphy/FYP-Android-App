@@ -127,11 +127,11 @@ public class ControlFragment extends Fragment{
             public void onClick(View view) {
                 if(BuildConfig.DEBUG){
                     Log.d(LOGTAG, "Submitting Config");
-                    if(!Session.getInstance(getActivity().getApplicationContext()).isConnectedToPi()){
+                    if(Session.getInstance(getActivity().getApplicationContext()).isConnectedToPi()){
                         Payload payload =  new Payload();
                         payload.setConfig(Session.getInstance(getActivity()).getConfig());
                         Packet configPacket = new Packet(Constants.SERVICE_CONFIG , payload);
-                        SocketManager.getInstance(getActivity().getApplicationContext()).sendPacketToPi(Utils.toJson(configPacket));
+                        SocketManager.getInstance(getActivity()).sendPacketToPi(Utils.toJson(configPacket));
                     }else{
                         //API...
                     }
