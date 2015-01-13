@@ -1,23 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Default_Fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <GridView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/gv_sensor"
-        android:columnWidth="@dimen/grid_item_width"
-        android:numColumns="auto_fit"
-        android:verticalSpacing="8dp"
-        android:horizontalSpacing="8dp"
-        android:orientation="horizontal"
-        android:stretchMode="columnWidth"
-        android:gravity="center_horizontal|center_vertical"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <GridView
+            android:id="@+id/gv_sensor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:columnWidth="@dimen/grid_item_width"
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:horizontalSpacing="8dp"
+            android:numColumns="auto_fit"
+            android:orientation="horizontal"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="8dp" />
+
+
+        <TextView
+            android:id="@+id/tv_last_updated"
+            style="@style/Text_GridItemName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="32dp"
+            android:padding="30dp"
+            android:text="Tuesday 13 Jan :: 10:24" />
+
+        </FrameLayout>
 
 </RelativeLayout>

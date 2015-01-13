@@ -5,6 +5,10 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import ie.ucc.cs1.fyp.Model.CurrentSensorValues;
 import ie.ucc.cs1.fyp.Model.Packet;
 import ie.ucc.cs1.fyp.Socket.Session;
 
@@ -38,7 +42,9 @@ public class PacketManager {
         }
         if(packet != null){
             if (packet.getService().equals(Constants.SERVICE_SENSOR_DATA)){
-                SensorManager.getInstance().setCurrentSensorValues(packet.getPayload().getCurrentSensorOutputs());
+                CurrentSensorValues currentSensorOutputs = packet.getPayload().getCurrentSensorOutputs();
+                currentSensorOutputs.setTime_stamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()));
+                SensorManager.getInstance().setCurrentSensorValues(currentSensorOutputs);
                 if(BuildConfig.DEBUG){
                     Log.d(LOGTAG,"Sensor Data");
                 }

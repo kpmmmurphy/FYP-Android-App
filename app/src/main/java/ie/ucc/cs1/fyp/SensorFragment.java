@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -26,6 +27,9 @@ public class SensorFragment extends Fragment {
 
     @InjectView(R.id.gv_sensor)
     GridView mGridView;
+    @InjectView(R.id.tv_last_updated)
+    TextView tvLastUpdated;
+
     private GridTileAdapter gridTileAdapter;
 
     private ArrayList<SensorOutput> sensorOutputs;
@@ -71,10 +75,11 @@ public class SensorFragment extends Fragment {
                             public void run() {
                                 gridTileAdapter.setSensorOutputs(SensorManager.getInstance().getCurrentSensorOutputsList());
                                 gridTileAdapter.notifyDataSetChanged();
+                                tvLastUpdated.setText(SensorManager.getInstance().getCurrentSensorValues().getTime_stamp());
                             }
                         });
                         try {
-                            Thread.sleep(2000);
+                            Thread.sleep(500);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
