@@ -95,6 +95,11 @@ public class SocketManager {
                 }
 
                 serverSocket = createServerSocket(ourIP);
+                try {
+                    serverSocket.setSoTimeout(ACK_SOCKET_TIMEOUT);
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                }
                 //Now wait for ACK
                 Socket ackSocket = serverSocket.accept();
                 if (BuildConfig.DEBUG){
@@ -235,13 +240,8 @@ public class SocketManager {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            Log.e(LOGTAG, "vskjnvsd");
             serverSocket = createServerSocket(ourIP);
-            try {
-                serverSocket.setSoTimeout(ACK_SOCKET_TIMEOUT);
-            } catch (SocketException e) {
-                e.printStackTrace();
-            }
+
 
             return null;
         }

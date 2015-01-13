@@ -129,7 +129,7 @@ public class ControlFragment extends Fragment{
                     Log.d(LOGTAG, "Submitting Config");
                     if(Session.getInstance(getActivity().getApplicationContext()).isConnectedToPi()){
                         Payload payload =  new Payload();
-                        payload.setConfig(Session.getInstance(getActivity()).getConfig());
+                        payload.setConfig(gatherInput());
                         Packet configPacket = new Packet(Constants.SERVICE_CONFIG , payload);
                         SocketManager.getInstance(getActivity()).sendPacketToPi(Utils.toJson(configPacket));
                     }else{
@@ -219,8 +219,8 @@ public class ControlFragment extends Fragment{
         }
     }
 
-    protected String gatherInput(){
-        Config config = Session.getInstance(getActivity()).getConfig();
+    protected Config gatherInput(){
+        Config config = new Config();
 
         /*System Details*/
         config.getSystemDetailsManager().setName(systemName.getText().toString());
@@ -274,6 +274,7 @@ public class ControlFragment extends Fragment{
         if (BuildConfig.DEBUG){
             Log.d(LOGTAG, configString);
         }
-        return configString;
+        Session.getInstance(getActivity()).setConfig(config);
+        return config;
     }
 }

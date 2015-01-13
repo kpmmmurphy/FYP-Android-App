@@ -26,6 +26,15 @@ public class Config {
     @SerializedName("api_manager")
     APIManager apiManager;
 
+    public Config(){
+        sensorManager = new SensorManager();
+        systemDetailsManager = new SystemDetailsManager();
+        wifiDirectManager = new WifiDirectManager();
+        alertManager      = new AlertManager();
+        sensors = new ArrayList<Sensor>();
+        apiManager = new APIManager();
+    }
+
     public SensorManager getSensorManager() {
         return sensorManager;
     }
