@@ -10,12 +10,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Model.Config;
 import ie.ucc.cs1.fyp.Model.Packet;
 import ie.ucc.cs1.fyp.Model.Payload;
 import ie.ucc.cs1.fyp.Model.Sensor;
+import ie.ucc.cs1.fyp.Network.API;
 import ie.ucc.cs1.fyp.Socket.Session;
 import ie.ucc.cs1.fyp.Socket.SocketManager;
 
@@ -153,11 +157,11 @@ public class ControlFragment extends Fragment{
         Utils.methodDebug(LOGTAG);
         if(Session.getInstance(getActivity()).isConnectedToPi()){
             //Session.getInstance(getActivity()).getConfig();
-
+            fillFields(null);
         }else{
             //API
+            API.getInstance(getActivity()).requestSystemConfig(successListener, errorListener);
         }
-        fillFields();
     }
 
     @Override
@@ -166,8 +170,11 @@ public class ControlFragment extends Fragment{
         Utils.methodDebug(LOGTAG);
     }
 
-    private void fillFields(){
-        Config config = Session.getInstance(getActivity()).getConfig();
+    private void fillFields(Config config){
+
+        if(config == null)
+            config = Session.getInstance(getActivity()).getConfig();
+
         if (config != null){
             /*System Details*/
             systemName.setText(config.getSystemDetailsManager().getName());
@@ -246,6 +253,7 @@ public class ControlFragment extends Fragment{
         config.getAlertManager().setVideo_mode(videoMode.isChecked());
 
         /*----SENSORS----*/
+        //TODO -- Create individual sensors
         for(Sensor sensor : config.getSensors()){
             if(sensor.getName().equalsIgnoreCase(Constants.SENSOR_NAME_MQ7)){
                 sensor.setAlert_threshold(Integer.valueOf(mq7AlertThreshold.getText().toString()));
@@ -277,4 +285,20 @@ public class ControlFragment extends Fragment{
         Session.getInstance(getActivity()).setConfig(config);
         return config;
     }
+
+    private Response.Listener<Config> successListener = new Response.Listener<Config>() {
+        @Override
+        public void onResponse(Config response) {
+            Utils.methodDebug(LOGTAG);
+            fillFields(response);
+        }
+    };
+
+    private Response.ErrorListener errorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Utils.methodDebug(LOGTAG);
+        }
+    };
+
 }

@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ie.ucc.cs1.fyp.Constants;
+import ie.ucc.cs1.fyp.Model.Config;
 import ie.ucc.cs1.fyp.Model.CurrentSensorValuesFromServer;
 import ie.ucc.cs1.fyp.Utils;
 
@@ -56,7 +57,7 @@ public class API {
     }
 
     //--REQUESTS
-    public void requestSensorValues(Response.Listener<CurrentSensorValuesFromServer> listener, Response.ErrorListener errorListener){
+     public void requestSensorValues(Response.Listener<CurrentSensorValuesFromServer> listener, Response.ErrorListener errorListener){
         Utils.methodDebug(LOGTAG);
 
         Map<String, String> headers = new HashMap<String, String>();
@@ -65,6 +66,19 @@ public class API {
         GsonRequest<CurrentSensorValuesFromServer> sensorValueRequest = new GsonRequest<CurrentSensorValuesFromServer>(URL, CurrentSensorValuesFromServer.class, headers, listener, errorListener);
         addToQueue(sensorValueRequest);
     }
+
+    public void requestSystemConfig(Response.Listener<Config> listener, Response.ErrorListener errorListener){
+        Utils.methodDebug(LOGTAG);
+
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put(Constants.API_REQUEST_HEADER_SERVICE, Constants.API_REQUEST_SERVICE_GET_CONFIG);
+
+        GsonRequest<Config> configGsonRequest = new GsonRequest<Config>(URL, Config.class, headers, listener, errorListener);
+        addToQueue(configGsonRequest);
+    }
+
+    //Must updated API manager to give back formatted responses.
+    //public void uploadSystemConfig(Response.Listener<>)
 
     public void addToQueue(Request req){
         req.setTag(Constants.LOGTAG);
