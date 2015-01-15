@@ -50,6 +50,9 @@
     <string name="config_sensor_probe_rate">Probe Rate</string>
     <string name="config_sensor_priority">Priority</string>
 
+    <!--General-->
+    <string name="sensor_last_updated">Last Updated :: </string>
+    
     <string-array name="boolean_array">
         <item>On</item>
         <item>Off</item>

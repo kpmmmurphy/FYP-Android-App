@@ -1,5 +1,7 @@
 package ie.ucc.cs1.fyp.Network;
 
+import android.util.Log;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -12,6 +14,7 @@ import com.google.gson.JsonSyntaxException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
+import ie.ucc.cs1.fyp.BuildConfig;
 import ie.ucc.cs1.fyp.Utils;
 
 /**
@@ -42,6 +45,12 @@ public class GsonRequest<T> extends Request<T> {
         Utils.methodDebug(LOGTAG);
         try{
             String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+            //For some reason, my API PHP manager is producing responses encapsulated with '[]'
+            //Just remove the first and last chars should do the trick
+            json = json.substring(1 , json.length() - 1);
+            if(BuildConfig.DEBUG){
+                Log.d(LOGTAG, "Response :: " + json);
+            }
             //Do not set the cache...
             return Response.success(gson.fromJson(json, clazz), null);
         }catch (UnsupportedEncodingException ex){

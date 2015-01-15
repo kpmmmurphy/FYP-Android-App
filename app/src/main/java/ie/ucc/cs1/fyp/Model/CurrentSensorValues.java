@@ -5,11 +5,20 @@ package ie.ucc.cs1.fyp.Model;
  */
 public class CurrentSensorValues {
 
-    protected String time_stamp;
+    protected String id;
+    protected String data_and_time;
     protected int temperature;
     protected int carbon_monoxide;
     protected int motion;
     protected int flammable_gas;
+
+    public CurrentSensorValues(String data_and_time, int temperature, int carbon_monoxide, int motion, int flammable_gas) {
+        this.data_and_time = data_and_time;
+        this.temperature = temperature;
+        this.carbon_monoxide = carbon_monoxide;
+        this.motion = motion;
+        this.flammable_gas = flammable_gas;
+    }
 
     public int getTemperature() {
         return temperature;
@@ -43,11 +52,19 @@ public class CurrentSensorValues {
         this.flammable_gas = flammable_gas;
     }
 
-    public String getTime_stamp() {
-        return time_stamp;
+    public String getId() {
+        return id;
     }
 
-    public void setTime_stamp(String time_stamp) {
-        this.time_stamp = time_stamp;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getData_and_time() {
+        return data_and_time;
+    }
+
+    public void setData_and_time(String data_and_time) {
+        this.data_and_time = data_and_time;
     }
 }

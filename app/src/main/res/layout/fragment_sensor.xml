@@ -30,8 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_marginTop="32dp"
-            android:padding="30dp"
-            android:text="Tuesday 13 Jan :: 10:24" />
+            android:padding="30dp" />
 
         </FrameLayout>
 

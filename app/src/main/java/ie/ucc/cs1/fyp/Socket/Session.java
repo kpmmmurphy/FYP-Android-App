@@ -44,7 +44,7 @@ public class Session {
         //new LoadConfigTask().execute();
     }
 
-    public static Session getInstance(Context context){
+    public static synchronized Session getInstance(Context context){
         if (__instance  == null){
             __instance = new Session(context);
             Log.d(LOGTAG, new GsonBuilder().create().toJson(__instance));

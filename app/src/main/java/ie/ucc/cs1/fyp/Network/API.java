@@ -2,7 +2,6 @@ package ie.ucc.cs1.fyp.Network;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.util.LruCache;
 
 import com.android.volley.Request;
@@ -14,9 +13,8 @@ import com.android.volley.toolbox.Volley;
 import java.util.HashMap;
 import java.util.Map;
 
-import ie.ucc.cs1.fyp.BuildConfig;
 import ie.ucc.cs1.fyp.Constants;
-import ie.ucc.cs1.fyp.Model.CurrentSensorValues;
+import ie.ucc.cs1.fyp.Model.CurrentSensorValuesFromServer;
 import ie.ucc.cs1.fyp.Utils;
 
 /**
@@ -49,7 +47,7 @@ public class API {
         });
     }
 
-    public static API getInstance(Context context){
+    public static synchronized API getInstance(Context context){
         Utils.methodDebug(LOGTAG);
         if (__instance == null){
             __instance = new API(context);
@@ -58,26 +56,17 @@ public class API {
     }
 
     //--REQUESTS
-    public void requestSensorValues(Response.ErrorListener errorListener){
+    public void requestSensorValues(Response.Listener<CurrentSensorValuesFromServer> listener, Response.ErrorListener errorListener){
         Utils.methodDebug(LOGTAG);
+
         Map<String, String> headers = new HashMap<String, String>();
         headers.put(Constants.API_REQUEST_HEADER_SERVICE, Constants.API_REQUEST_SERVICE_GET_SENSOR_VALUES);
 
-        GsonRequest sensorValueRequest = new GsonRequest(URL, CurrentSensorValues.class, headers, new Response.Listener<CurrentSensorValues>(){
-
-            @Override
-            public void onResponse(CurrentSensorValues response) {
-                Utils.methodDebug(LOGTAG);
-                if(BuildConfig.DEBUG){
-                    Log.d(LOGTAG, Utils.toJson(response));
-                }
-                ie.ucc.cs1.fyp.SensorManager.getInstance().setCurrentSensorValues(response);
-            }
-        },errorListener);
+        GsonRequest<CurrentSensorValuesFromServer> sensorValueRequest = new GsonRequest<CurrentSensorValuesFromServer>(URL, CurrentSensorValuesFromServer.class, headers, listener, errorListener);
         addToQueue(sensorValueRequest);
     }
 
-    public void addToQueue(Request<Object> req){
+    public void addToQueue(Request req){
         req.setTag(Constants.LOGTAG);
         getQueue().add(req);
     }

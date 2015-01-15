@@ -66,7 +66,7 @@ public class SocketManager {
         ourIP = Session.getInstance(mContext).getIp_address();
     }
 
-    public static SocketManager getInstance(Context context){
+    public static synchronized SocketManager getInstance(Context context){
         if(__instance == null){
             __instance = new SocketManager(context);
         }

@@ -8,11 +8,15 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Adapter.GridTileAdapter;
+import ie.ucc.cs1.fyp.Model.CurrentSensorValuesFromServer;
 import ie.ucc.cs1.fyp.Model.SensorOutput;
 import ie.ucc.cs1.fyp.Network.API;
 import ie.ucc.cs1.fyp.Socket.Session;
@@ -50,6 +54,8 @@ public class SensorFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_sensor, container, false);
         ButterKnife.inject(this, view);
+        gridTileAdapter = new GridTileAdapter(getActivity().getApplicationContext(), Utils.randomSensorOutput());
+        mGridView.setAdapter(gridTileAdapter);
         return view;
     }
 
@@ -57,47 +63,80 @@ public class SensorFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Utils.methodDebug(LOGTAG);
-        gridTileAdapter = new GridTileAdapter(getActivity().getApplicationContext(), Utils.randomSensorOutput());
-        mGridView.setAdapter(gridTileAdapter);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         Utils.methodDebug(LOGTAG);
-        if(Session.getInstance(getActivity()).isConnectedToPi()){
-            sensorValueReadThread = new Thread(){
-                @Override
-                public void run() {
-                    while (!this.isInterrupted()){
-                        getActivity().runOnUiThread( new Runnable() {
+
+        sensorValueReadThread = new Thread() {
+            @Override
+            public void run() {
+                while (!Thread.currentThread().isInterrupted()) {
+
+                    if (!Session.getInstance(getActivity()).isConnectedToPi()) {
+                        //Networking Stuff
+                        API.getInstance(getActivity()).requestSensorValues(successListener, errorListener);
+                    }else{
+                        getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                gridTileAdapter.setSensorOutputs(SensorManager.getInstance().getCurrentSensorOutputsList());
-                                gridTileAdapter.notifyDataSetChanged();
-                                tvLastUpdated.setText(SensorManager.getInstance().getCurrentSensorValues().getTime_stamp());
+                                refreshValues();
                             }
                         });
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                    }
+
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
-            };
-            sensorValueReadThread.start();
-        }else{
-            //Networking Stuff
-            API.getInstance(getActivity()).requestSensorValues(null);
-            gridTileAdapter.setSensorOutputs(SensorManager.getInstance().getCurrentSensorOutputsList());
-            gridTileAdapter.notifyDataSetChanged();
-        }
+            }
+        };
+        sensorValueReadThread.start();
     }
+
 
     @Override
     public void onPause() {
         super.onPause();
         Utils.methodDebug(LOGTAG);
+        sensorValueReadThread.interrupt();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        sensorValueReadThread = null;
+    }
+
+    //--API Listeners
+    private Response.Listener<CurrentSensorValuesFromServer> successListener = new Response.Listener<CurrentSensorValuesFromServer>() {
+        @Override
+        public void onResponse(CurrentSensorValuesFromServer response) {
+            Utils.methodDebug(LOGTAG);
+            SensorValueManager.getInstance().setCurrentSensorValuesFromServer(response);
+            refreshValues();
+        }
+    };
+
+    private Response.ErrorListener errorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Utils.methodDebug(LOGTAG);
+            if (BuildConfig.DEBUG) {
+                error.printStackTrace();
+            }
+        }
+    };
+
+    private void refreshValues() {
+        gridTileAdapter.setSensorOutputs(SensorValueManager.getInstance().getCurrentSensorOutputsList());
+        gridTileAdapter.notifyDataSetChanged();
+        if (SensorValueManager.getInstance().getCurrentSensorValues() != null){
+            tvLastUpdated.setText(getString(R.string.sensor_last_updated) + " " + SensorValueManager.getInstance().getCurrentSensorValues().getData_and_time());
+        }
     }
 }

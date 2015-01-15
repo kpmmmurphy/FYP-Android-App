@@ -43,8 +43,8 @@ public class PacketManager {
         if(packet != null){
             if (packet.getService().equals(Constants.SERVICE_SENSOR_DATA)){
                 CurrentSensorValues currentSensorOutputs = packet.getPayload().getCurrentSensorOutputs();
-                currentSensorOutputs.setTime_stamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()));
-                SensorManager.getInstance().setCurrentSensorValues(currentSensorOutputs);
+                currentSensorOutputs.setData_and_time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()));
+                SensorValueManager.getInstance().setCurrentSensorValues(currentSensorOutputs);
                 if(BuildConfig.DEBUG){
                     Log.d(LOGTAG,"Sensor Data");
                 }
