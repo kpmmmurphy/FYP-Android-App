@@ -8,12 +8,14 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import ie.ucc.cs1.fyp.Constants;
+import ie.ucc.cs1.fyp.Model.CameraResponse;
 import ie.ucc.cs1.fyp.Model.Config;
 import ie.ucc.cs1.fyp.Model.CurrentSensorValuesFromServer;
 import ie.ucc.cs1.fyp.Utils;
@@ -75,6 +77,20 @@ public class API {
 
         GsonRequest<Config> configGsonRequest = new GsonRequest<Config>(URL, Config.class, headers, listener, errorListener);
         addToQueue(configGsonRequest);
+    }
+
+    public void requestListImages(Response.Listener<CameraResponse> listener, Response.ErrorListener errorListener){
+        Utils.methodDebug(LOGTAG);
+
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put(Constants.API_REQUEST_HEADER_SERVICE, Constants.API_REQUEST_SERVICE_LIST_IMAGES);
+
+        GsonRequest<CameraResponse> listImageRequest = new GsonRequest<CameraResponse>(URL, CameraResponse.class, headers, listener, errorListener);
+        addToQueue(listImageRequest);
+    }
+
+    public void requestImage(String url, NetworkImageView nIV){
+        nIV.setImageUrl(url, imageLoader);
     }
 
     //Must updated API manager to give back formatted responses.

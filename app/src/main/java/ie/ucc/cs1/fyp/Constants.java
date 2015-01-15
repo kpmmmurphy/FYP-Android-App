@@ -56,4 +56,5 @@ public interface Constants {
     public final static String API_REQUEST_HEADER_SERVICE            = "service";
     public final static String API_REQUEST_SERVICE_GET_SENSOR_VALUES = "get_sensor_values";
     public final static String API_REQUEST_SERVICE_GET_CONFIG        = "get_config";
+    public final static String API_REQUEST_SERVICE_LIST_IMAGES       = "list_images";
 }

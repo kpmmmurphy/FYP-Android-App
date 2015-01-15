@@ -5,11 +5,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="wrap_content"
+    <!--<ImageView
+        android:id="@+id/iv_selected_image"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/icn_camera"
-        android:layout_centerVertical="true"
+        android:layout_marginTop="64dp"
+        android:layout_centerHorizontal="true"/>-->
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/iv_current_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icn_camera"
+        android:layout_marginTop="64dp"
         android:layout_centerHorizontal="true"/>
+
+    <ScrollView
+        android:layout_below="@id/iv_current_image"
+        android:layout_width="fill_parent"
+        android:layout_height="128dp">
+        <LinearLayout
+            android:id="@+id/sv_recent_images"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            </LinearLayout>
+
+        </ScrollView>
 
 </RelativeLayout>
