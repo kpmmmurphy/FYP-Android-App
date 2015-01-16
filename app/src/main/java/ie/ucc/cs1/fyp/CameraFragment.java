@@ -2,7 +2,6 @@ package ie.ucc.cs1.fyp;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,8 +70,9 @@ public class CameraFragment extends Fragment{
         @Override
         public void onResponse(CameraResponse response) {
             Utils.methodDebug(LOGTAG);
-            if (BuildConfig.DEBUG){
-                Log.e(LOGTAG, String.valueOf(response.getImages().size()));
+            if(response.getImages() != null){
+                response.getImages().remove(".");
+                response.getImages().remove("..");
             }
         }
     };
