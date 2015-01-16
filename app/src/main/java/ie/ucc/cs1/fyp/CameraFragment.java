@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -33,6 +34,12 @@ public class CameraFragment extends Fragment{
     NetworkImageView currentImage;
     @InjectView(R.id.sv_recent_images)
     LinearLayout recentImages;
+    @InjectView(R.id.tv_image_time_and_date)
+    TextView imageTimeAndDate;
+    @InjectView(R.id.camera_fragment_error_layout)
+    LinearLayout errorLayout;
+    @InjectView(R.id.camera_fragment_error_text)
+    TextView errorText;
 
     public CameraFragment() {
         Utils.methodDebug(LOGTAG);
@@ -79,23 +86,35 @@ public class CameraFragment extends Fragment{
             if(imgList != null){
                 imgList.remove(".");
                 imgList.remove("..");
-                Collections.reverse(imgList);
+                if(imgList.size() > 0){
+                    errorLayout.setVisibility(View.GONE);
+                    Collections.reverse(imgList);
 
-                for(String imagePath : imgList){
-                    NetworkImageView nIV = new NetworkImageView(getActivity());
-                    nIV.setLayoutParams(new ViewGroup.LayoutParams(450, ViewGroup.LayoutParams.MATCH_PARENT));
-                    API.getInstance(getActivity()).requestImage(CAMERA_URL + imagePath, nIV);
-                    if(response.getImages().indexOf(imagePath) == 0){
-                        API.getInstance(getActivity()).requestImage(CAMERA_URL + imagePath, currentImage);
-                    }
-                    nIV.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            String urlOfImg = CAMERA_URL + imgList.get(recentImages.indexOfChild(view));
-                            API.getInstance(getActivity()).requestImage(urlOfImg, currentImage);
+                    for(final String imagePath : imgList){
+                        NetworkImageView nIV = new NetworkImageView(getActivity());
+                        nIV.setLayoutParams(new ViewGroup.LayoutParams(450, ViewGroup.LayoutParams.MATCH_PARENT));
+                        nIV.setPadding(5, 5, 5, 5);
+                        API.getInstance(getActivity()).requestImage(CAMERA_URL + imagePath, nIV);
+                        if(response.getImages().indexOf(imagePath) == 0){
+                            API.getInstance(getActivity()).requestImage(CAMERA_URL + imagePath, currentImage);
+                            imageTimeAndDate.setText(imagePath.substring(0, imagePath.length() - 4));
                         }
-                    });
-                    recentImages.addView(nIV);
+
+                        nIV.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                String imgName = imgList.get(recentImages.indexOfChild(view));
+                                String urlOfImg = CAMERA_URL + imgName;
+                                API.getInstance(getActivity()).requestImage(urlOfImg, currentImage);
+                                imageTimeAndDate.setText(imgName.substring(0, imgName.length() - 4));
+                            }
+                        });
+
+                        recentImages.addView(nIV);
+                    }
+                }else{
+                    errorLayout.setVisibility(View.VISIBLE);
+                    errorText.setText(R.string.camera_no_images_to_display);
                 }
             }
         }
@@ -105,6 +124,8 @@ public class CameraFragment extends Fragment{
         @Override
         public void onErrorResponse(VolleyError error) {
             Utils.methodDebug(LOGTAG);
+            errorLayout.setVisibility(View.VISIBLE);
+            errorText.setText(R.string.camera_unable_to_display_images);
         }
     };
 }

@@ -50,6 +50,10 @@
     <string name="config_sensor_probe_rate">Probe Rate</string>
     <string name="config_sensor_priority">Priority</string>
 
+    <!--Camera Fragment-->
+    <string name="camera_no_images_to_display">No Images to Display</string>
+    <string name="camera_unable_to_display_images">No Images to Display</string>
+
     <!--General-->
     <string name="sensor_last_updated">Last Updated :: </string>
     
