@@ -13,6 +13,8 @@ import android.widget.Switch;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import java.util.ArrayList;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Model.Config;
@@ -256,29 +258,41 @@ public class ControlFragment extends Fragment{
 
         /*----SENSORS----*/
         //TODO -- Create individual sensors
-        for(Sensor sensor : config.getSensors()){
-            if(sensor.getName().equalsIgnoreCase(Constants.SENSOR_NAME_MQ7)){
-                sensor.setAlert_threshold(Integer.valueOf(mq7AlertThreshold.getText().toString()));
-                sensor.setIs_active(mq7IsActive.isChecked());
-                sensor.setProbe_rate(Integer.valueOf(mq7ProbeRate.getText().toString()));
-                sensor.setPriority(Integer.valueOf(mq7Priority.getText().toString()));
-            }else if(sensor.getName().equalsIgnoreCase(Constants.SENSOR_NAME_MQ2)){
-                sensor.setAlert_threshold(Integer.valueOf(mq2AlertThreshold.getText().toString()));
-                sensor.setIs_active(mq2IsActive.isChecked());
-                sensor.setProbe_rate(Integer.valueOf(mq2ProbeRate.getText().toString()));
-                sensor.setPriority(Integer.valueOf(mq2Priority.getText().toString()));
-            }else if(sensor.getName().equalsIgnoreCase(Constants.SENSOR_NAME_THERMISTOR)){
-                sensor.setAlert_threshold(Integer.valueOf(thermistorAlertThreshold.getText().toString()));
-                sensor.setIs_active(thermistorIsActive.isChecked());
-                sensor.setProbe_rate(Integer.valueOf(thermistorProbeRate.getText().toString()));
-                sensor.setPriority(Integer.valueOf(thermistorPriority.getText().toString()));
-            }else if(sensor.getName().equalsIgnoreCase(Constants.SENSOR_NAME_MOTION)){
-                sensor.setAlert_threshold(Integer.valueOf(motionAlertThreshold.getText().toString()));
-                sensor.setIs_active(motionIsActive.isChecked());
-                sensor.setProbe_rate(Integer.valueOf(motionProbeRate.getText().toString()));
-                sensor.setPriority(Integer.valueOf(motionPriority.getText().toString()));
-            }
-        }
+        ArrayList<Sensor> sensors = new ArrayList<Sensor>();
+        Sensor sensor = new Sensor();
+
+        sensor.setName(Constants.SENSOR_NAME_MQ7.toLowerCase());
+        sensor.setAlert_threshold(Integer.valueOf(mq7AlertThreshold.getText().toString()));
+        sensor.setIs_active(mq7IsActive.isChecked());
+        sensor.setProbe_rate(Integer.valueOf(mq7ProbeRate.getText().toString()));
+        sensor.setPriority(Integer.valueOf(mq7Priority.getText().toString()));
+        sensors.add(sensor);
+
+        sensor = new Sensor();
+        sensor.setName(Constants.SENSOR_NAME_MQ2.toLowerCase());
+        sensor.setAlert_threshold(Integer.valueOf(mq2AlertThreshold.getText().toString()));
+        sensor.setIs_active(mq2IsActive.isChecked());
+        sensor.setProbe_rate(Integer.valueOf(mq2ProbeRate.getText().toString()));
+        sensor.setPriority(Integer.valueOf(mq2Priority.getText().toString()));
+        sensors.add(sensor);
+
+        sensor = new Sensor();
+        sensor.setName(Constants.SENSOR_NAME_THERMISTOR.toLowerCase());
+        sensor.setAlert_threshold(Integer.valueOf(thermistorAlertThreshold.getText().toString()));
+        sensor.setIs_active(thermistorIsActive.isChecked());
+        sensor.setProbe_rate(Integer.valueOf(thermistorProbeRate.getText().toString()));
+        sensor.setPriority(Integer.valueOf(thermistorPriority.getText().toString()));
+        sensors.add(sensor);
+
+        sensor = new Sensor();
+        sensor.setName(Constants.SENSOR_NAME_MOTION.toLowerCase());
+        sensor.setAlert_threshold(Integer.valueOf(motionAlertThreshold.getText().toString()));
+        sensor.setIs_active(motionIsActive.isChecked());
+        sensor.setProbe_rate(Integer.valueOf(motionProbeRate.getText().toString()));
+        sensor.setPriority(Integer.valueOf(motionPriority.getText().toString()));
+        sensors.add(sensor);
+
+        config.setSensors(sensors);
 
         String configString = Utils.toJson(config);
         if (BuildConfig.DEBUG){
