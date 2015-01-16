@@ -11,6 +11,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Model.CameraResponse;
@@ -21,7 +24,10 @@ import ie.ucc.cs1.fyp.Network.API;
  */
 public class CameraFragment extends Fragment{
 
-    private static String LOGTAG = "__CAMERA_FRAGMENT";
+    private static final String LOGTAG = "__CAMERA_FRAGMENT";
+
+    private static final String CAMERA_URL = Constants.API_URL + Constants.API_CAMERA;
+    private ArrayList<String> imgList;
 
     @InjectView(R.id.iv_current_image)
     NetworkImageView currentImage;
@@ -56,7 +62,6 @@ public class CameraFragment extends Fragment{
     public void onResume() {
         super.onResume();
         Utils.methodDebug(LOGTAG);
-        API.getInstance(getActivity()).requestImage("http://www.hollywoodreporter.com/sites/default/files/2014/07/adventure_time.jpg", currentImage);
         API.getInstance(getActivity()).requestListImages(successListener, errorListener);
     }
 
@@ -70,9 +75,28 @@ public class CameraFragment extends Fragment{
         @Override
         public void onResponse(CameraResponse response) {
             Utils.methodDebug(LOGTAG);
-            if(response.getImages() != null){
-                response.getImages().remove(".");
-                response.getImages().remove("..");
+            imgList = response.getImages();
+            if(imgList != null){
+                imgList.remove(".");
+                imgList.remove("..");
+                Collections.reverse(imgList);
+
+                for(String imagePath : imgList){
+                    NetworkImageView nIV = new NetworkImageView(getActivity());
+                    nIV.setLayoutParams(new ViewGroup.LayoutParams(450, ViewGroup.LayoutParams.MATCH_PARENT));
+                    API.getInstance(getActivity()).requestImage(CAMERA_URL + imagePath, nIV);
+                    if(response.getImages().indexOf(imagePath) == 0){
+                        API.getInstance(getActivity()).requestImage(CAMERA_URL + imagePath, currentImage);
+                    }
+                    nIV.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String urlOfImg = CAMERA_URL + imgList.get(recentImages.indexOfChild(view));
+                            API.getInstance(getActivity()).requestImage(urlOfImg, currentImage);
+                        }
+                    });
+                    recentImages.addView(nIV);
+                }
             }
         }
     };
