@@ -5,9 +5,9 @@ import android.util.Log;
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -21,19 +21,30 @@ import ie.ucc.cs1.fyp.Utils;
 /**
  * Created by kpmmmurphy on 12/01/15.
  */
-public class GsonRequest<T> extends Request<T> {
+public class GsonRequest<T> extends JsonRequest<T> {
     private static final String LOGTAG = GsonRequest.class.getSimpleName();
 
     private Gson gson = new Gson();
     private final Class<T> clazz;
+    private final String body;
     private final Map<String, String> headers;
     private final Response.Listener<T> listener;
 
     public GsonRequest(String url, Class<T> clazz, Map<String, String> headers, Response.Listener<T> listener, Response.ErrorListener errorListener ) {
-        super(Method.POST, url, errorListener);
+        this(url, clazz ,headers, null, listener, errorListener);
+    }
+
+    public GsonRequest(String url, Class<T> clazz, Map<String, String> headers, String jsonRequest, Response.Listener<T> listener, Response.ErrorListener errorListener ) {
+        super(Method.POST, url, (jsonRequest == null) ? null : jsonRequest , listener ,errorListener);
         this.clazz = clazz;
         this.headers = headers;
         this.listener = listener;
+        this.body = jsonRequest;
+    }
+
+    @Override
+    public byte[] getBody() {
+        return body != null ? body.getBytes() : super.getBody();
     }
 
     @Override
@@ -51,6 +62,7 @@ public class GsonRequest<T> extends Request<T> {
             if (clazz.equals(CurrentSensorValuesFromServer.class)){
                 json = json.substring(1 , json.length() - 1);
             }
+
             if(BuildConfig.DEBUG){
                 Log.d(LOGTAG, "Response :: " + json);
             }
@@ -67,6 +79,4 @@ public class GsonRequest<T> extends Request<T> {
     protected void deliverResponse(T response) {
         listener.onResponse(response);
     }
-
-
 }

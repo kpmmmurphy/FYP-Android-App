@@ -16,6 +16,7 @@ import com.android.volley.VolleyError;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Model.Config;
+import ie.ucc.cs1.fyp.Model.ConfigResponse;
 import ie.ucc.cs1.fyp.Model.Packet;
 import ie.ucc.cs1.fyp.Model.Payload;
 import ie.ucc.cs1.fyp.Model.Sensor;
@@ -138,6 +139,7 @@ public class ControlFragment extends Fragment{
                         SocketManager.getInstance(getActivity()).sendPacketToPi(Utils.toJson(configPacket));
                     }else{
                         //API...
+                        API.getInstance(getActivity()).uploadSystemConfig(gatherInput(), updateConfigSuccessListener,updateConfigErrorListener);
                     }
                 }
             }
@@ -160,7 +162,7 @@ public class ControlFragment extends Fragment{
             fillFields(null);
         }else{
             //API
-            API.getInstance(getActivity()).requestSystemConfig(successListener, errorListener);
+            API.getInstance(getActivity()).requestSystemConfig(getConfigSuccessListener, getConfigErrorListener);
         }
     }
 
@@ -286,7 +288,7 @@ public class ControlFragment extends Fragment{
         return config;
     }
 
-    private Response.Listener<Config> successListener = new Response.Listener<Config>() {
+    private Response.Listener<Config> getConfigSuccessListener = new Response.Listener<Config>() {
         @Override
         public void onResponse(Config response) {
             Utils.methodDebug(LOGTAG);
@@ -294,7 +296,22 @@ public class ControlFragment extends Fragment{
         }
     };
 
-    private Response.ErrorListener errorListener = new Response.ErrorListener() {
+    private Response.ErrorListener getConfigErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Utils.methodDebug(LOGTAG);
+        }
+    };
+
+    private Response.Listener<ConfigResponse> updateConfigSuccessListener = new Response.Listener<ConfigResponse>() {
+        @Override
+        public void onResponse(ConfigResponse response) {
+            Utils.methodDebug(LOGTAG);
+
+        }
+    };
+
+    private Response.ErrorListener updateConfigErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
             Utils.methodDebug(LOGTAG);
