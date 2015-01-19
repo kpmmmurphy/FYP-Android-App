@@ -17,6 +17,8 @@ import android.widget.VideoView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,7 +59,7 @@ public class CameraFragment extends Fragment{
     void onItemSelected(int position){
         Utils.methodDebug(LOGTAG);
         String videoName  = videoList.get(position);
-        String urlOfVideo = CAMERA_URL + videoName;
+        setTimeAndDate(videoName);
         VideoView vv = new VideoView(getActivity());
         MediaController mediaController = new MediaController(getActivity());
         mediaController.setAnchorView(currentVideo);
@@ -65,6 +67,8 @@ public class CameraFragment extends Fragment{
         currentVideo.setVideoURI(Uri.parse(CAMERA_URL + videoName));
         currentImage.setVisibility(View.GONE);
         currentVideo.setVisibility(View.VISIBLE);
+        currentVideo.requestFocus();
+        currentVideo.start();
     }
 
     public CameraFragment() {
@@ -119,22 +123,26 @@ public class CameraFragment extends Fragment{
                     for(final String imagePath : imgList){
                         NetworkImageView nIV = new NetworkImageView(getActivity());
                         nIV.setLayoutParams(new ViewGroup.LayoutParams(450, ViewGroup.LayoutParams.MATCH_PARENT));
-                        nIV.setPadding(5, 5, 5, 5);
                         API.getInstance(getActivity()).requestImage(CAMERA_URL + imagePath, nIV);
-                        if(response.getImages().indexOf(imagePath) == 0){
+
+                        if(imgList.indexOf(imagePath) == 0){
                             API.getInstance(getActivity()).requestImage(CAMERA_URL + imagePath, currentImage);
-                            imageTimeAndDate.setText(reformatDate(imagePath.substring(0, imagePath.length() - 4)));
+                            setTimeAndDate(imagePath);
                         }
 
                         nIV.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                YoYo.with(Techniques.Pulse)
+                                        .duration(700)
+                                        .playOn(view);
                                 String imgName = imgList.get(recentImages.indexOfChild(view));
                                 String urlOfImg = CAMERA_URL + imgName;
                                 API.getInstance(getActivity()).requestImage(urlOfImg, currentImage);
                                 currentImage.setVisibility(View.VISIBLE);
+
                                 currentVideo.setVisibility(View.GONE);
-                                imageTimeAndDate.setText(reformatDate(imgName.substring(0, imgName.length() - 4)));
+                                setTimeAndDate(imgName);
                             }
                         });
                         recentImages.addView(nIV);
@@ -170,6 +178,10 @@ public class CameraFragment extends Fragment{
     }
 
     private void filterAssets(ArrayList<String> assets){
+
+        imgList.clear();
+        videoList.clear();
+
         assets.remove(".");
         assets.remove("..");
         assets.remove(".directory");
@@ -187,7 +199,11 @@ public class CameraFragment extends Fragment{
 
     private String reformatDate(String date){
         String[] items = date.split("_");
-        return String.format("%s  %s : %s", items[0], items[1].substring(0,2), items[1].substring(2,4));
+        return String.format("%s  %s : %s", items[0], items[1].substring(0,2), items[1].substring(2,4)).replace("-", " - ");
+    }
+
+    private void setTimeAndDate(String fileName){
+        imageTimeAndDate.setText(getString(R.string.tv_captured) + " " + reformatDate(fileName.substring(0, fileName.length() - 4)));
     }
 }
 

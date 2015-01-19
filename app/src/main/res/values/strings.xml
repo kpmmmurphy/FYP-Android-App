@@ -55,6 +55,7 @@
     <string name="camera_unable_to_display_images">No Images to Display</string>
     <string name="tv_title_images">Images</string>
     <string name="tv_title_videos">Videos</string>
+    <string name="tv_captured">Captured :: </string>
 
     <!--General-->
     <string name="sensor_last_updated">Last Updated :: </string>
