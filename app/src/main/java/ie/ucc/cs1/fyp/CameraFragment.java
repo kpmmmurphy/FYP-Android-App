@@ -7,8 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -22,6 +23,7 @@ import java.util.Collections;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnItemClick;
 import ie.ucc.cs1.fyp.Model.CameraResponse;
 import ie.ucc.cs1.fyp.Network.API;
 
@@ -46,10 +48,24 @@ public class CameraFragment extends Fragment{
     TextView imageTimeAndDate;
     @InjectView(R.id.camera_fragment_error_layout)
     LinearLayout errorLayout;
-    @InjectView(R.id.sv_recent_videos)
-    LinearLayout recentVideos;
+    @InjectView(R.id.lv_recent_videos)
+    ListView recentVideos;
     @InjectView(R.id.camera_fragment_error_text)
     TextView errorText;
+
+    @OnItemClick(R.id.lv_recent_videos)
+    void onItemSelected(int position){
+        Utils.methodDebug(LOGTAG);
+        String videoName  = videoList.get(position);
+        String urlOfVideo = CAMERA_URL + videoName;
+        VideoView vv = new VideoView(getActivity());
+        MediaController mediaController = new MediaController(getActivity());
+        mediaController.setAnchorView(currentVideo);
+        currentVideo.setMediaController(mediaController);
+        currentVideo.setVideoURI(Uri.parse(CAMERA_URL + videoName));
+        currentImage.setVisibility(View.GONE);
+        currentVideo.setVisibility(View.VISIBLE);
+    }
 
     public CameraFragment() {
         Utils.methodDebug(LOGTAG);
@@ -116,31 +132,17 @@ public class CameraFragment extends Fragment{
                                 String imgName = imgList.get(recentImages.indexOfChild(view));
                                 String urlOfImg = CAMERA_URL + imgName;
                                 API.getInstance(getActivity()).requestImage(urlOfImg, currentImage);
+                                currentImage.setVisibility(View.VISIBLE);
+                                currentVideo.setVisibility(View.GONE);
                                 imageTimeAndDate.setText(reformatDate(imgName.substring(0, imgName.length() - 4)));
                             }
                         });
                         recentImages.addView(nIV);
                     }
-
+                    populateVideoList(videoList);
                     for(final String videoPath : videoList){
                         Log.e(LOGTAG, videoPath);
-                        VideoView vv = new VideoView(getActivity());
-                        MediaController mediaController = new MediaController(getActivity());
-                        mediaController.setAnchorView(vv);
-                        vv.setMediaController(mediaController);
-                        vv.setVideoURI(Uri.parse(CAMERA_URL + videoPath));
-                        vv.setLayoutParams(new FrameLayout.LayoutParams(550, 550));
-                        vv.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                String videoName = videoList.get(recentVideos.indexOfChild(view));
-                                String urlOfVideo = CAMERA_URL + videoName;
-                                //Toggle views
 
-                                //imageTimeAndDate.setText(reformatDate(imgName.substring(0, imgName.length() - 4)));
-                            }
-                        });
-                        recentVideos.addView(vv, 0);
                     }
                 }else{
                     errorLayout.setVisibility(View.VISIBLE);
@@ -161,6 +163,11 @@ public class CameraFragment extends Fragment{
             errorText.setText(R.string.camera_unable_to_display_images);
         }
     };
+
+    private void populateVideoList(ArrayList<String> videos){
+        ArrayAdapter<String> videoAdaptor = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,videos);
+        recentVideos.setAdapter(videoAdaptor);
+    }
 
     private void filterAssets(ArrayList<String> assets){
         assets.remove(".");

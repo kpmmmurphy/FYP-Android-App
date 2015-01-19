@@ -22,7 +22,7 @@
             android:id="@+id/vv_current_video"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible"/>
+            android:visibility="gone"/>
     </FrameLayout>
 
     <TextView
@@ -80,19 +80,19 @@
         android:layout_below="@id/tv_title_videos"
         android:background="@color/gray" />
 
-    <HorizontalScrollView
+    <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="64dp"
         android:layout_below="@id/view_divider_videos">
 
-        <LinearLayout
-            android:id="@+id/sv_recent_videos"
+        <ListView
+            android:id="@+id/lv_recent_videos"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@color/gray"
-            android:orientation="horizontal"></LinearLayout>
+            android:orientation="horizontal"></ListView>
 
-    </HorizontalScrollView>
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/camera_fragment_error_layout"
