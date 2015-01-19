@@ -1,12 +1,17 @@
 package ie.ucc.cs1.fyp;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -29,6 +34,7 @@ public class CameraFragment extends Fragment{
 
     private static final String CAMERA_URL = Constants.API_URL + Constants.API_CAMERA;
     private ArrayList<String> imgList;
+    private ArrayList<String> videoList;
 
     @InjectView(R.id.iv_current_image)
     NetworkImageView currentImage;
@@ -38,6 +44,8 @@ public class CameraFragment extends Fragment{
     TextView imageTimeAndDate;
     @InjectView(R.id.camera_fragment_error_layout)
     LinearLayout errorLayout;
+    @InjectView(R.id.sv_recent_videos)
+    LinearLayout recentVideos;
     @InjectView(R.id.camera_fragment_error_text)
     TextView errorText;
 
@@ -49,6 +57,8 @@ public class CameraFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utils.methodDebug(LOGTAG);
+        imgList = new ArrayList<String>();
+        videoList = new ArrayList<String>();
     }
 
     @Override
@@ -82,14 +92,12 @@ public class CameraFragment extends Fragment{
         @Override
         public void onResponse(CameraResponse response) {
             Utils.methodDebug(LOGTAG);
-            imgList = response.getImages();
-            if(imgList != null){
-                imgList.remove(".");
-                imgList.remove("..");
+            if(response.getImages() != null){
+                filterAssets(response.getImages());
                 if(imgList.size() > 0){
                     errorLayout.setVisibility(View.GONE);
-                    Collections.reverse(imgList);
 
+                    recentImages.removeAllViews();
                     for(final String imagePath : imgList){
                         NetworkImageView nIV = new NetworkImageView(getActivity());
                         nIV.setLayoutParams(new ViewGroup.LayoutParams(450, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -97,7 +105,7 @@ public class CameraFragment extends Fragment{
                         API.getInstance(getActivity()).requestImage(CAMERA_URL + imagePath, nIV);
                         if(response.getImages().indexOf(imagePath) == 0){
                             API.getInstance(getActivity()).requestImage(CAMERA_URL + imagePath, currentImage);
-                            imageTimeAndDate.setText(imagePath.substring(0, imagePath.length() - 4));
+                            imageTimeAndDate.setText(reformatDate(imagePath.substring(0, imagePath.length() - 4)));
                         }
 
                         nIV.setOnClickListener(new View.OnClickListener() {
@@ -106,16 +114,28 @@ public class CameraFragment extends Fragment{
                                 String imgName = imgList.get(recentImages.indexOfChild(view));
                                 String urlOfImg = CAMERA_URL + imgName;
                                 API.getInstance(getActivity()).requestImage(urlOfImg, currentImage);
-                                imageTimeAndDate.setText(imgName.substring(0, imgName.length() - 4));
+                                imageTimeAndDate.setText(reformatDate(imgName.substring(0, imgName.length() - 4)));
                             }
                         });
-
                         recentImages.addView(nIV);
+                    }
+
+                    for(final String videoPath : videoList){
+                        Log.e(LOGTAG, videoPath);
+                        VideoView vv = new VideoView(getActivity());
+                        vv.setMediaController(new MediaController(getActivity()));
+                        vv.setVideoURI(Uri.parse(CAMERA_URL + videoPath));
+                        vv.setLayoutParams(new FrameLayout.LayoutParams(550, 550));
+                        vv.start();
+                        recentVideos.addView(vv,0);
                     }
                 }else{
                     errorLayout.setVisibility(View.VISIBLE);
                     errorText.setText(R.string.camera_no_images_to_display);
                 }
+            }else{
+                errorLayout.setVisibility(View.VISIBLE);
+                errorText.setText(R.string.camera_no_images_to_display);
             }
         }
     };
@@ -128,6 +148,27 @@ public class CameraFragment extends Fragment{
             errorText.setText(R.string.camera_unable_to_display_images);
         }
     };
+
+    private void filterAssets(ArrayList<String> assets){
+        assets.remove(".");
+        assets.remove("..");
+        assets.remove(".directory");
+        for(String item : assets){
+            String format = item.substring(item.length() - 3, item.length());
+            if(format.equalsIgnoreCase("jpg")){
+                imgList.add(item);
+            }else{
+                videoList.add(item);
+            }
+        }
+        Collections.reverse(imgList);
+        Collections.reverse(videoList);
+    }
+
+    private String reformatDate(String date){
+        String[] items = date.split("_");
+        return String.format("%s  %s : %s", items[0], items[1].substring(0,2), items[1].substring(2,4));
+    }
 }
 
 
