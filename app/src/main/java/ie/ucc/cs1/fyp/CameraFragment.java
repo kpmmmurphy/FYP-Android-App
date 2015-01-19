@@ -38,6 +38,8 @@ public class CameraFragment extends Fragment{
 
     @InjectView(R.id.iv_current_image)
     NetworkImageView currentImage;
+    @InjectView(R.id.vv_current_video)
+    VideoView currentVideo;
     @InjectView(R.id.sv_recent_images)
     LinearLayout recentImages;
     @InjectView(R.id.tv_image_time_and_date)
@@ -123,11 +125,22 @@ public class CameraFragment extends Fragment{
                     for(final String videoPath : videoList){
                         Log.e(LOGTAG, videoPath);
                         VideoView vv = new VideoView(getActivity());
-                        vv.setMediaController(new MediaController(getActivity()));
+                        MediaController mediaController = new MediaController(getActivity());
+                        mediaController.setAnchorView(vv);
+                        vv.setMediaController(mediaController);
                         vv.setVideoURI(Uri.parse(CAMERA_URL + videoPath));
                         vv.setLayoutParams(new FrameLayout.LayoutParams(550, 550));
-                        vv.start();
-                        recentVideos.addView(vv,0);
+                        vv.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                String videoName = videoList.get(recentVideos.indexOfChild(view));
+                                String urlOfVideo = CAMERA_URL + videoName;
+                                //Toggle views
+
+                                //imageTimeAndDate.setText(reformatDate(imgName.substring(0, imgName.length() - 4)));
+                            }
+                        });
+                        recentVideos.addView(vv, 0);
                     }
                 }else{
                     errorLayout.setVisibility(View.VISIBLE);

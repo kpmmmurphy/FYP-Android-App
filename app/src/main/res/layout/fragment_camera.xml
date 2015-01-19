@@ -15,12 +15,14 @@
             android:id="@+id/iv_current_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/icn_camera" />
+            android:src="@drawable/icn_camera"
+            android:visibility="gone"/>
 
         <VideoView
+            android:id="@+id/vv_current_video"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
     </FrameLayout>
 
     <TextView
