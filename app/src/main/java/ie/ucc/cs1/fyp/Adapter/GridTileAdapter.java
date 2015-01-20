@@ -56,7 +56,7 @@ public class GridTileAdapter extends BaseAdapter {
             holder = (Holder) view.getTag();
         }
 
-        holder.name.setText(String.valueOf(getItem(i).getName()));
+        holder.name.setText(String.valueOf(getItem(i).getName()).replace("_", " "));
         holder.outputLevel.setText(String.valueOf(getItem(i).getValue()));
         holder.measurement.setText(String.valueOf(getItem(i).getMeasurement()));
         return view;

@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 
 import java.util.ArrayList;
 
@@ -136,7 +138,9 @@ public class SensorFragment extends Fragment {
         gridTileAdapter.setSensorOutputs(SensorValueManager.getInstance().getCurrentSensorOutputsList());
         gridTileAdapter.notifyDataSetChanged();
         if (SensorValueManager.getInstance().getCurrentSensorValues() != null){
+            YoYo.with(Techniques.FadeOut).duration(500).playOn(tvLastUpdated);
             tvLastUpdated.setText(getString(R.string.sensor_last_updated) + " " + SensorValueManager.getInstance().getCurrentSensorValues().getData_and_time());
+            YoYo.with(Techniques.FadeIn).duration(500).playOn(tvLastUpdated);
         }
     }
 }

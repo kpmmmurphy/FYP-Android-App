@@ -207,7 +207,9 @@ public class CameraFragment extends Fragment{
     }
 
     private void setTimeAndDate(String fileName){
+        YoYo.with(Techniques.FadeOut).duration(500).playOn(imageTimeAndDate);
         imageTimeAndDate.setText(getString(R.string.tv_captured) + " " + reformatDate(fileName.substring(0, fileName.length() - 4)));
+        YoYo.with(Techniques.FadeIn).duration(500).playOn(imageTimeAndDate);
     }
 }
 
