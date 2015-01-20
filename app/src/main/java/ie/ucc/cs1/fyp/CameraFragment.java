@@ -65,8 +65,10 @@ public class CameraFragment extends Fragment{
         mediaController.setAnchorView(currentVideo);
         currentVideo.setMediaController(mediaController);
         currentVideo.setVideoURI(Uri.parse(CAMERA_URL + videoName));
-        currentImage.setVisibility(View.GONE);
+        //currentImage.setVisibility(View.GONE);
         currentVideo.setVisibility(View.VISIBLE);
+        YoYo.with(Techniques.FadeOut).duration(700).playOn(currentImage);
+        YoYo.with(Techniques.FadeIn).duration(700).playOn(currentVideo);
         currentVideo.requestFocus();
         currentVideo.start();
     }
@@ -139,9 +141,11 @@ public class CameraFragment extends Fragment{
                                 String imgName = imgList.get(recentImages.indexOfChild(view));
                                 String urlOfImg = CAMERA_URL + imgName;
                                 API.getInstance(getActivity()).requestImage(urlOfImg, currentImage);
-                                currentImage.setVisibility(View.VISIBLE);
 
+                                //currentImage.setVisibility(View.VISIBLE);
                                 currentVideo.setVisibility(View.GONE);
+                                YoYo.with(Techniques.FadeOut).duration(700).playOn(currentVideo);
+                                YoYo.with(Techniques.FadeIn).duration(700).playOn(currentImage);
                                 setTimeAndDate(imgName);
                             }
                         });

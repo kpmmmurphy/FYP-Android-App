@@ -39,8 +39,8 @@
         android:id="@+id/tv_title_images"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
         android:layout_below="@id/tv_image_time_and_date"
+        android:layout_marginTop="6dp"
         android:padding="10dp"
         android:text="@string/tv_title_images"
         android:textAllCaps="true"
@@ -58,8 +58,8 @@
         android:id="@+id/hsv_Images"
         android:layout_width="fill_parent"
         android:layout_height="124dp"
-        android:layout_marginBottom="8dp"
-        android:layout_below="@id/view_divider_images">
+        android:layout_below="@id/view_divider_images"
+        android:layout_marginBottom="8dp">
 
         <LinearLayout
             android:id="@+id/sv_recent_images"
@@ -75,8 +75,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/hsv_Images"
         android:padding="10dp"
-        android:textAllCaps="true"
         android:text="@string/tv_title_videos"
+        android:textAllCaps="true"
         android:textSize="24sp" />
 
     <View
@@ -87,19 +87,15 @@
         android:layout_marginBottom="8dp"
         android:background="@color/gray" />
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="64dp"
-        android:layout_below="@id/view_divider_videos">
 
-        <ListView
-            android:id="@+id/lv_recent_videos"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/gray"
-            android:orientation="horizontal"></ListView>
+    <ListView
+        android:id="@+id/lv_recent_videos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view_divider_videos"
+        android:background="@color/gray"
+        android:orientation="horizontal"></ListView>
 
-    </ScrollView>
 
     <LinearLayout
         android:id="@+id/camera_fragment_error_layout"

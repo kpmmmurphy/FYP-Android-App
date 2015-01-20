@@ -59,7 +59,9 @@
 
     <!--General-->
     <string name="sensor_last_updated">Last Updated :: </string>
-    
+    <string name="config_upload_success">Config Uploaded Successfully</string>
+    <string name="config_upload_failed">Config Uploaded Failed, Please Try Again.</string>
+
     <string-array name="boolean_array">
         <item>On</item>
         <item>Off</item>

@@ -8,10 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 
 import java.util.ArrayList;
 
@@ -32,6 +36,9 @@ import ie.ucc.cs1.fyp.Socket.SocketManager;
 public class ControlFragment extends Fragment{
 
     private static String LOGTAG = "__CAMERA_FRAGMENT";
+
+    @InjectView(R.id.fragment_control_layout)
+    ScrollView controlLayout;
 
     /*System Details*/
     @InjectView(R.id.et_system_config_name)
@@ -141,6 +148,7 @@ public class ControlFragment extends Fragment{
                         SocketManager.getInstance(getActivity()).sendPacketToPi(Utils.toJson(configPacket));
                     }else{
                         //API...
+                        YoYo.with(Techniques.FadeOut).duration(700).playOn(controlLayout);
                         API.getInstance(getActivity()).uploadSystemConfig(gatherInput(), updateConfigSuccessListener,updateConfigErrorListener);
                     }
                 }
@@ -257,7 +265,6 @@ public class ControlFragment extends Fragment{
         config.getAlertManager().setVideo_mode(videoMode.isChecked());
 
         /*----SENSORS----*/
-        //TODO -- Create individual sensors
         ArrayList<Sensor> sensors = new ArrayList<Sensor>();
         Sensor sensor = new Sensor();
 
@@ -321,6 +328,11 @@ public class ControlFragment extends Fragment{
         @Override
         public void onResponse(ConfigResponse response) {
             Utils.methodDebug(LOGTAG);
+            if(response.getStatus_code() == Constants.CONNECT_SUCCESS){
+
+            }
+            Toast.makeText(getActivity(), getString(R.string.config_upload_success),Toast.LENGTH_LONG).show();
+            YoYo.with(Techniques.FadeIn).duration(700).playOn(controlLayout);
 
         }
     };
@@ -329,6 +341,8 @@ public class ControlFragment extends Fragment{
         @Override
         public void onErrorResponse(VolleyError error) {
             Utils.methodDebug(LOGTAG);
+            Toast.makeText(getActivity(), getString(R.string.config_upload_failed),Toast.LENGTH_LONG).show();
+            YoYo.with(Techniques.FadeOut).duration(700).playOn(controlLayout);
         }
     };
 
