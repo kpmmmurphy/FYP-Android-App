@@ -19,6 +19,7 @@ import ie.ucc.cs1.fyp.Model.CameraResponse;
 import ie.ucc.cs1.fyp.Model.Config;
 import ie.ucc.cs1.fyp.Model.ConfigResponse;
 import ie.ucc.cs1.fyp.Model.CurrentSensorValuesFromServer;
+import ie.ucc.cs1.fyp.Model.SensorValuesHolder;
 import ie.ucc.cs1.fyp.Utils;
 
 /**
@@ -101,8 +102,16 @@ public class API {
         Map<String, String> headers = new HashMap<String, String>();
         headers.put(Constants.API_REQUEST_HEADER_SERVICE, Constants.API_REQUEST_SERVICE_UPDATE_CONFIG);
 
-
         GsonRequest<ConfigResponse> updateConfigRequest = new GsonRequest<ConfigResponse>(URL, ConfigResponse.class, headers, Utils.toJson(config), listener, errorListener);
+        addToQueue(updateConfigRequest);
+    }
+
+    public void requestCurrentHourSensorValues(Response.Listener<SensorValuesHolder> listener, Response.ErrorListener errorListener){
+        Utils.methodDebug(LOGTAG);
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put(Constants.API_REQUEST_HEADER_SERVICE, Constants.API_REQUEST_SERVICE_CURRENT_HOUR_SENSOR_VALUES);
+
+        GsonRequest<SensorValuesHolder> updateConfigRequest = new GsonRequest<SensorValuesHolder>(URL, SensorValuesHolder.class, headers, listener, errorListener);
         addToQueue(updateConfigRequest);
     }
 

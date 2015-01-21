@@ -61,4 +61,5 @@ public interface Constants {
     public final static String API_REQUEST_SERVICE_GET_CONFIG        = "get_config";
     public final static String API_REQUEST_SERVICE_UPDATE_CONFIG     = "update_config";
     public final static String API_REQUEST_SERVICE_LIST_IMAGES       = "list_images";
+    public final static String API_REQUEST_SERVICE_CURRENT_HOUR_SENSOR_VALUES = "get_current_hour_sensor_values";
 }

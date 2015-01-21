@@ -3,30 +3,30 @@
 
     <string name="app_name">FYP</string>
 
-    <!--TABZZZ-->
+    <!-- TABZZZ -->
     <string name="title_section1">Sensors</string>
     <string name="title_section2">Image</string>
     <string name="title_section3">Control</string>
+    <string name="title_section4">Stats</string>
 
-    <!--Action Bar Menu Items-->
+    <!-- Action Bar Menu Items -->
     <string name="action_bar_menu_pair">Pair</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
 
-    <!--Toasts Msgs-->
+    <!-- Toasts Msgs -->
     <string name="connected_to_pi_success">Connected to Pi</string>
     <string name="connected_to_pi_failed">Connected to Pi Failed</string>
 
-    <!--Sensors-->
+    <!-- Sensors -->
     <string name="sensor_mq7">Carbon Monoxide</string>
     <string name="sensor_mq2">Flammable Gas</string>
     <string name="sensor_temperature">Temperature</string>
     <string name="sensor_motion">Motion</string>
 
-    <!--Config Fragment-->
+    <!-- Config Fragment -->
     <string name="config_title_system_details">System Details</string>
     <string name="config_system_details_name">name</string>
     <string name="config_system_details_location">location</string>
@@ -50,14 +50,14 @@
     <string name="config_sensor_probe_rate">Probe Rate</string>
     <string name="config_sensor_priority">Priority</string>
 
-    <!--Camera Fragment-->
+    <!-- Camera Fragment -->
     <string name="camera_no_images_to_display">No Images to Display</string>
     <string name="camera_unable_to_display_images">No Images to Display</string>
     <string name="tv_title_images">Images</string>
     <string name="tv_title_videos">Videos</string>
     <string name="tv_captured">Captured :: </string>
 
-    <!--General-->
+    <!-- General -->
     <string name="sensor_last_updated">Last Updated :: </string>
     <string name="config_upload_success">Config Uploaded Successfully</string>
     <string name="config_upload_failed">Config Uploaded Failed, Please Try Again.</string>
@@ -66,5 +66,7 @@
         <item>On</item>
         <item>Off</item>
     </string-array>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

@@ -53,6 +53,7 @@ public class MainActivity extends FragmentActivity {
         mTabsAdapter = new TabsAdaptor(this, getSupportFragmentManager(), getActionBar(), mViewPager);
         mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section1)), SensorFragment.class, null);
         mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section2)), CameraFragment.class, null);
+        mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section4)), GraphFragment.class, null);
         mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section3)), ControlFragment.class, null);
 
         connectedToPiReceiver = new ConnectedToPiReceiver();
@@ -134,6 +135,7 @@ public class MainActivity extends FragmentActivity {
         mTabsAdapter.clearTabInfo();
         mTabsAdapter.updateTab(getActionBar().newTab().setText(getString(R.string.title_section1)), SensorFragment.class, null);
         mTabsAdapter.updateTab(getActionBar().newTab().setText(getString(R.string.title_section2)), CameraFragment.class, null);
+        mTabsAdapter.updateTab(getActionBar().newTab().setText(getString(R.string.title_section4)), GraphFragment.class, null);
         mTabsAdapter.updateTab(getActionBar().newTab().setText(getString(R.string.title_section3)), ControlFragment.class, null);
     }
 
