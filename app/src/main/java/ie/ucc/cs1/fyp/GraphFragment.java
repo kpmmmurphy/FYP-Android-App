@@ -3,6 +3,7 @@ package ie.ucc.cs1.fyp;
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import ie.ucc.cs1.fyp.Model.CurrentSensorValuesFromServer;
 import ie.ucc.cs1.fyp.Model.SensorValuesHolder;
 import ie.ucc.cs1.fyp.Network.API;
 
@@ -68,16 +70,22 @@ public class GraphFragment extends Fragment {
             if(response.getSensor_values_list() == null || response.getSensor_values_list().isEmpty()){
 
             }else{
+                Log.e(LOGTAG, String.valueOf(response.getSensor_values_list().size()));
                 ArrayList<Entry> currentHourData = new ArrayList<Entry>();
-                Entry entry1 = new Entry(Float.valueOf(response.getSensor_values_list().get(0).getTemperature()), 1);
-                currentHourData.add(entry1);
+                ArrayList<String> xVals = new ArrayList<String>();
+                int count = 0;
+                for(CurrentSensorValuesFromServer values : response.getSensor_values_list()){
+                    Entry entry = new Entry(Float.valueOf(values.getTemperature()), ++count);
+                    currentHourData.add(entry);
+                    xVals.add(getHourFromDateAndTime(values.getDate_and_time()));
+                }
 
                 LineDataSet set1 = new LineDataSet(currentHourData, "Temp");
                 ArrayList<LineDataSet> lineDataSets = new ArrayList<LineDataSet>();
                 lineDataSets.add(set1);
 
-                ArrayList<String> xVals = new ArrayList<String>();
-                xVals.add("Hello");
+
+
 
                 LineData lineData = new LineData(xVals, lineDataSets);
                 lineChart.setData(lineData);
@@ -91,5 +99,9 @@ public class GraphFragment extends Fragment {
             Utils.methodDebug(LOGTAG);
         }
     };
+
+    private String getHourFromDateAndTime(String date_and_time){
+        return date_and_time.split(" ")[1];
+    }
 
 }
