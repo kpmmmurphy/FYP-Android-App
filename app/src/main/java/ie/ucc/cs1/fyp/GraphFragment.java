@@ -27,8 +27,12 @@ public class GraphFragment extends Fragment {
 
     private static final String LOGTAG = GraphFragment.class.getSimpleName();
 
-    @InjectView(R.id.graphing_line_chart)
-    LineChart lineChart;
+    @InjectView(R.id.graphing_line_chart_current_hour)
+    LineChart lcCurrentHour;
+    @InjectView(R.id.graphing_line_chart_agg_hour)
+    LineChart lcAggHour;
+    @InjectView(R.id.graphing_line_chart_agg_day)
+    LineChart lcAggDay;
 
     public GraphFragment() {
     }
@@ -56,7 +60,7 @@ public class GraphFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        API.getInstance(getActivity()).requestCurrentHourSensorValues(currentHourSuccessListener, currentHourErrorListener);
+        API.getInstance(getActivity()).requestCurrentHourSensorValues(currentHourSuccessListener, sensorValuesErrorListener);
     }
 
     @Override
@@ -88,12 +92,44 @@ public class GraphFragment extends Fragment {
 
 
                 LineData lineData = new LineData(xVals, lineDataSets);
-                lineChart.setData(lineData);
+                lcCurrentHour.setData(lineData);
             }
         }
     };
 
-    private Response.ErrorListener currentHourErrorListener = new Response.ErrorListener() {
+
+
+    private Response.Listener<SensorValuesHolder> sensorValuesAggPerHourSuccessListener = new Response.Listener<SensorValuesHolder>() {
+        @Override
+        public void onResponse(SensorValuesHolder response) {
+            Utils.methodDebug(LOGTAG);
+            if(response.getSensor_values_list() == null || response.getSensor_values_list().isEmpty()){
+
+            }else{
+                Log.e(LOGTAG, String.valueOf(response.getSensor_values_list().size()));
+                ArrayList<Entry> currentHourData = new ArrayList<Entry>();
+                ArrayList<String> xVals = new ArrayList<String>();
+                int count = 0;
+                for(CurrentSensorValuesFromServer values : response.getSensor_values_list()){
+                    Entry entry = new Entry(Float.valueOf(values.getTemperature()), ++count);
+                    currentHourData.add(entry);
+                    xVals.add(getHourFromDateAndTime(values.getDate_and_time()));
+                }
+
+                LineDataSet set1 = new LineDataSet(currentHourData, "Temp");
+                ArrayList<LineDataSet> lineDataSets = new ArrayList<LineDataSet>();
+                lineDataSets.add(set1);
+
+
+
+
+                LineData lineData = new LineData(xVals, lineDataSets);
+                lcAggHour.setData(lineData);
+            }
+        }
+    };
+
+    private Response.ErrorListener sensorValuesErrorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
             Utils.methodDebug(LOGTAG);

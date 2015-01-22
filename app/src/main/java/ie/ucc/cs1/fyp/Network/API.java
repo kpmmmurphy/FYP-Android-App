@@ -115,6 +115,24 @@ public class API {
         addToQueue(updateConfigRequest);
     }
 
+    public void requestAggSensorValuesPerHour(Response.Listener<SensorValuesHolder> listener, Response.ErrorListener errorListener){
+        Utils.methodDebug(LOGTAG);
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put(Constants.API_REQUEST_HEADER_SERVICE, Constants.API_REQUEST_SERVICE_AGG_SENSOR_VALUES_PER_HOUR);
+
+        GsonRequest<SensorValuesHolder> updateConfigRequest = new GsonRequest<SensorValuesHolder>(URL, SensorValuesHolder.class, headers, listener, errorListener);
+        addToQueue(updateConfigRequest);
+    }
+
+    public void requestAggSensorValuesPerDay(Response.Listener<SensorValuesHolder> listener, Response.ErrorListener errorListener){
+        Utils.methodDebug(LOGTAG);
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put(Constants.API_REQUEST_HEADER_SERVICE, Constants.API_REQUEST_SERVICE_AGG_SENSOR_VALUES_PER_DAY);
+
+        GsonRequest<SensorValuesHolder> updateConfigRequest = new GsonRequest<SensorValuesHolder>(URL, SensorValuesHolder.class, headers, listener, errorListener);
+        addToQueue(updateConfigRequest);
+    }
+
     public void addToQueue(Request req){
         req.setTag(Constants.LOGTAG);
         getQueue().add(req);

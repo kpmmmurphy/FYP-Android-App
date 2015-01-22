@@ -1,12 +1,115 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Default_Fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ie.ucc.cs1.fyp.GraphFragment">
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/graphing_line_chart"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/graphing_line_chart_current_hour"
+            android:layout_width="match_parent"
+            android:layout_height="265dp" />
+
+        <RadioGroup
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_current_hour_temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onRadioButtonClickedCurrentHour"
+                android:text="@string/sensor_temperature" />
+
+            <RadioButton
+                android:id="@+id/radio_current_hour_co"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onRadioButtonClickedCurrentHour"
+                android:text="@string/sensor_mq7" />
+
+            <RadioButton
+                android:id="@+id/radio_current_hour_flam"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onRadioButtonClickedCurrentHour"
+                android:text="@string/sensor_mq2" />
+        </RadioGroup>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/graphing_line_chart_agg_hour"
+            android:layout_width="match_parent"
+            android:layout_height="256dp" />
+
+        <RadioGroup
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_agg_hour_temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onRadioButtonClickedAggHour"
+                android:text="@string/sensor_temperature" />
+
+            <RadioButton
+                android:id="@+id/radio_agg_hour_co"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onRadioButtonClickedAggHour"
+                android:text="@string/sensor_mq7" />
+
+            <RadioButton
+                android:id="@+id/radio_agg_hour_flam"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onRadioButtonClickedAggHour"
+                android:text="@string/sensor_mq2" />
+        </RadioGroup>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/graphing_line_chart_agg_day"
+            android:layout_width="match_parent"
+            android:layout_height="256dp" />
+
+        <RadioGroup
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_agg_day_temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onRadioButtonClickedAggDay"
+                android:text="@string/sensor_temperature" />
+
+            <RadioButton
+                android:id="@+id/radio_agg_day_co"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onRadioButtonClickedAggDay"
+                android:text="@string/sensor_mq7" />
+
+            <RadioButton
+                android:id="@+id/radio_agg_day_flam"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onRadioButtonClickedAggDay"
+                android:text="@string/sensor_mq2" />
+        </RadioGroup>
+    </LinearLayout>
+</ScrollView>
