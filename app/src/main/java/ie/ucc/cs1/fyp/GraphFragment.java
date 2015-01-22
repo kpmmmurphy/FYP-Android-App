@@ -1,12 +1,13 @@
 package ie.ucc.cs1.fyp;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -135,6 +136,27 @@ public class GraphFragment extends Fragment {
             Utils.methodDebug(LOGTAG);
         }
     };
+
+    public void onRadioButtonClickedAggHour(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.radio_agg_hour_temp:
+                if (checked)
+                    Log.e(LOGTAG, "TEMP")
+                    break;
+            case R.id.radio_agg_hour_flam:
+                if (checked)
+                    // Ninjas rule
+                    break;
+            case R.id.radio_agg_hour_co:
+                if (checked)
+                    // Ninjas rule
+                    break;
+        }
+    }
 
     private String getHourFromDateAndTime(String date_and_time){
         return date_and_time.split(" ")[1];
