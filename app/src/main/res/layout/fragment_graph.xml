@@ -16,6 +16,7 @@
             android:layout_height="265dp" />
 
         <RadioGroup
+            android:id="@+id/radio_group_current_hour"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -26,22 +27,25 @@
                 android:id="@+id/radio_current_hour_temp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onRadioButtonClickedCurrentHour"
                 android:text="@string/sensor_temperature" />
 
             <RadioButton
                 android:id="@+id/radio_current_hour_co"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onRadioButtonClickedCurrentHour"
                 android:text="@string/sensor_mq7" />
 
             <RadioButton
                 android:id="@+id/radio_current_hour_flam"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onRadioButtonClickedCurrentHour"
                 android:text="@string/sensor_mq2" />
+
+            <RadioButton
+                android:id="@+id/radio_current_hour_motion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sensor_motion" />
         </RadioGroup>
 
         <com.github.mikephil.charting.charts.LineChart
@@ -50,6 +54,7 @@
             android:layout_height="256dp" />
 
         <RadioGroup
+            android:id="@+id/radio_group_agg_hour"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -60,22 +65,25 @@
                 android:id="@+id/radio_agg_hour_temp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onRadioButtonClickedAggHour"
                 android:text="@string/sensor_temperature" />
 
             <RadioButton
                 android:id="@+id/radio_agg_hour_co"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onRadioButtonClickedAggHour"
                 android:text="@string/sensor_mq7" />
 
             <RadioButton
                 android:id="@+id/radio_agg_hour_flam"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onRadioButtonClickedAggHour"
                 android:text="@string/sensor_mq2" />
+
+            <RadioButton
+                android:id="@+id/radio_agg_hour_motion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sensor_motion" />
         </RadioGroup>
 
         <com.github.mikephil.charting.charts.LineChart
@@ -84,6 +92,7 @@
             android:layout_height="256dp" />
 
         <RadioGroup
+            android:id="@+id/radio_group_agg_day"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -94,22 +103,25 @@
                 android:id="@+id/radio_agg_day_temp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onRadioButtonClickedAggDay"
                 android:text="@string/sensor_temperature" />
 
             <RadioButton
                 android:id="@+id/radio_agg_day_co"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onRadioButtonClickedAggDay"
                 android:text="@string/sensor_mq7" />
 
             <RadioButton
                 android:id="@+id/radio_agg_day_flam"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onRadioButtonClickedAggDay"
                 android:text="@string/sensor_mq2" />
+
+            <RadioButton
+                android:id="@+id/radio_agg_day_motion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sensor_motion" />
         </RadioGroup>
     </LinearLayout>
 </ScrollView>

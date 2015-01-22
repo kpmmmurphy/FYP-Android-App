@@ -8,9 +8,18 @@ public class CurrentSensorValuesFromServer {
     protected String id;
     protected String date_and_time;
     protected String temperature;
+    protected String avg_temperature;
+    protected String min_temperature;
+    protected String max_temperature;
     protected String carbon_monoxide;
-    protected String motion;
+    protected String avg_carbon_monoxide;
+    protected String min_carbon_monoxide;
+    protected String max_carbon_monoxide;
     protected String flammable_gas;
+    protected String avg_flammable_gas;
+    protected String min_flammable_gas;
+    protected String max_flammable_gas;
+    protected String motion;
 
     public String getId() {
         return id;
@@ -58,5 +67,77 @@ public class CurrentSensorValuesFromServer {
 
     public void setFlammable_gas(String flammable_gas) {
         this.flammable_gas = flammable_gas;
+    }
+
+    public String getAvg_temperature() {
+        return avg_temperature;
+    }
+
+    public void setAvg_temperature(String avg_temperature) {
+        this.avg_temperature = avg_temperature;
+    }
+
+    public String getMin_temperature() {
+        return min_temperature;
+    }
+
+    public void setMin_temperature(String min_temperature) {
+        this.min_temperature = min_temperature;
+    }
+
+    public String getMax_temperature() {
+        return max_temperature;
+    }
+
+    public void setMax_temperature(String max_temperature) {
+        this.max_temperature = max_temperature;
+    }
+
+    public String getAvg_carbon_monoxide() {
+        return avg_carbon_monoxide;
+    }
+
+    public void setAvg_carbon_monoxide(String avg_carbon_monoxide) {
+        this.avg_carbon_monoxide = avg_carbon_monoxide;
+    }
+
+    public String getMin_carbon_monoxide() {
+        return min_carbon_monoxide;
+    }
+
+    public void setMin_carbon_monoxide(String min_carbon_monoxide) {
+        this.min_carbon_monoxide = min_carbon_monoxide;
+    }
+
+    public String getMax_carbon_monoxide() {
+        return max_carbon_monoxide;
+    }
+
+    public void setMax_carbon_monoxide(String max_carbon_monoxide) {
+        this.max_carbon_monoxide = max_carbon_monoxide;
+    }
+
+    public String getAvg_flammable_gas() {
+        return avg_flammable_gas;
+    }
+
+    public void setAvg_flammable_gas(String avg_flammable_gas) {
+        this.avg_flammable_gas = avg_flammable_gas;
+    }
+
+    public String getMin_flammable_gas() {
+        return min_flammable_gas;
+    }
+
+    public void setMin_flammable_gas(String min_flammable_gas) {
+        this.min_flammable_gas = min_flammable_gas;
+    }
+
+    public String getMax_flammable_gas() {
+        return max_flammable_gas;
+    }
+
+    public void setMax_flammable_gas(String max_flammable_gas) {
+        this.max_flammable_gas = max_flammable_gas;
     }
 }
