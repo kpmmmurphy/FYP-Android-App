@@ -3,7 +3,6 @@ package ie.ucc.cs1.fyp;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +73,9 @@ public class GraphFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        rgCurrentHour.setOnCheckedChangeListener(onCheckedChangeListenerAggHour);
         rgAggHour.setOnCheckedChangeListener(onCheckedChangeListenerAggHour);
+        rgAggDay.setOnCheckedChangeListener(onCheckedChangeListenerAggHour);
 
         currentHourValues = new ArrayList<CurrentSensorValuesFromServer>();
         currentDayValues  = new ArrayList<CurrentSensorValuesFromServer>();
@@ -82,6 +83,7 @@ public class GraphFragment extends Fragment {
 
         API.getInstance(getActivity()).requestCurrentHourSensorValues(currentHourSuccessListener, sensorValuesErrorListener);
         API.getInstance(getActivity()).requestAggSensorValuesPerHour(sensorValuesAggPerHourSuccessListener, sensorValuesErrorListener);
+        API.getInstance(getActivity()).requestAggSensorValuesPerDay(sensorValuesAggPerDaySuccessListener, sensorValuesErrorListener);
     }
 
     @Override
@@ -100,8 +102,6 @@ public class GraphFragment extends Fragment {
         }
     };
 
-
-
     private Response.Listener<SensorValuesHolder> sensorValuesAggPerHourSuccessListener = new Response.Listener<SensorValuesHolder>() {
         @Override
         public void onResponse(SensorValuesHolder response) {
@@ -109,13 +109,24 @@ public class GraphFragment extends Fragment {
             if(response.getSensor_values_list() == null || response.getSensor_values_list().isEmpty()){
 
             }else{
-                currentHourValues = response.getSensor_values_list();
-                //populateLineChart(lcAggHour, response.getSensor_values_list(), Constants.SENSOR_NAME_MQ2);
+                currentDayValues = response.getSensor_values_list();
             }
         }
     };
 
-    private void populateLineChart(LineChart lineChart,  ArrayList<CurrentSensorValuesFromServer> sensorValues, String sensor){
+    private Response.Listener<SensorValuesHolder> sensorValuesAggPerDaySuccessListener = new Response.Listener<SensorValuesHolder>() {
+        @Override
+        public void onResponse(SensorValuesHolder response) {
+            Utils.methodDebug(LOGTAG);
+            if(response.getSensor_values_list() == null || response.getSensor_values_list().isEmpty()){
+
+            }else{
+                 dayValues = response.getSensor_values_list();
+            }
+        }
+    };
+
+    private void populateLineChart(LineChart lineChart,  ArrayList<CurrentSensorValuesFromServer> sensorValues, String sensor, boolean isAgg, int dateTimeType){
 
         if(sensorValues.size() > 0){
             ArrayList<String> xVals  = new ArrayList<String>();
@@ -128,36 +139,60 @@ public class GraphFragment extends Fragment {
             int count = 0;
             Entry entry1 = null, entry2 = null, entry3 = null, entry4 = null;
             for(CurrentSensorValuesFromServer values : sensorValues){
-                if(sensor.equals(Constants.SENSOR_NAME_THERMISTOR)){
-                    entry1 = new Entry(Float.valueOf(values.getMin_temperature()), count);
-                    entry2 = new Entry(Float.valueOf(values.getMax_temperature()), count);
-                    entry3 = new Entry(Float.valueOf(values.getAvg_temperature()), count);
-                }else if(sensor.equals(Constants.SENSOR_NAME_MQ7)){
-                    entry1 = new Entry(Float.valueOf(values.getMin_carbon_monoxide()), count);
-                    entry2 = new Entry(Float.valueOf(values.getMax_carbon_monoxide()), count);
-                    entry3 = new Entry(Float.valueOf(values.getAvg_carbon_monoxide()), count);
-                }else if(sensor.equals(Constants.SENSOR_NAME_MQ2)){
-                    entry1 = new Entry(Float.valueOf(values.getMin_flammable_gas()), count);
-                    entry2 = new Entry(Float.valueOf(values.getMax_flammable_gas()), count);
-                    entry3 = new Entry(Float.valueOf(values.getAvg_flammable_gas()), count);
-                }else if(sensor.equals(Constants.SENSOR_NAME_MOTION)){
-                    entry4 = new Entry(Float.valueOf(values.getMotion()), count);
-                }
-                ++count;
+                if(isAgg){
+                    if(sensor.equals(Constants.SENSOR_NAME_THERMISTOR)){
+                        entry1 = new Entry(Float.valueOf(values.getMin_temperature()), count);
+                        entry2 = new Entry(Float.valueOf(values.getMax_temperature()), count);
+                        entry3 = new Entry(Float.valueOf(values.getAvg_temperature()), count);
+                    }else if(sensor.equals(Constants.SENSOR_NAME_MQ7)){
+                        entry1 = new Entry(Float.valueOf(values.getMin_carbon_monoxide()), count);
+                        entry2 = new Entry(Float.valueOf(values.getMax_carbon_monoxide()), count);
+                        entry3 = new Entry(Float.valueOf(values.getAvg_carbon_monoxide()), count);
+                    }else if(sensor.equals(Constants.SENSOR_NAME_MQ2)){
+                        entry1 = new Entry(Float.valueOf(values.getMin_flammable_gas()), count);
+                        entry2 = new Entry(Float.valueOf(values.getMax_flammable_gas()), count);
+                        entry3 = new Entry(Float.valueOf(values.getAvg_flammable_gas()), count);
+                    }else if(sensor.equals(Constants.SENSOR_NAME_MOTION)){
+                        entry4 = new Entry(Float.valueOf(values.getMotion()), count);
+                    }
 
-                if(entry1 != null){
-                    minData.add(entry1);
+                    if(entry1 != null){
+                        minData.add(entry1);
+                    }
+                    if(entry2 != null){
+                        maxData.add(entry2);
+                    }
+                    if(entry3 != null){
+                        avgData.add(entry3);
+                    }
+                    if(entry4 != null){
+                        normalData.add(entry4);
+                    }
+                }else{
+                    if(sensor.equals(Constants.SENSOR_NAME_THERMISTOR)){
+                        entry1 = new Entry(Float.valueOf(values.getTemperature()), count);
+                    }else if(sensor.equals(Constants.SENSOR_NAME_MQ7)){
+                        entry1 = new Entry(Float.valueOf(values.getCarbon_monoxide()), count);
+                    }else if(sensor.equals(Constants.SENSOR_NAME_MQ2)){
+                        entry1 = new Entry(Float.valueOf(values.getFlammable_gas()), count);
+                    }else if(sensor.equals(Constants.SENSOR_NAME_MOTION)){
+                        entry1 = new Entry(Float.valueOf(values.getMotion()), count);
+                    }
+
+                    normalData.add(entry1);
+
                 }
-                if(entry2 != null){
-                    maxData.add(entry2);
+
+                String xValString = "";
+                if(dateTimeType == Constants.GRAPH_DATE_TIME_TYPE_HOUR_WITH_SECOND){
+                    xValString = getHourWithSecFromDateAndTime(values.getDate_and_time());
+                }else if(dateTimeType == Constants.GRAPH_DATE_TIME_TYPE_HOUR){
+                    xValString = getHourFromDateAndTime(values.getDate_and_time());
+                }else if(dateTimeType == Constants.GRAPH_DATE_TIME_TYPE_DAY){
+                    xValString = getDayFromDateAndTime(values.getDate_and_time());
                 }
-                if(entry3 != null){
-                    avgData.add(entry3);
-                }
-                if(entry4 != null){
-                    normalData.add(entry4);
-                }
-                xVals.add(getHourFromDateAndTime(values.getDate_and_time()));
+                xVals.add(xValString);
+                ++count;
             }
             if(minData.size() > 0) {
                 LineDataSet set1 = new LineDataSet(minData, "Min: " + sensor.replace("_", " "));
@@ -174,11 +209,10 @@ public class GraphFragment extends Fragment {
             if(avgData.size() > 0){
                 LineDataSet set3 = new LineDataSet(avgData, "Avg: " +  sensor.replace("_", " "));
                 lineDataSets.add(set3);
-
             }
 
             if(normalData.size() > 0){
-                LineDataSet set4 = new LineDataSet(normalData, "Percentage of " +  sensor.replace("_", " "));
+                LineDataSet set4 = new LineDataSet(normalData, "Level of " +  sensor.replace("_", " "));
                 lineDataSets.add(set4);
             }
 
@@ -199,28 +233,58 @@ public class GraphFragment extends Fragment {
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, int i) {
             switch(i) {
+                //CURRENT HOUR
+                case R.id.radio_current_hour_temp:
+                    populateLineChart(lcCurrentHour, currentHourValues, Constants.SENSOR_NAME_THERMISTOR,false, Constants.GRAPH_DATE_TIME_TYPE_HOUR_WITH_SECOND);
+                    break;
+                case R.id.radio_current_hour_flam:
+                    populateLineChart(lcCurrentHour, currentHourValues, Constants.SENSOR_NAME_MQ2, false, Constants.GRAPH_DATE_TIME_TYPE_HOUR_WITH_SECOND);
+                    break;
+                case R.id.radio_current_hour_co:
+                    populateLineChart(lcCurrentHour, currentHourValues, Constants.SENSOR_NAME_MQ7, false,  Constants.GRAPH_DATE_TIME_TYPE_HOUR_WITH_SECOND);
+                    break;
+                case R.id.radio_current_hour_motion:
+                    populateLineChart(lcCurrentHour, currentHourValues, Constants.SENSOR_NAME_MOTION, false, Constants.GRAPH_DATE_TIME_TYPE_HOUR_WITH_SECOND);
+                    break;
+                //AGG HOUR
                 case R.id.radio_agg_hour_temp:
-                    Log.e(LOGTAG, "TEMP");
-                    populateLineChart(lcAggHour, currentHourValues, Constants.SENSOR_NAME_THERMISTOR);
+                    populateLineChart(lcAggHour, currentDayValues, Constants.SENSOR_NAME_THERMISTOR, true, Constants.GRAPH_DATE_TIME_TYPE_HOUR);
                     break;
                 case R.id.radio_agg_hour_flam:
-                    Log.e(LOGTAG, "Flam");
-                    populateLineChart(lcAggHour, currentHourValues, Constants.SENSOR_NAME_MQ2);
+                    populateLineChart(lcAggHour, currentDayValues, Constants.SENSOR_NAME_MQ2, true, Constants.GRAPH_DATE_TIME_TYPE_HOUR);
                     break;
                 case R.id.radio_agg_hour_co:
-                    Log.e(LOGTAG, "CO");
-                    populateLineChart(lcAggHour, currentHourValues, Constants.SENSOR_NAME_MQ7);
+                    populateLineChart(lcAggHour, currentDayValues, Constants.SENSOR_NAME_MQ7, true, Constants.GRAPH_DATE_TIME_TYPE_HOUR);
                     break;
                 case R.id.radio_agg_hour_motion:
-                    Log.e(LOGTAG, "Motion");
-                    populateLineChart(lcAggHour, currentHourValues, Constants.SENSOR_NAME_MOTION);
+                    populateLineChart(lcAggHour, currentDayValues, Constants.SENSOR_NAME_MOTION,true, Constants.GRAPH_DATE_TIME_TYPE_HOUR);
                     break;
+                //AGG DAY
+                case R.id.radio_agg_day_temp:
+                    populateLineChart(lcAggDay, dayValues, Constants.SENSOR_NAME_THERMISTOR, true, Constants.GRAPH_DATE_TIME_TYPE_DAY);
+                    break;
+                case R.id.radio_agg_day_flam:
+                    populateLineChart(lcAggDay, dayValues, Constants.SENSOR_NAME_MQ2, true, Constants.GRAPH_DATE_TIME_TYPE_DAY);
+                    break;
+                case R.id.radio_agg_day_co:
+                    populateLineChart(lcAggDay, dayValues, Constants.SENSOR_NAME_MQ7, true, Constants.GRAPH_DATE_TIME_TYPE_DAY);
+                    break;
+                case R.id.radio_agg_day_motion:
+                    populateLineChart(lcAggDay, dayValues, Constants.SENSOR_NAME_MOTION,true, Constants.GRAPH_DATE_TIME_TYPE_DAY);
             }
         }
     };
 
-    private String getHourFromDateAndTime(String date_and_time){
+    private String getHourWithSecFromDateAndTime(String date_and_time){
         return date_and_time.split(" ")[1];
+    }
+
+    private String getHourFromDateAndTime(String date_and_time){
+        return date_and_time.split(" ")[1].substring(0, 5);
+    }
+
+    private String getDayFromDateAndTime(String date_and_time){
+        return date_and_time.split(" ")[0];
     }
 
 }
