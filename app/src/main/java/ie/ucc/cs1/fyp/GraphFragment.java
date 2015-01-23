@@ -15,7 +15,6 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 
@@ -42,6 +41,10 @@ public class GraphFragment extends Fragment {
     RadioGroup rgAggHour;
     @InjectView(R.id.radio_group_agg_day)
     RadioGroup rgAggDay;
+
+    ArrayList<CurrentSensorValuesFromServer> currentHourValues;
+    ArrayList<CurrentSensorValuesFromServer> currentDayValues;
+    ArrayList<CurrentSensorValuesFromServer> dayValues;
 
 
     public GraphFragment() {
@@ -73,6 +76,10 @@ public class GraphFragment extends Fragment {
 
         rgAggHour.setOnCheckedChangeListener(onCheckedChangeListenerAggHour);
 
+        currentHourValues = new ArrayList<CurrentSensorValuesFromServer>();
+        currentDayValues  = new ArrayList<CurrentSensorValuesFromServer>();
+        dayValues         = new ArrayList<CurrentSensorValuesFromServer>();
+
         API.getInstance(getActivity()).requestCurrentHourSensorValues(currentHourSuccessListener, sensorValuesErrorListener);
         API.getInstance(getActivity()).requestAggSensorValuesPerHour(sensorValuesAggPerHourSuccessListener, sensorValuesErrorListener);
     }
@@ -88,25 +95,7 @@ public class GraphFragment extends Fragment {
             if(response.getSensor_values_list() == null || response.getSensor_values_list().isEmpty()){
 
             }else{
-                Log.e(LOGTAG, String.valueOf(response.getSensor_values_list().size()));
-                ArrayList<Entry> currentHourData = new ArrayList<Entry>();
-                ArrayList<String> xVals = new ArrayList<String>();
-                int count = 0;
-                for(CurrentSensorValuesFromServer values : response.getSensor_values_list()){
-                    Entry entry = new Entry(Float.valueOf(values.getTemperature()), ++count);
-                    currentHourData.add(entry);
-                    xVals.add(getHourFromDateAndTime(values.getDate_and_time()));
-                }
-
-                LineDataSet set1 = new LineDataSet(currentHourData, "Temp");
-                ArrayList<LineDataSet> lineDataSets = new ArrayList<LineDataSet>();
-                lineDataSets.add(set1);
-
-
-
-
-                LineData lineData = new LineData(xVals, lineDataSets);
-                lcCurrentHour.setData(lineData);
+                currentHourValues = response.getSensor_values_list();
             }
         }
     };
@@ -120,23 +109,8 @@ public class GraphFragment extends Fragment {
             if(response.getSensor_values_list() == null || response.getSensor_values_list().isEmpty()){
 
             }else{
-                /*Log.e(LOGTAG, String.valueOf(response.getSensor_values_list().size()));
-                ArrayList<Entry> currentHourData = new ArrayList<Entry>();
-                ArrayList<String> xVals = new ArrayList<String>();
-                int count = 0;
-                for(CurrentSensorValuesFromServer values : response.getSensor_values_list()){
-                    Entry entry = new Entry(Float.valueOf(values.getAvg_carbon_monoxide()), ++count);
-                    currentHourData.add(entry);
-                    xVals.add(getHourFromDateAndTime(values.getDate_and_time()));
-                }
-
-                LineDataSet set1 = new LineDataSet(currentHourData, "Temp");
-                ArrayList<LineDataSet> lineDataSets = new ArrayList<LineDataSet>();
-                lineDataSets.add(set1);
-
-                LineData lineData = new LineData(xVals, lineDataSets);
-                lcAggHour.setData(lineData);*/
-                populateLineChart(lcAggHour, response.getSensor_values_list(), Constants.SENSOR_NAME_MQ2);
+                currentHourValues = response.getSensor_values_list();
+                //populateLineChart(lcAggHour, response.getSensor_values_list(), Constants.SENSOR_NAME_MQ2);
             }
         }
     };
@@ -149,9 +123,10 @@ public class GraphFragment extends Fragment {
             ArrayList<Entry> minData = new ArrayList<Entry>();
             ArrayList<Entry> maxData = new ArrayList<Entry>();
             ArrayList<Entry> avgData = new ArrayList<Entry>();
+            ArrayList<Entry> normalData = new ArrayList<Entry>();
 
             int count = 0;
-            Entry entry1 = null, entry2 = null, entry3 = null;
+            Entry entry1 = null, entry2 = null, entry3 = null, entry4 = null;
             for(CurrentSensorValuesFromServer values : sensorValues){
                 if(sensor.equals(Constants.SENSOR_NAME_THERMISTOR)){
                     entry1 = new Entry(Float.valueOf(values.getMin_temperature()), count);
@@ -165,24 +140,50 @@ public class GraphFragment extends Fragment {
                     entry1 = new Entry(Float.valueOf(values.getMin_flammable_gas()), count);
                     entry2 = new Entry(Float.valueOf(values.getMax_flammable_gas()), count);
                     entry3 = new Entry(Float.valueOf(values.getAvg_flammable_gas()), count);
+                }else if(sensor.equals(Constants.SENSOR_NAME_MOTION)){
+                    entry4 = new Entry(Float.valueOf(values.getMotion()), count);
                 }
                 ++count;
 
-                minData.add(entry1);
-                maxData.add(entry2);
-                avgData.add(entry3);
+                if(entry1 != null){
+                    minData.add(entry1);
+                }
+                if(entry2 != null){
+                    maxData.add(entry2);
+                }
+                if(entry3 != null){
+                    avgData.add(entry3);
+                }
+                if(entry4 != null){
+                    normalData.add(entry4);
+                }
                 xVals.add(getHourFromDateAndTime(values.getDate_and_time()));
             }
-            LineDataSet set1 = new LineDataSet(minData, "Min " + sensor);
-            set1.setColor(R.color.);
-            LineDataSet set2 = new LineDataSet(maxData, "Max" +  sensor);
-            LineDataSet set3 = new LineDataSet(avgData, "Avg" +  sensor);
+            if(minData.size() > 0) {
+                LineDataSet set1 = new LineDataSet(minData, "Min: " + sensor.replace("_", " "));
+                set1.setColor(getResources().getColor(R.color.graph_min));
+                set1.setCircleColor(getResources().getColor(R.color.graph_min));
+                lineDataSets.add(set1);
+            }
+            if(maxData.size() > 0){
+                LineDataSet set2 = new LineDataSet(maxData, "Max: " +  sensor.replace("_", " "));
+                set2.setColor(getResources().getColor(R.color.graph_max));
+                set2.setCircleColor(getResources().getColor(R.color.graph_max));
+                lineDataSets.add(set2);
+            }
+            if(avgData.size() > 0){
+                LineDataSet set3 = new LineDataSet(avgData, "Avg: " +  sensor.replace("_", " "));
+                lineDataSets.add(set3);
 
-            lineDataSets.add(set1);
-            lineDataSets.add(set2);
-            lineDataSets.add(set3);
+            }
+
+            if(normalData.size() > 0){
+                LineDataSet set4 = new LineDataSet(normalData, "Percentage of " +  sensor.replace("_", " "));
+                lineDataSets.add(set4);
+            }
 
             lineChart.setData(new LineData(xVals, lineDataSets));
+            lineChart.animateXY(1000, 1000);
         }
 
     }
@@ -200,15 +201,19 @@ public class GraphFragment extends Fragment {
             switch(i) {
                 case R.id.radio_agg_hour_temp:
                     Log.e(LOGTAG, "TEMP");
+                    populateLineChart(lcAggHour, currentHourValues, Constants.SENSOR_NAME_THERMISTOR);
                     break;
                 case R.id.radio_agg_hour_flam:
                     Log.e(LOGTAG, "Flam");
+                    populateLineChart(lcAggHour, currentHourValues, Constants.SENSOR_NAME_MQ2);
                     break;
                 case R.id.radio_agg_hour_co:
                     Log.e(LOGTAG, "CO");
+                    populateLineChart(lcAggHour, currentHourValues, Constants.SENSOR_NAME_MQ7);
                     break;
                 case R.id.radio_agg_hour_motion:
                     Log.e(LOGTAG, "Motion");
+                    populateLineChart(lcAggHour, currentHourValues, Constants.SENSOR_NAME_MOTION);
                     break;
             }
         }

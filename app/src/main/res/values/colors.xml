@@ -26,7 +26,6 @@
     <color name="output_alert">#e50000</color>
 
     <!--Graph Colors-->
-    <color name="graph_min">#BA1919</color>
+    <color name="graph_min">#A375FF</color>
     <color name="graph_max">#BA1919</color>
-    <color name="graph_avg">#BA1919</color>
 </resources>

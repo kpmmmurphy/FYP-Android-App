@@ -68,5 +68,8 @@
     </string-array>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="graphing_title_current_hour">Current Hour Sensor Readings</string>
+    <string name="graphing_title_current_day_summary_by_hour">Current Day Summary</string>
+    <string name="graphing_title_day_summary">Day Summary</string>
 
 </resources>

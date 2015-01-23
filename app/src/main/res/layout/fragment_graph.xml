@@ -10,16 +10,28 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <TextView
+            style="@style/Config_Section_Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/graphing_title_current_hour" />
+
+        <View
+            style="@style/Config_Divider"
+            android:layout_width="match_parent"
+            android:layout_height="1px" />
+
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/graphing_line_chart_current_hour"
             android:layout_width="match_parent"
-            android:layout_height="265dp" />
+            android:layout_height="364dp" />
 
         <RadioGroup
             android:id="@+id/radio_group_current_hour"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="12dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
@@ -48,16 +60,28 @@
                 android:text="@string/sensor_motion" />
         </RadioGroup>
 
+        <TextView
+            style="@style/Config_Section_Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/graphing_title_current_day_summary_by_hour" />
+
+        <View
+            style="@style/Config_Divider"
+            android:layout_width="match_parent"
+            android:layout_height="1px" />
+
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/graphing_line_chart_agg_hour"
             android:layout_width="match_parent"
-            android:layout_height="256dp" />
+            android:layout_height="364dp" />
 
         <RadioGroup
             android:id="@+id/radio_group_agg_hour"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="12dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
@@ -86,16 +110,28 @@
                 android:text="@string/sensor_motion" />
         </RadioGroup>
 
+        <TextView
+            style="@style/Config_Section_Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/graphing_title_day_summary" />
+
+        <View
+            style="@style/Config_Divider"
+            android:layout_width="match_parent"
+            android:layout_height="1px" />
+
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/graphing_line_chart_agg_day"
             android:layout_width="match_parent"
-            android:layout_height="256dp" />
+            android:layout_height="364dp" />
 
         <RadioGroup
             android:id="@+id/radio_group_agg_day"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="12dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
