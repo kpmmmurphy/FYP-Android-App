@@ -15,6 +15,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 
@@ -173,6 +174,7 @@ public class GraphFragment extends Fragment {
                 xVals.add(getHourFromDateAndTime(values.getDate_and_time()));
             }
             LineDataSet set1 = new LineDataSet(minData, "Min " + sensor);
+            set1.setColor(R.color.);
             LineDataSet set2 = new LineDataSet(maxData, "Max" +  sensor);
             LineDataSet set3 = new LineDataSet(avgData, "Avg" +  sensor);
 
