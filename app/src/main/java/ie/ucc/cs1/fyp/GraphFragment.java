@@ -73,9 +73,7 @@ public class GraphFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        rgCurrentHour.setOnCheckedChangeListener(onCheckedChangeListenerAggHour);
-        rgAggHour.setOnCheckedChangeListener(onCheckedChangeListenerAggHour);
-        rgAggDay.setOnCheckedChangeListener(onCheckedChangeListenerAggHour);
+
 
         currentHourValues = new ArrayList<CurrentSensorValuesFromServer>();
         currentDayValues  = new ArrayList<CurrentSensorValuesFromServer>();
@@ -84,6 +82,14 @@ public class GraphFragment extends Fragment {
         API.getInstance(getActivity()).requestCurrentHourSensorValues(currentHourSuccessListener, sensorValuesErrorListener);
         API.getInstance(getActivity()).requestAggSensorValuesPerHour(sensorValuesAggPerHourSuccessListener, sensorValuesErrorListener);
         API.getInstance(getActivity()).requestAggSensorValuesPerDay(sensorValuesAggPerDaySuccessListener, sensorValuesErrorListener);
+
+        rgCurrentHour.setOnCheckedChangeListener(onCheckedChangeListenerAggHour);
+        rgAggHour.setOnCheckedChangeListener(onCheckedChangeListenerAggHour);
+        rgAggDay.setOnCheckedChangeListener(onCheckedChangeListenerAggHour);
+
+
+
+
     }
 
     @Override
@@ -98,6 +104,7 @@ public class GraphFragment extends Fragment {
 
             }else{
                 currentHourValues = response.getSensor_values_list();
+                onCheckedChangeListenerAggHour.onCheckedChanged(rgCurrentHour,R.id.radio_current_hour_temp);
             }
         }
     };
@@ -110,6 +117,7 @@ public class GraphFragment extends Fragment {
 
             }else{
                 currentDayValues = response.getSensor_values_list();
+                onCheckedChangeListenerAggHour.onCheckedChanged(rgAggHour,R.id.radio_agg_hour_temp);
             }
         }
     };
@@ -122,6 +130,7 @@ public class GraphFragment extends Fragment {
 
             }else{
                  dayValues = response.getSensor_values_list();
+                 onCheckedChangeListenerAggHour.onCheckedChanged(rgAggDay,R.id.radio_agg_day_temp);
             }
         }
     };

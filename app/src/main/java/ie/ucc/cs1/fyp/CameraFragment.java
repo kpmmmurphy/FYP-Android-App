@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.MediaController;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -40,6 +41,8 @@ public class CameraFragment extends Fragment{
     private ArrayList<String> imgList;
     private ArrayList<String> videoList;
 
+    @InjectView(R.id.view_wrapper)
+    RelativeLayout viewWrapper;
     @InjectView(R.id.iv_current_image)
     NetworkImageView currentImage;
     @InjectView(R.id.vv_current_video)
@@ -119,6 +122,7 @@ public class CameraFragment extends Fragment{
             if(response.getImages() != null){
                 filterAssets(response.getImages());
                 if(imgList.size() > 0){
+                    viewWrapper.setVisibility(View.VISIBLE);
                     errorLayout.setVisibility(View.GONE);
 
                     recentImages.removeAllViews();
@@ -157,10 +161,12 @@ public class CameraFragment extends Fragment{
 
                     }
                 }else{
+                    viewWrapper.setVisibility(View.GONE);
                     errorLayout.setVisibility(View.VISIBLE);
                     errorText.setText(R.string.camera_no_images_to_display);
                 }
             }else{
+                viewWrapper.setVisibility(View.GONE);
                 errorLayout.setVisibility(View.VISIBLE);
                 errorText.setText(R.string.camera_no_images_to_display);
             }
@@ -171,6 +177,7 @@ public class CameraFragment extends Fragment{
         @Override
         public void onErrorResponse(VolleyError error) {
             Utils.methodDebug(LOGTAG);
+            viewWrapper.setVisibility(View.GONE);
             errorLayout.setVisibility(View.VISIBLE);
             errorText.setText(R.string.camera_unable_to_display_images);
         }
