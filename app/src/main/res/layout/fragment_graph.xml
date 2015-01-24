@@ -14,7 +14,8 @@
             style="@style/Config_Section_Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/graphing_title_current_hour" />
+            android:text="@string/graphing_title_current_hour"
+            android:textAllCaps="true" />
 
         <View
             style="@style/Config_Divider"
@@ -36,6 +37,7 @@
             android:orientation="horizontal">
 
             <RadioButton
+                android:checked="true"
                 android:id="@+id/radio_current_hour_temp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -64,7 +66,8 @@
             style="@style/Config_Section_Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/graphing_title_current_day_summary_by_hour" />
+            android:text="@string/graphing_title_current_day_summary_by_hour"
+            android:textAllCaps="true" />
 
         <View
             style="@style/Config_Divider"
@@ -86,6 +89,7 @@
             android:orientation="horizontal">
 
             <RadioButton
+                android:checked="true"
                 android:id="@+id/radio_agg_hour_temp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -114,7 +118,8 @@
             style="@style/Config_Section_Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/graphing_title_day_summary" />
+            android:text="@string/graphing_title_day_summary"
+            android:textAllCaps="true" />
 
         <View
             style="@style/Config_Divider"
@@ -136,6 +141,7 @@
             android:orientation="horizontal">
 
             <RadioButton
+                android:checked="true"
                 android:id="@+id/radio_agg_day_temp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
