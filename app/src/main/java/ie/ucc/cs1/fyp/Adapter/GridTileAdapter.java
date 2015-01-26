@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import ie.ucc.cs1.fyp.Constants;
 import ie.ucc.cs1.fyp.Model.SensorOutput;
 import ie.ucc.cs1.fyp.R;
 
@@ -42,7 +43,6 @@ public class GridTileAdapter extends BaseAdapter {
         return 0;
     }
 
-    int fade = 10;
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         Holder holder;
@@ -59,6 +59,18 @@ public class GridTileAdapter extends BaseAdapter {
         holder.name.setText(String.valueOf(getItem(i).getName()).replace("_", " "));
         holder.outputLevel.setText(String.valueOf(getItem(i).getValue()));
         holder.measurement.setText(String.valueOf(getItem(i).getMeasurement()));
+
+        if(getItem(i).getName().equalsIgnoreCase(Constants.SENSOR_NAME_MOTION)){
+            if(getItem(i).getMaxValue() != null)
+                holder.maxValue.setText(getItem(i).getMaxValue() + "%");
+        }else{
+            holder.maxValue.setText("Max " + String.valueOf(getItem(i).getMaxValue()));
+
+            holder.minValue.setText("Min " + String.valueOf(getItem(i).getMinValue()));
+        }
+
+
+
         return view;
     }
 
@@ -71,7 +83,7 @@ public class GridTileAdapter extends BaseAdapter {
         TextView name;
         @InjectView(R.id.tv_sensor_max_value)
         TextView maxValue;
-        @InjectView(R.id.tv_sensor_max_value)
+        @InjectView(R.id.tv_sensor_min_value)
         TextView minValue;
 
 

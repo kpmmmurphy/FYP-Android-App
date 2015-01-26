@@ -9,11 +9,15 @@ public class SensorOutput {
     protected String  name;
     protected Integer value;
     protected String  measurement;
+    protected Integer maxValue;
+    protected Integer minValue;
 
-    public SensorOutput(String name,String measurement, Integer value) {
+    public SensorOutput(String name, String measurement, Integer value, Integer maxValue, Integer minValue) {
         this.value = value;
         this.name = name;
         this.measurement = measurement;
+        this.maxValue = maxValue;
+        this.minValue = minValue;
     }
 
     public String getName() {
@@ -38,5 +42,21 @@ public class SensorOutput {
 
     public void setMeasurement(String measurement) {
         this.measurement = measurement;
+    }
+
+    public Integer getMaxValue() {
+        return maxValue;
+    }
+
+    public void setMaxValue(Integer maxValue) {
+        this.maxValue = maxValue;
+    }
+
+    public Integer getMinValue() {
+        return minValue;
+    }
+
+    public void setMinValue(Integer minValue) {
+        this.minValue = minValue;
     }
 }
