@@ -20,6 +20,7 @@ public class CurrentSensorValuesFromServer {
     protected String min_flammable_gas;
     protected String max_flammable_gas;
     protected String motion;
+    protected String precentage_motion;
 
     public String getId() {
         return id;
@@ -64,6 +65,7 @@ public class CurrentSensorValuesFromServer {
     public String getFlammable_gas() {
         return flammable_gas;
     }
+
 
     public void setFlammable_gas(String flammable_gas) {
         this.flammable_gas = flammable_gas;

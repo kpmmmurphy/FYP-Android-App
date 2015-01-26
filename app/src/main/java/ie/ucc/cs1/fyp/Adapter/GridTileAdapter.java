@@ -69,6 +69,11 @@ public class GridTileAdapter extends BaseAdapter {
         TextView measurement;
         @InjectView(R.id.tv_sensor_name)
         TextView name;
+        @InjectView(R.id.tv_sensor_max_value)
+        TextView maxValue;
+        @InjectView(R.id.tv_sensor_max_value)
+        TextView minValue;
+
 
         public Holder(View view) {
             ButterKnife.inject(this, view);

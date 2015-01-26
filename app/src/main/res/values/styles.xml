@@ -2,6 +2,8 @@
 <resources>
     <style name="AppTheme" parent="android:Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:textViewStyle">@style/CustomTextViewStyle</item>
+        <item name="android:buttonStyle">@style/CustomTextViewStyle</item>
     </style>
 
     <!-- ActionBar styles -->
@@ -19,6 +21,9 @@
     </style>
     
     <!--Text Appearance-->
+    <style name="CustomTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
 
     <!--SENSOR GRID ITEM-->
     <style name="Text_GridItemOutput" parent="android:TextAppearance.DeviceDefault.Large">
@@ -33,6 +38,13 @@
 
     <style name="Text_GridItemName" parent="android:TextAppearance.DeviceDefault.Large">
         <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/output_normal</item>
+    </style>
+
+    <style name="Text_GridItemMaxMin">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/output_normal</item>
     </style>
 
