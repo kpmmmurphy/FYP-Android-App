@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="320dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/dialog_tv_title"
+        style="@style/Config_Sensor_Section_Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        tools:text="Carbon Monoxide" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        style="@style/Config_Divider"/>
+
+    <TextView
+        android:id="@+id/dialog_tv_sensor_output_level"
+        style="@style/Text_GridItemOutput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="sans-serif-light"
+        tools:text="100" />
+
+    <TextView
+        android:id="@+id/dialog_tv_sensor_measurement"
+        style="@style/Text_GridItemMeasurement"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="-24dp"
+        android:fontFamily="sans-serif-thin"
+        tools:text="ppm" />
+
+    <TextView
+        android:id="@+id/dialog_tv_sensor_output_suggestion"
+        style="@style/Config_Section_Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        tools:text="Current Level is Safe" />
+
+</LinearLayout>

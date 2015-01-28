@@ -56,7 +56,7 @@ public class SensorFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_sensor, container, false);
         ButterKnife.inject(this, view);
-        gridTileAdapter = new GridTileAdapter(getActivity().getApplicationContext(), Utils.randomSensorOutput());
+        gridTileAdapter = new GridTileAdapter(getActivity(), Utils.randomSensorOutput());
         mGridView.setAdapter(gridTileAdapter);
         return view;
     }

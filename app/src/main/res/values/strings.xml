@@ -72,5 +72,6 @@
     <string name="graphing_title_current_hour">Current Hour Sensor Readings</string>
     <string name="graphing_title_current_day_summary_by_hour">Current Day Summary</string>
     <string name="graphing_title_day_summary">Complete Summary</string>
+    <string name="sensor_output_feedback">Sensor Output Feedback</string>
 
 </resources>

@@ -1,9 +1,11 @@
 package ie.ucc.cs1.fyp.Adapter;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -69,6 +71,8 @@ public class GridTileAdapter extends BaseAdapter {
             holder.minValue.setText("Min " + String.valueOf(getItem(i).getMinValue()));
         }
 
+        view.setOnClickListener(onSensorTileClick);
+
 
 
         return view;
@@ -91,6 +95,24 @@ public class GridTileAdapter extends BaseAdapter {
             ButterKnife.inject(this, view);
         }
     }
+
+    private View.OnClickListener onSensorTileClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            final Dialog dialog = new Dialog(mContext);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.dialog_sensor_output);
+            TextView tvTitle = (TextView)(view.findViewById(R.id.tv_sensor_name));
+            TextView tvValue = (TextView)(view.findViewById(R.id.tv_sensor_output_level));
+            TextView tvMesaurement = (TextView)(view.findViewById(R.id.tv_sensor_measurement));
+
+            ((TextView)dialog.findViewById(R.id.dialog_tv_title)).setText(tvTitle.getText());
+            ((TextView)dialog.findViewById(R.id.dialog_tv_sensor_output_level)).setText(tvValue.getText());
+            ((TextView)dialog.findViewById(R.id.dialog_tv_sensor_measurement)).setText(tvMesaurement.getText());
+
+            dialog.show();
+        }
+    };
 
     public void setSensorOutputs(ArrayList<SensorOutput> sensorOutputs) {
         this.sensorOutputs = sensorOutputs;
