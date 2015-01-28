@@ -44,4 +44,8 @@ public class Utils {
         return min + (int) (Math.random() * max);
     }
 
+    /*public static String getSensorOutputFeedback(){
+
+    }*/
+
 }
