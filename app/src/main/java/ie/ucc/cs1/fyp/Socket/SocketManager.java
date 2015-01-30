@@ -114,7 +114,7 @@ public class SocketManager {
 
                 Packet packet = gson.fromJson(receivedString, Packet.class);
 
-                if(packet.getPayload() != null && packet.getService().equals(Constants.SERVICE_PAIRED) && packet.getPayload().getStatus_code() == Constants.CONNECT_SUCCESS){
+                if(packet.getPayload() != null && packet.getService().equals(Constants.SERVICE_PAIRED) && packet.getPayload().getPaired().getStatus_code() == Constants.CONNECT_SUCCESS){
                     //Set session to connected
                     if(BuildConfig.DEBUG){
                         Log.d(LOGTAG, "Connected to Pi");
