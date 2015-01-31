@@ -82,9 +82,19 @@ public class GraphFragment extends Fragment {
 
         if(Session.getInstance(getActivity()).isConnectedToPi()){
             SocketManager.getInstance(getActivity()).sendPacketToPi(Utils.toJson(new Packet(Constants.JSON_VALUE_WIFI_DIRECT_GET_GRAPH_DATA , null)));
-            currentHourValues.addAll(Session.getInstance(getActivity()).getGraphData().get(Constants.GRAPH_DATA_CUR_HOUR));
-            currentDayValues.addAll(Session.getInstance(getActivity()).getGraphData().get(Constants.GRAPH_DATA_CUR_DAY_AGG_HOUR));
-            dayValues.addAll(Session.getInstance(getActivity()).getGraphData().get(Constants.GRAPH_DATA_AGG_DAY));
+            if(Session.getInstance(getActivity()).getGraphData().containsKey(Constants.GRAPH_DATA_CUR_HOUR)){
+                currentHourValues.addAll(Session.getInstance(getActivity()).getGraphData().get(Constants.GRAPH_DATA_CUR_HOUR));
+                onCheckedChangeListenerAggHour.onCheckedChanged(rgCurrentHour,R.id.radio_current_hour_temp);
+            }
+            if(Session.getInstance(getActivity()).getGraphData().containsKey(Constants.GRAPH_DATA_CUR_DAY_AGG_HOUR)){
+                currentDayValues.addAll(Session.getInstance(getActivity()).getGraphData().get(Constants.GRAPH_DATA_CUR_DAY_AGG_HOUR));
+                onCheckedChangeListenerAggHour.onCheckedChanged(rgAggHour,R.id.radio_agg_hour_temp);
+
+            }
+            if(Session.getInstance(getActivity()).getGraphData().containsKey(Constants.GRAPH_DATA_AGG_DAY)){
+                dayValues.addAll(Session.getInstance(getActivity()).getGraphData().get(Constants.GRAPH_DATA_AGG_DAY));
+                onCheckedChangeListenerAggHour.onCheckedChanged(rgAggDay,R.id.radio_agg_day_temp);
+            }
         }else{
             API.getInstance(getActivity()).requestCurrentHourSensorValues(currentHourSuccessListener, sensorValuesErrorListener);
             API.getInstance(getActivity()).requestAggSensorValuesPerHour(sensorValuesAggPerHourSuccessListener, sensorValuesErrorListener);
@@ -94,10 +104,6 @@ public class GraphFragment extends Fragment {
         rgCurrentHour.setOnCheckedChangeListener(onCheckedChangeListenerAggHour);
         rgAggHour.setOnCheckedChangeListener(onCheckedChangeListenerAggHour);
         rgAggDay.setOnCheckedChangeListener(onCheckedChangeListenerAggHour);
-
-
-
-
     }
 
     @Override
@@ -293,14 +299,23 @@ public class GraphFragment extends Fragment {
     };
 
     private String getHourWithSecFromDateAndTime(String date_and_time){
+        if(Session.getInstance(getActivity()).isConnectedToPi()){
+            date_and_time = date_and_time.replace("T", " ");
+        }
         return date_and_time.split(" ")[1];
     }
 
     private String getHourFromDateAndTime(String date_and_time){
+        if(Session.getInstance(getActivity()).isConnectedToPi()){
+            date_and_time = date_and_time.replace("T", " ");
+        }
         return date_and_time.split(" ")[1].substring(0, 5);
     }
 
     private String getDayFromDateAndTime(String date_and_time){
+        if(Session.getInstance(getActivity()).isConnectedToPi()){
+            date_and_time = date_and_time.replace("T", " ");
+        }
         return date_and_time.split(" ")[0];
     }
 

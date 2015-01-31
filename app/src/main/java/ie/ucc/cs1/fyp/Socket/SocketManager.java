@@ -151,6 +151,8 @@ public class SocketManager {
             @Override
             public void run() {
                 try {
+                    //Request Graph Data Right Away!!
+                    SocketManager.getInstance(mContext).sendPacketToPi(Utils.toJson(new Packet(Constants.JSON_VALUE_WIFI_DIRECT_GET_GRAPH_DATA , null)));
                     while (!this.isInterrupted()){
                         piDirectSocket = serverSocket.accept();
                         String currentPacket = readPacket(piDirectSocket.getInputStream());
