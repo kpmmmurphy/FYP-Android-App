@@ -66,6 +66,11 @@ public class PacketManager {
                     Log.d(LOGTAG, "GRAPH_DATA_AGG_DAY");
                 }
                 session.getGraphData().put(Constants.GRAPH_DATA_AGG_DAY, packet.getPayload().getSensor_list_agg_day());
+            }else if(packet.getService().equals(Constants.SERVICE_REQUEST_STREAM)) {
+                if (BuildConfig.DEBUG) {
+                    Log.d(LOGTAG, "SERVICE_REQUEST_STREAM");
+                }
+                session.setStreamAddress(packet.getPayload().getStream_address());
             }else if(packet.getService().equals(Constants.SERVICE_RESPONSE)){
                 if(BuildConfig.DEBUG){
                     Log.d(LOGTAG,"Response");

@@ -23,6 +23,7 @@ public interface Constants {
     public static final int SOCKET_CLIENT_PORT           = 5005;
     public static final int SOCKET_SERVER_PORT           = 5006;
     public static final int SOCKET_MULTICAST_PORT        = 5007;
+    public static final int VIDEO_STREAM_PORT            = 8554;
 
     //Socket Json Keys
     public static final String JSON_KEY_SERVICE = "service";
@@ -33,6 +34,8 @@ public interface Constants {
     public static final String SERVICE_RESPONSE     = "response";
     public static final String SERVICE_SENSOR_DATA  = "current_sensor_values";
     public static final String SERVICE_PAIRED       = "paired";
+    public static final String SERVICE_REQUEST_STREAM  = "request_stream";
+    public static final String SERVICE_REQUEST_IMAGE   = "request_image";
     public static final String JSON_VALUE_WIFI_DIRECT_GET_GRAPH_DATA = "get_graph_data";
     public static final String GRAPH_DATA_CUR_HOUR         = "sensor_list_current_hour";
     public static final String GRAPH_DATA_CUR_DAY_AGG_HOUR = "sensor_list_current_day_agg_hour";

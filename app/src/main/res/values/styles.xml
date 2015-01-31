@@ -3,7 +3,6 @@
     <style name="AppTheme" parent="android:Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="android:textViewStyle">@style/CustomTextViewStyle</item>
-        <item name="android:buttonStyle">@style/CustomTextViewStyle</item>
     </style>
 
     <!-- ActionBar styles -->

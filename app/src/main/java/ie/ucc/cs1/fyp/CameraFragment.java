@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.MediaController;
@@ -26,9 +27,13 @@ import java.util.Collections;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import butterknife.OnItemClick;
 import ie.ucc.cs1.fyp.Model.CameraResponse;
+import ie.ucc.cs1.fyp.Model.Packet;
 import ie.ucc.cs1.fyp.Network.API;
+import ie.ucc.cs1.fyp.Socket.Session;
+import ie.ucc.cs1.fyp.Socket.SocketManager;
 
 /**
  * Created by kpmmmurphy on 04/11/14.
@@ -57,23 +62,41 @@ public class CameraFragment extends Fragment{
     ListView recentVideos;
     @InjectView(R.id.camera_fragment_error_text)
     TextView errorText;
+    @InjectView(R.id.camera_btn_request_image)
+    Button btnRequestImage;
+    @InjectView(R.id.camera_btn_request_stream)
+    Button getBtnRequestStream;
+    @InjectView(R.id.camera_direct_controls)
+    LinearLayout llCameraControls;
 
     @OnItemClick(R.id.lv_recent_videos)
     void onItemSelected(int position){
         Utils.methodDebug(LOGTAG);
         String videoName  = videoList.get(position);
         setTimeAndDate(videoName);
-        VideoView vv = new VideoView(getActivity());
-        MediaController mediaController = new MediaController(getActivity());
-        mediaController.setAnchorView(currentVideo);
-        currentVideo.setMediaController(mediaController);
-        currentVideo.setVideoURI(Uri.parse(CAMERA_URL + videoName));
-        //currentImage.setVisibility(View.GONE);
-        currentVideo.setVisibility(View.VISIBLE);
-        YoYo.with(Techniques.FadeOut).duration(700).playOn(currentImage);
-        YoYo.with(Techniques.FadeIn).duration(700).playOn(currentVideo);
-        currentVideo.requestFocus();
-        currentVideo.start();
+        playURIWithVV(currentVideo, CAMERA_URL + videoName);
+    }
+
+    @OnClick(R.id.camera_btn_request_image)
+    void onClick(){
+        Utils.methodDebug(LOGTAG);
+        SocketManager.getInstance(getActivity()).sendPacketToPi(Utils.toJson(new Packet(Constants.SERVICE_REQUEST_IMAGE, null)));
+    }
+
+    @OnClick(R.id.camera_btn_request_stream)
+    void onClickStream(){
+        Utils.methodDebug(LOGTAG);
+        SocketManager.getInstance(getActivity()).sendPacketToPi(Utils.toJson(new Packet(Constants.SERVICE_REQUEST_STREAM, null)));
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        String uri = String.format("%s%s:%d/", "rtsp://",Session.getInstance(getActivity()).getPiIPAddress().getHostName(), Constants.VIDEO_STREAM_PORT);
+        if(BuildConfig.DEBUG){
+            Log.d(LOGTAG, "Streaming at URL : " + uri);
+        }
+        playURIWithVV(currentVideo, uri);
     }
 
     public CameraFragment() {
@@ -106,7 +129,12 @@ public class CameraFragment extends Fragment{
     public void onResume() {
         super.onResume();
         Utils.methodDebug(LOGTAG);
-        API.getInstance(getActivity()).requestListImages(successListener, errorListener);
+        if(Session.getInstance(getActivity()).isConnectedToPi()){
+
+
+        }else{
+            API.getInstance(getActivity()).requestListImages(successListener, errorListener);
+        }
     }
 
     @Override
@@ -217,6 +245,19 @@ public class CameraFragment extends Fragment{
         YoYo.with(Techniques.FadeOut).duration(500).playOn(imageTimeAndDate);
         imageTimeAndDate.setText(getString(R.string.tv_captured) + " " + reformatDate(fileName.substring(0, fileName.length() - 4)));
         YoYo.with(Techniques.FadeIn).duration(500).playOn(imageTimeAndDate);
+    }
+
+    private void playURIWithVV(VideoView vv, String uri){
+        Utils.methodDebug(LOGTAG);
+        MediaController mediaController = new MediaController(getActivity());
+        mediaController.setAnchorView(vv);
+        vv.setMediaController(mediaController);
+        vv.setVideoURI(Uri.parse(uri));
+        vv.setVisibility(View.VISIBLE);
+        YoYo.with(Techniques.FadeOut).duration(700).playOn(currentImage);
+        YoYo.with(Techniques.FadeIn).duration(700).playOn(vv);
+        vv.requestFocus();
+        vv.start();
     }
 }
 

@@ -9,6 +9,5 @@
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:progressBarStyle">@android:style/Widget.Material.ProgressBar.Small</item>
         <item name="android:textViewStyle">@style/CustomTextViewStyle</item>
-        <item name="android:buttonStyle">@style/CustomTextViewStyle</item>
     </style>
 </resources>

@@ -17,6 +17,8 @@ public class Payload {
     protected Session session;
     protected Status status;
     protected Paired paired;
+    protected String stream_address;
+    protected String image_data;
 
     public CurrentSensorValues getCurrent_sensor_values() {
         return current_sensor_values;
@@ -80,5 +82,13 @@ public class Payload {
 
     public void setSensor_list_agg_day(ArrayList<CurrentSensorValuesFromServer> sensor_list_agg_day) {
         this.sensor_list_agg_day = sensor_list_agg_day;
+    }
+
+    public String getStream_address() {
+        return stream_address;
+    }
+
+    public String getImage_data() {
+        return image_data;
     }
 }

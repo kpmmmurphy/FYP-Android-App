@@ -25,6 +25,7 @@ public class Session {
 
     private transient Config config;
     private transient InetAddress piIPAddress;
+    private transient String streamAddress;
     private transient HashMap<String, ArrayList<CurrentSensorValuesFromServer>> graphData;
 
     //Fields to be serialised
@@ -102,5 +103,13 @@ public class Session {
 
     public void setGraphData(HashMap<String, ArrayList<CurrentSensorValuesFromServer>> graphData) {
         this.graphData = graphData;
+    }
+
+    public String getStreamAddress() {
+        return streamAddress;
+    }
+
+    public void setStreamAddress(String streamAddress) {
+        this.streamAddress = streamAddress;
     }
 }

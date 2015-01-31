@@ -9,7 +9,6 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:progressBarStyle">@android:style/Widget.ProgressBar</item>
         <item name="android:textViewStyle">@style/CustomTextViewStyle</item>
-        <item name="android:buttonStyle">@style/CustomTextViewStyle</item>
     </style>
 
     <style name="TranslucentStatusBar" parent="android:Widget.Holo.ActionBar">
