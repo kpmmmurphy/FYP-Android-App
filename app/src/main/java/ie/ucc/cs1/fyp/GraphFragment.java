@@ -20,8 +20,11 @@ import java.util.ArrayList;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Model.CurrentSensorValuesFromServer;
+import ie.ucc.cs1.fyp.Model.Packet;
 import ie.ucc.cs1.fyp.Model.SensorValuesHolder;
 import ie.ucc.cs1.fyp.Network.API;
+import ie.ucc.cs1.fyp.Socket.Session;
+import ie.ucc.cs1.fyp.Socket.SocketManager;
 
 public class GraphFragment extends Fragment {
 
@@ -73,15 +76,20 @@ public class GraphFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-
-
         currentHourValues = new ArrayList<CurrentSensorValuesFromServer>();
         currentDayValues  = new ArrayList<CurrentSensorValuesFromServer>();
         dayValues         = new ArrayList<CurrentSensorValuesFromServer>();
 
-        API.getInstance(getActivity()).requestCurrentHourSensorValues(currentHourSuccessListener, sensorValuesErrorListener);
-        API.getInstance(getActivity()).requestAggSensorValuesPerHour(sensorValuesAggPerHourSuccessListener, sensorValuesErrorListener);
-        API.getInstance(getActivity()).requestAggSensorValuesPerDay(sensorValuesAggPerDaySuccessListener, sensorValuesErrorListener);
+        if(Session.getInstance(getActivity()).isConnectedToPi()){
+            SocketManager.getInstance(getActivity()).sendPacketToPi(Utils.toJson(new Packet(Constants.JSON_VALUE_WIFI_DIRECT_GET_GRAPH_DATA , null)));
+            currentHourValues.addAll(Session.getInstance(getActivity()).getGraphData().get(Constants.GRAPH_DATA_CUR_HOUR));
+            currentDayValues.addAll(Session.getInstance(getActivity()).getGraphData().get(Constants.GRAPH_DATA_CUR_DAY_AGG_HOUR));
+            dayValues.addAll(Session.getInstance(getActivity()).getGraphData().get(Constants.GRAPH_DATA_AGG_DAY));
+        }else{
+            API.getInstance(getActivity()).requestCurrentHourSensorValues(currentHourSuccessListener, sensorValuesErrorListener);
+            API.getInstance(getActivity()).requestAggSensorValuesPerHour(sensorValuesAggPerHourSuccessListener, sensorValuesErrorListener);
+            API.getInstance(getActivity()).requestAggSensorValuesPerDay(sensorValuesAggPerDaySuccessListener, sensorValuesErrorListener);
+        }
 
         rgCurrentHour.setOnCheckedChangeListener(onCheckedChangeListenerAggHour);
         rgAggHour.setOnCheckedChangeListener(onCheckedChangeListenerAggHour);

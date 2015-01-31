@@ -33,6 +33,10 @@ public interface Constants {
     public static final String SERVICE_RESPONSE     = "response";
     public static final String SERVICE_SENSOR_DATA  = "current_sensor_values";
     public static final String SERVICE_PAIRED       = "paired";
+    public static final String JSON_VALUE_WIFI_DIRECT_GET_GRAPH_DATA = "get_graph_data";
+    public static final String GRAPH_DATA_CUR_HOUR         = "sensor_list_current_hour";
+    public static final String GRAPH_DATA_CUR_DAY_AGG_HOUR = "sensor_list_current_day_agg_hour";
+    public static final String GRAPH_DATA_AGG_DAY          = "sensor_list_agg_day";
 
     //Pi Response Values
     public static final int CONNECT_SUCCESS  = 200;

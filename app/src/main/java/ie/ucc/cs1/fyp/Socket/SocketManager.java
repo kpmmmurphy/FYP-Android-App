@@ -113,7 +113,7 @@ public class SocketManager {
                 }
 
                 Packet packet = gson.fromJson(receivedString, Packet.class);
-
+                Log.e(LOGTAG, String.valueOf(packet.getPayload().getPaired().getStatus_code()));
                 if(packet.getPayload() != null && packet.getService().equals(Constants.SERVICE_PAIRED) && packet.getPayload().getPaired().getStatus_code() == Constants.CONNECT_SUCCESS){
                     //Set session to connected
                     if(BuildConfig.DEBUG){

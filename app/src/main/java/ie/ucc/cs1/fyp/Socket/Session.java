@@ -2,20 +2,17 @@ package ie.ucc.cs1.fyp.Socket;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.provider.Settings.Secure;
 import android.text.format.Formatter;
-import android.util.Log;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
-import ie.ucc.cs1.fyp.Constants;
 import ie.ucc.cs1.fyp.Model.Config;
+import ie.ucc.cs1.fyp.Model.CurrentSensorValuesFromServer;
 
 /**
  * Created by kpmmmurphy on 07/01/15.
@@ -28,6 +25,7 @@ public class Session {
 
     private transient Config config;
     private transient InetAddress piIPAddress;
+    private transient HashMap<String, ArrayList<CurrentSensorValuesFromServer>> graphData;
 
     //Fields to be serialised
     protected String time_stamp;
@@ -40,14 +38,12 @@ public class Session {
         ip_address = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
         device_id = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
         time_stamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
-
-        //new LoadConfigTask().execute();
+        graphData = new HashMap<String, ArrayList<CurrentSensorValuesFromServer>>();
     }
 
     public static synchronized Session getInstance(Context context){
         if (__instance  == null){
             __instance = new Session(context);
-            Log.d(LOGTAG, new GsonBuilder().create().toJson(__instance));
         }
         return __instance;
     }
@@ -100,12 +96,11 @@ public class Session {
         this.piIPAddress = piIPAddress;
     }
 
-    private class LoadConfigTask extends AsyncTask<Void, Void, Void>{
+    public HashMap<String, ArrayList<CurrentSensorValuesFromServer>> getGraphData() {
+        return graphData;
+    }
 
-        @Override
-        protected Void doInBackground(Void... voids) {
-            config = new Gson().fromJson(Constants.CONFIG_DEFAULT, Config.class);
-            return null;
-        }
+    public void setGraphData(HashMap<String, ArrayList<CurrentSensorValuesFromServer>> graphData) {
+        this.graphData = graphData;
     }
 }
