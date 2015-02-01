@@ -92,7 +92,7 @@ public class CameraFragment extends Fragment{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        String uri = String.format("%s%s:%d/", "rtsp://",Session.getInstance(getActivity()).getPiIPAddress().getHostName(), Constants.VIDEO_STREAM_PORT);
+        String uri = String.format("%s%s:%d/", "http:/", Session.getInstance(getActivity()).getPiIPAddress().toString(), Constants.VIDEO_STREAM_PORT);
         if(BuildConfig.DEBUG){
             Log.d(LOGTAG, "Streaming at URL : " + uri);
         }

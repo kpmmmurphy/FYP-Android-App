@@ -23,7 +23,7 @@ public interface Constants {
     public static final int SOCKET_CLIENT_PORT           = 5005;
     public static final int SOCKET_SERVER_PORT           = 5006;
     public static final int SOCKET_MULTICAST_PORT        = 5007;
-    public static final int VIDEO_STREAM_PORT            = 8554;
+    public static final int VIDEO_STREAM_PORT            = 12345;
 
     //Socket Json Keys
     public static final String JSON_KEY_SERVICE = "service";
