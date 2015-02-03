@@ -16,6 +16,7 @@ import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Constants;
 import ie.ucc.cs1.fyp.Model.SensorOutput;
 import ie.ucc.cs1.fyp.R;
+import ie.ucc.cs1.fyp.SensorValueManager;
 
 /**
  * Created by kpmmmurphy on 01/11/14.
@@ -106,9 +107,27 @@ public class GridTileAdapter extends BaseAdapter {
             TextView tvValue = (TextView)(view.findViewById(R.id.tv_sensor_output_level));
             TextView tvMesaurement = (TextView)(view.findViewById(R.id.tv_sensor_measurement));
 
+            String sensorName = tvTitle.getText().toString();
+            int sensorValue   = Integer.valueOf(tvValue.getText().toString());
+
             ((TextView)dialog.findViewById(R.id.dialog_tv_title)).setText(tvTitle.getText());
             ((TextView)dialog.findViewById(R.id.dialog_tv_sensor_output_level)).setText(tvValue.getText());
             ((TextView)dialog.findViewById(R.id.dialog_tv_sensor_measurement)).setText(tvMesaurement.getText());
+            ((TextView)dialog.findViewById(R.id.dialog_tv_sensor_output_suggestion)).setText(SensorValueManager.getUserFeedback(sensorName,sensorValue, mContext ));
+
+            int sensorDetailsID = 0;
+            if(sensorName.equalsIgnoreCase(Constants.SENSOR_NAME_MQ7.replace("_", ""))){
+                sensorDetailsID = R.string.sensor_description_mq7;
+            }else if(sensorName.equalsIgnoreCase(Constants.SENSOR_NAME_MQ2.replace("_", ""))){
+                sensorDetailsID = R.string.sensor_description_mq2;
+            }else if(sensorName.equalsIgnoreCase(Constants.SENSOR_NAME_MOTION)){
+                sensorDetailsID = R.string.sensor_description_motion;
+            }else if (sensorName.equalsIgnoreCase(Constants.SENSOR_NAME_THERMISTOR)){
+                sensorDetailsID = R.string.sensor_description_thermistor;
+            }
+
+            ((TextView)dialog.findViewById(R.id.dialog_tv_sensor_details)).setText(mContext.getString(sensorDetailsID));
+
 
             dialog.show();
         }

@@ -57,6 +57,9 @@
     <string name="tv_title_videos">Videos</string>
     <string name="tv_captured">Captured :: </string>
 
+    <string name="camera_request_image">Capture Image</string>
+    <string name="camera_request_stream">Start Stream</string>
+
     <!-- General -->
     <string name="sensor_last_updated">Last Updated :: </string>
     <string name="config_upload_success">Config Uploaded Successfully</string>
@@ -88,8 +91,28 @@
     <string name="sensor_output_mq7_100">Headache after 1 to 2 hours of constant exposure.</string>
     <string name="sensor_output_mq7_200">Dizziness, Nausea, Fatigue, Headache after 2 to 3 hours of constant exposure.</string>
     <string name="sensor_output_mq7_400">Nausea and Headache after 1 to 2 hours, life threatening in 3 hours.</string>
-    <string name="camera_request_image">Capture Image</string>
-    <string name="camera_request_stream">Start Stream</string>
+    <string name="sensor_output_mq7_800">Dizziness, Nausea and Headache after 45 minutes, unconsciousness after 2 hours.</string>
+    <string name="sensor_output_mq7_1600">Dizziness, Nausea and Headache after 20 minutes, unconsciousness and possible death after 2 hours.</string>
+    <string name="sensor_output_mq7_3200">Dizziness, Nausea and Headache after 5 to 10 minutes, unconsciousness and possible death after 15 minutes.</string>
+    <string name="sensor_output_mq7_6400">Dizziness and Headache after 1 to 2 minutes, unconsciousness and possible death between 2 and 15 minutes.</string>
+    <string name="sensor_output_mq7_12800">Danger of death in 1 to 3 minutes.</string>
 
+    <!--Temperature-->
+    <string name="sensor_output_thermistor_sub_zero">Sub-zero, greatly increased risk of Pneumonia.</string>
+    <string name="sensor_output_thermistor_0">Close to Freezing, increased risk of Pneumonia.</string>
+    <string name="sensor_output_thermistor_10">Below recommended room temperature, increased risk of Pneumonia.</string>
+    <string name="sensor_output_thermistor_20">Regular room temperature</string>
+    <string name="sensor_output_thermistor_30">Above recommend average room temperature.</string>
+    <string name="sensor_output_thermistor_40">Possible fire, perform safety checks</string>
+    <string name="sensor_output_thermistor_50">Possible fire, time to exit the building</string>
+
+    <!--Flammable Gas-->
+    <string name="sensor_output_mq2_10">Check gas appliances, potential leakage. Do not light any open flames.</string>
+    <string name="sensor_output_mq2_20">Check gas appliances, potential leakage. Open all windows.Do not light any open flames.</string>
+    <string name="sensor_output_mq2_50">Open all windows and doors, leave building and contact Gas Networks Ireland on 1850 20 50 50</string>
+
+    <!--Motion-->
+    <string name="sensor_output_motion_0">No motion currently being detected.</string>
+    <string name="sensor_output_motion_1">Motion currently being detected!</string>
 
 </resources>

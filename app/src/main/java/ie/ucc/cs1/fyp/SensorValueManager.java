@@ -1,5 +1,7 @@
 package ie.ucc.cs1.fyp;
 
+import android.content.Context;
+
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -100,6 +102,52 @@ public class SensorValueManager {
         }
 
         return sensorOutputs;
+    }
+
+    public static String getUserFeedback(String sensor, int value, Context context){
+        int feedbackID = R.string.sensor_output_normal;
+        if(sensor.equalsIgnoreCase(Constants.SENSOR_NAME_MQ7.replace("_", " "))){
+
+            if(value >= 25)
+                feedbackID = R.string.sensor_output_mq7_25;
+
+            if(value >= 35)
+                feedbackID = R.string.sensor_output_mq7_35;
+
+            if(value >= 100)
+                feedbackID = R.string.sensor_output_mq7_100;
+
+            if(value >= 200)
+                feedbackID = R.string.sensor_output_mq7_200;
+
+            if(value >= 400)
+                feedbackID = R.string.sensor_output_mq7_400;
+
+            if(value >= 800)
+                feedbackID = R.string.sensor_output_mq7_800;
+
+            if(value >= 1600)
+                feedbackID = R.string.sensor_output_mq7_1600;
+
+            if(value >= 3200)
+                feedbackID = R.string.sensor_output_mq7_3200;
+
+            if(value >= 6400)
+                feedbackID = R.string.sensor_output_mq7_6400;
+
+            if(value >= 12800)
+                feedbackID = R.string.sensor_output_mq7_12800;
+
+
+        }else if(sensor.equalsIgnoreCase(Constants.SENSOR_NAME_MQ2.replace("_", " "))){
+
+        }else if(sensor.equalsIgnoreCase(Constants.SENSOR_NAME_MOTION.replace("_", " "))){
+
+        }else if(sensor.equalsIgnoreCase(Constants.SENSOR_NAME_THERMISTOR.replace("_", " "))){
+
+        }
+
+        return context.getString(feedbackID);
     }
 
 }

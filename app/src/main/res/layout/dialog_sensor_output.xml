@@ -45,4 +45,17 @@
         android:layout_gravity="center_horizontal"
         tools:text="Current Level is Safe" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        style="@style/Config_Divider"/>
+
+    <TextView
+        android:id="@+id/dialog_tv_sensor_details"
+        style="@style/Text_GridItemMaxMin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        tools:text="Current Level is Safe" />
+
 </LinearLayout>
