@@ -39,7 +39,9 @@
 
     <TextView
         android:id="@+id/dialog_tv_sensor_output_suggestion"
-        style="@style/Config_Section_Title"
+        style="@style/Text_GridItemName"
+        android:gravity="center_horizontal"
+        android:padding="12dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -53,6 +55,7 @@
     <TextView
         android:id="@+id/dialog_tv_sensor_details"
         style="@style/Text_GridItemMaxMin"
+        android:padding="12dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

@@ -116,9 +116,9 @@ public class GridTileAdapter extends BaseAdapter {
             ((TextView)dialog.findViewById(R.id.dialog_tv_sensor_output_suggestion)).setText(SensorValueManager.getUserFeedback(sensorName,sensorValue, mContext ));
 
             int sensorDetailsID = 0;
-            if(sensorName.equalsIgnoreCase(Constants.SENSOR_NAME_MQ7.replace("_", ""))){
+            if(sensorName.equalsIgnoreCase(Constants.SENSOR_NAME_MQ7.replace("_", " "))){
                 sensorDetailsID = R.string.sensor_description_mq7;
-            }else if(sensorName.equalsIgnoreCase(Constants.SENSOR_NAME_MQ2.replace("_", ""))){
+            }else if(sensorName.equalsIgnoreCase(Constants.SENSOR_NAME_MQ2.replace("_", " "))){
                 sensorDetailsID = R.string.sensor_description_mq2;
             }else if(sensorName.equalsIgnoreCase(Constants.SENSOR_NAME_MOTION)){
                 sensorDetailsID = R.string.sensor_description_motion;
@@ -127,7 +127,6 @@ public class GridTileAdapter extends BaseAdapter {
             }
 
             ((TextView)dialog.findViewById(R.id.dialog_tv_sensor_details)).setText(mContext.getString(sensorDetailsID));
-
 
             dialog.show();
         }

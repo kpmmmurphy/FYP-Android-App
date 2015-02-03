@@ -141,9 +141,45 @@ public class SensorValueManager {
 
         }else if(sensor.equalsIgnoreCase(Constants.SENSOR_NAME_MQ2.replace("_", " "))){
 
+            if(value >= 10)
+                feedbackID = R.string.sensor_output_mq2_10;
+
+            if(value >= 20)
+                feedbackID = R.string.sensor_output_mq2_20;
+
+            if(value >= 50)
+                feedbackID = R.string.sensor_output_mq2_50;
+
         }else if(sensor.equalsIgnoreCase(Constants.SENSOR_NAME_MOTION.replace("_", " "))){
 
+            if(value == 0)
+                feedbackID = R.string.sensor_output_motion_0;
+
+            if(value == 1)
+                feedbackID = R.string.sensor_output_motion_1;
+
         }else if(sensor.equalsIgnoreCase(Constants.SENSOR_NAME_THERMISTOR.replace("_", " "))){
+
+            if(value < 0)
+                feedbackID = R.string.sensor_output_thermistor_sub_zero;
+
+            if(value == 0)
+                feedbackID = R.string.sensor_output_thermistor_0;
+
+            if(value >= 10)
+                feedbackID = R.string.sensor_output_thermistor_10;
+
+            if(value >= 20)
+                feedbackID = R.string.sensor_output_thermistor_20;
+
+            if(value >= 30)
+                feedbackID = R.string.sensor_output_thermistor_30;
+
+            if(value >= 40)
+                feedbackID = R.string.sensor_output_thermistor_40;
+
+            if(value >= 50)
+                feedbackID = R.string.sensor_output_thermistor_50;
 
         }
 
