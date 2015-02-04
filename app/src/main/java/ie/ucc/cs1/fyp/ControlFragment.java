@@ -21,8 +21,8 @@ import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import ie.ucc.cs1.fyp.Model.APIResponse;
 import ie.ucc.cs1.fyp.Model.Config;
-import ie.ucc.cs1.fyp.Model.ConfigResponse;
 import ie.ucc.cs1.fyp.Model.Packet;
 import ie.ucc.cs1.fyp.Model.Payload;
 import ie.ucc.cs1.fyp.Model.Sensor;
@@ -324,9 +324,9 @@ public class ControlFragment extends Fragment{
         }
     };
 
-    private Response.Listener<ConfigResponse> updateConfigSuccessListener = new Response.Listener<ConfigResponse>() {
+    private Response.Listener<APIResponse> updateConfigSuccessListener = new Response.Listener<APIResponse>() {
         @Override
-        public void onResponse(ConfigResponse response) {
+        public void onResponse(APIResponse response) {
             Utils.methodDebug(LOGTAG);
             if(response.getStatus_code() == Constants.CONNECT_SUCCESS){
 

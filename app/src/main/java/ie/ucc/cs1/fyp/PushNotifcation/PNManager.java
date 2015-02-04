@@ -13,6 +13,7 @@ import java.io.IOException;
 
 import ie.ucc.cs1.fyp.Constants;
 import ie.ucc.cs1.fyp.MainActivity;
+import ie.ucc.cs1.fyp.Network.API;
 
 /**
  * Created by kpmmmurphy on 04/02/15.
@@ -155,7 +156,7 @@ public class PNManager {
      * using the 'from' address in the message.
      */
     private void sendRegistrationIdToBackend() {
-
+        API.getInstance(mContext).requestRegPNID(null, null);
     }
 
     /**

@@ -15,10 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ie.ucc.cs1.fyp.Constants;
+import ie.ucc.cs1.fyp.Model.APIResponse;
 import ie.ucc.cs1.fyp.Model.CameraResponse;
 import ie.ucc.cs1.fyp.Model.Config;
-import ie.ucc.cs1.fyp.Model.ConfigResponse;
 import ie.ucc.cs1.fyp.Model.CurrentSensorValuesFromServer;
+import ie.ucc.cs1.fyp.Model.PNRegRequest;
 import ie.ucc.cs1.fyp.Model.SensorValuesHolder;
 import ie.ucc.cs1.fyp.Utils;
 
@@ -96,13 +97,13 @@ public class API {
     }
 
     //Must updated API manager to give back formatted responses.
-    public void uploadSystemConfig(Config config, Response.Listener<ConfigResponse> listener, Response.ErrorListener errorListener){
+    public void uploadSystemConfig(Config config, Response.Listener<APIResponse> listener, Response.ErrorListener errorListener){
         Utils.methodDebug(LOGTAG);
 
         Map<String, String> headers = new HashMap<String, String>();
         headers.put(Constants.API_REQUEST_HEADER_SERVICE, Constants.API_REQUEST_SERVICE_UPDATE_CONFIG);
 
-        GsonRequest<ConfigResponse> updateConfigRequest = new GsonRequest<ConfigResponse>(URL, ConfigResponse.class, headers, Utils.toJson(config), listener, errorListener);
+        GsonRequest<APIResponse> updateConfigRequest = new GsonRequest<APIResponse>(URL, APIResponse.class, headers, Utils.toJson(config), listener, errorListener);
         addToQueue(updateConfigRequest);
     }
 
@@ -132,6 +133,17 @@ public class API {
         GsonRequest<SensorValuesHolder> updateConfigRequest = new GsonRequest<SensorValuesHolder>(URL, SensorValuesHolder.class, headers, listener, errorListener);
         addToQueue(updateConfigRequest);
     }
+
+    public void requestRegPNID(PNRegRequest pnRegRequest,Response.Listener<APIResponse> listener, Response.ErrorListener errorListener){
+        Utils.methodDebug(LOGTAG);
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put(Constants.API_REQUEST_HEADER_SERVICE, Constants.API_REQUEST_SERVICE_REG_PN_ID);
+
+        GsonRequest<APIResponse> regPNID = new GsonRequest<APIResponse>(URL, APIResponse.class, headers, Utils.toJson(pnRegRequest), listener, errorListener);
+        addToQueue(regPNID);
+    }
+
+
 
     public void addToQueue(Request req){
         req.setTag(Constants.LOGTAG);
