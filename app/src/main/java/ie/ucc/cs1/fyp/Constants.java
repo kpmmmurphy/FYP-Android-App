@@ -80,4 +80,5 @@ public interface Constants {
 
     //PUSH NOTIFICATIONS
     public static final String GCM_API_KEY = "42480706366";
+    public static final String PN_TITLE = "Sensor System";
 }

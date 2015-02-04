@@ -18,6 +18,7 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Adapter.TabsAdaptor;
+import ie.ucc.cs1.fyp.PushNotifcation.GcmIntentService;
 import ie.ucc.cs1.fyp.PushNotifcation.PNManager;
 import ie.ucc.cs1.fyp.Socket.Session;
 import ie.ucc.cs1.fyp.Socket.SocketManager;
@@ -46,7 +47,9 @@ public class MainActivity extends FragmentActivity {
 
         //Register for Push Notifcations
         PNManager.getInstance(this).registerForPN();
-        PNManager.getInstance(this).sendRegistrationIdToBackend();
+
+        GcmIntentService service = new GcmIntentService();
+        service.sendNotification("Did it work?", this);
 
         mViewPager.setId(R.id.view_pager);
         mViewPager.setAdapter(mTabsAdapter);
