@@ -139,4 +139,6 @@ public class MainActivity extends FragmentActivity {
         mTabsAdapter.updateTab(getActionBar().newTab().setText(getString(R.string.title_section3)), ControlFragment.class, null);
     }
 
+
+
 }

@@ -76,4 +76,7 @@ public interface Constants {
     public static final int GRAPH_DATE_TIME_TYPE_HOUR_WITH_SECOND = 1;
     public static final int GRAPH_DATE_TIME_TYPE_HOUR = 2;
     public static final int GRAPH_DATE_TIME_TYPE_DAY = 3;
+
+    //PUSH NOTIFICATIONS
+    public static final String GCM_API_KEY = "";
 }
