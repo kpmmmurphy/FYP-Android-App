@@ -18,6 +18,7 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Adapter.TabsAdaptor;
+import ie.ucc.cs1.fyp.PushNotifcation.PNManager;
 import ie.ucc.cs1.fyp.Socket.Session;
 import ie.ucc.cs1.fyp.Socket.SocketManager;
 
@@ -42,6 +43,10 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
+
+        //Register for Push Notifcations
+        PNManager.getInstance(this).registerForPN();
+        PNManager.getInstance(this).sendRegistrationIdToBackend();
 
         mViewPager.setId(R.id.view_pager);
         mViewPager.setAdapter(mTabsAdapter);

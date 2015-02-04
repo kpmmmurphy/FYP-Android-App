@@ -7,13 +7,18 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
 
 import ie.ucc.cs1.fyp.Constants;
 import ie.ucc.cs1.fyp.MainActivity;
+import ie.ucc.cs1.fyp.Model.APIResponse;
+import ie.ucc.cs1.fyp.Model.PNRegRequest;
 import ie.ucc.cs1.fyp.Network.API;
+import ie.ucc.cs1.fyp.Utils;
 
 /**
  * Created by kpmmmurphy on 04/02/15.
@@ -155,8 +160,8 @@ public class PNManager {
      * device sends upstream messages to a server that echoes back the message
      * using the 'from' address in the message.
      */
-    private void sendRegistrationIdToBackend() {
-        API.getInstance(mContext).requestRegPNID(null, null);
+    public void sendRegistrationIdToBackend() {
+        API.getInstance(mContext).requestRegPNID(new PNRegRequest(regid),regIDSuccessListener, regIDErrorListener);
     }
 
     /**
@@ -175,4 +180,21 @@ public class PNManager {
         editor.putInt(PROPERTY_APP_VERSION, appVersion);
         editor.apply();
     }
+
+    private Response.Listener<APIResponse> regIDSuccessListener = new Response.Listener<APIResponse>() {
+        @Override
+        public void onResponse(APIResponse response) {
+            Utils.toJson(LOGTAG);
+            if(response.getStatus_code() == Constants.CONNECT_SUCCESS){
+                Log.i(LOGTAG, "Successfully registered PN ID on CS1");
+            }
+        }
+    };
+
+    private Response.ErrorListener regIDErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Utils.toJson(LOGTAG);
+        }
+    };
 }
