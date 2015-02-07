@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.os.Bundle;
@@ -20,6 +19,7 @@ import ie.ucc.cs1.fyp.BuildConfig;
 import ie.ucc.cs1.fyp.Constants;
 import ie.ucc.cs1.fyp.MainActivity;
 import ie.ucc.cs1.fyp.R;
+import ie.ucc.cs1.fyp.Utils;
 
 /**
  * Created by kpmmmurphy on 04/02/15.
@@ -71,7 +71,7 @@ public class GcmIntentService extends IntentService {
                 Log.i(LOGTAG, "Completed work @ " + SystemClock.elapsedRealtime());
                 // Post notification of received message.
 
-                sendNotification(constructMsg(extras), null);
+                sendNotification(Utils.constructMsg(this, extras, "", ""), null);
                 Log.i(LOGTAG, "Received: " + extras.toString());
             }
         }
@@ -106,7 +106,7 @@ public class GcmIntentService extends IntentService {
                 mainActivityIntent, PendingIntent.FLAG_CANCEL_CURRENT, bundle);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(mContext)
-                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
+                        .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_launcher))
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setAutoCancel(true)
                         .setContentTitle(Constants.PN_TITLE)
@@ -118,26 +118,11 @@ public class GcmIntentService extends IntentService {
                         .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
-
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
-    private String constructMsg(Bundle extras){
-        String sensor = extras.getString(Constants.SENSOR_NAME);
-        String sensorValue = extras.getString(Constants.SENSOR_VALUE);
-        String msgText = "Alert Threshold Reached";
-        if(sensor.equalsIgnoreCase(Constants.SENSOR_CAMERA)){
-            msgText = "Image Captured!";
-        }else if(sensor.equalsIgnoreCase(Constants.SENSOR_CAMERA)){
-            msgText = "Activity Detected!";
-        }
 
-        //Store current alert details in SharedPrefs
-        SharedPreferences prefs = getApplicationContext().getSharedPreferences("fyp", Context.MODE_PRIVATE);
-        prefs.edit().putString(Constants.SENSOR_NAME, sensor).apply();
-        prefs.edit().putString(Constants.SENSOR_VALUE, sensorValue).apply();
 
-        return String.format("%s : %s", sensor.toUpperCase(), msgText);
-    }
+
 }

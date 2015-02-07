@@ -75,7 +75,6 @@ public class MainActivity extends FragmentActivity {
         super.onResume();
         //Check if we're starting from Pending Intent(From a Push Notifcation)
         if(getIntent().getBooleanExtra(Constants.PN_FROM_PENDING_INTENT, false)){
-            Log.e("kjbndv", "dsuiofnvrb");
             SharedPreferences prefs = getApplicationContext().getSharedPreferences("fyp", Context.MODE_PRIVATE);
             Utils.createDialog(this, prefs.getString(Constants.SENSOR_NAME, ""), prefs.getString(Constants.SENSOR_VALUE, ""));
         }

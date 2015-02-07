@@ -1,11 +1,9 @@
 package ie.ucc.cs1.fyp.Adapter;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -73,8 +71,7 @@ public class GridTileAdapter extends BaseAdapter {
         }
 
         view.setOnClickListener(onSensorTileClick);
-
-
+        view.setOnLongClickListener(onSensorTileLongClick);
 
         return view;
     }
@@ -91,7 +88,6 @@ public class GridTileAdapter extends BaseAdapter {
         @InjectView(R.id.tv_sensor_min_value)
         TextView minValue;
 
-
         public Holder(View view) {
             ButterKnife.inject(this, view);
         }
@@ -100,9 +96,6 @@ public class GridTileAdapter extends BaseAdapter {
     private View.OnClickListener onSensorTileClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            final Dialog dialog = new Dialog(mContext);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.dialog_sensor_output);
             TextView tvTitle = (TextView)(view.findViewById(R.id.tv_sensor_name));
             TextView tvValue = (TextView)(view.findViewById(R.id.tv_sensor_output_level));
 
@@ -113,9 +106,23 @@ public class GridTileAdapter extends BaseAdapter {
         }
     };
 
+    private View.OnLongClickListener onSensorTileLongClick = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View view) {
+            TextView tvTitle = (TextView)(view.findViewById(R.id.tv_sensor_name));
+            TextView tvValue = (TextView)(view.findViewById(R.id.tv_sensor_output_level));
+
+            String sensorName  = tvTitle.getText().toString();
+
+            Utils.sendDummyPN(mContext, sensorName, String.valueOf(100));
+            return false;
+        }
+    };
+
     public void setSensorOutputs(ArrayList<SensorOutput> sensorOutputs) {
         this.sensorOutputs = sensorOutputs;
     }
+
 
 
 }

@@ -2,7 +2,10 @@ package ie.ucc.cs1.fyp;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
@@ -11,6 +14,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 
 import ie.ucc.cs1.fyp.Model.SensorOutput;
+import ie.ucc.cs1.fyp.PushNotifcation.GcmIntentService;
 
 /**
  * Created by kpmmmurphy on 30/10/14.
@@ -48,7 +52,7 @@ public class Utils {
         return min + (int) (Math.random() * max);
     }
 
-    public static void createDialog(Context context,String sensorName, String sensorValue){
+    public static void createDialog(Context context, String sensorName, String sensorValue){
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_sensor_output);
@@ -76,6 +80,47 @@ public class Utils {
         ((TextView)dialog.findViewById(R.id.dialog_tv_sensor_details)).setText(context.getString(sensorDetailsID));
 
         dialog.show();
+    }
+
+    public static String constructMsg(Context context, Bundle extras, String sensor, String sensorValue){
+        if(sensor.isEmpty()){
+            sensor = extras.getString(Constants.SENSOR_NAME);
+        }
+        if(sensorValue.isEmpty()){
+            sensorValue = extras.getString(Constants.SENSOR_VALUE);
+        }
+
+        String msgText = "Alert Threshold Reached";
+        if(sensor.equalsIgnoreCase(Constants.SENSOR_CAMERA)){
+            msgText = "Image Captured!";
+        }else if(sensor.equalsIgnoreCase(Constants.SENSOR_CAMERA)){
+            msgText = "Activity Detected!";
+        }
+
+        //Store current alert details in SharedPrefs
+        SharedPreferences prefs = context.getSharedPreferences("fyp", Context.MODE_PRIVATE);
+        prefs.edit().putString(Constants.SENSOR_NAME, sensor).apply();
+        prefs.edit().putString(Constants.SENSOR_VALUE, sensorValue).apply();
+
+        return String.format("%s : %s", sensor.toUpperCase(), msgText);
+    }
+
+    private View.OnLongClickListener onSensorTileLongClick = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View view) {
+            TextView tvTitle = (TextView)(view.findViewById(R.id.tv_sensor_name));
+            TextView tvValue = (TextView)(view.findViewById(R.id.tv_sensor_output_level));
+
+            String sensorName  = tvTitle.getText().toString();
+
+            //Utils.createDialog(mContext, sensorName, String.valueOf(100));
+            return false;
+        }
+    };
+
+    public static void sendDummyPN(Context context, String sensor, String sensorVal){
+        GcmIntentService gcmIntentService = new GcmIntentService();
+        gcmIntentService.sendNotification(constructMsg(context, null, sensor, sensorVal), context);
     }
 
 }
