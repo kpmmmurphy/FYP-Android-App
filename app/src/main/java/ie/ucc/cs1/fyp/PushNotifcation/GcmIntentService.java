@@ -1,10 +1,13 @@
 package ie.ucc.cs1.fyp.PushNotifcation;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
@@ -12,6 +15,7 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import ie.ucc.cs1.fyp.BuildConfig;
 import ie.ucc.cs1.fyp.Constants;
 import ie.ucc.cs1.fyp.MainActivity;
 import ie.ucc.cs1.fyp.R;
@@ -65,7 +69,8 @@ public class GcmIntentService extends IntentService {
                 }
                 Log.i(LOGTAG, "Completed work @ " + SystemClock.elapsedRealtime());
                 // Post notification of received message.
-                sendNotification("Received: " + extras.toString(), null);
+
+                sendNotification(constructMsg(extras), null);
                 Log.i(LOGTAG, "Received: " + extras.toString());
             }
         }
@@ -79,6 +84,10 @@ public class GcmIntentService extends IntentService {
     public void sendNotification(String msg, Context context) {
         Context mContext = this;
 
+        if(BuildConfig.DEBUG){
+            Log.i(LOGTAG, "Push Payload : " + msg);
+        }
+
         //When testing, we need to pass in current context
         if(context != null){
             mContext = context;
@@ -91,13 +100,30 @@ public class GcmIntentService extends IntentService {
                 new Intent(mContext, MainActivity.class), 0);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(mContext)
+                        .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher))
                         .setSmallIcon(R.drawable.ic_launcher)
+                        .setAutoCancel(true)
                         .setContentTitle(Constants.PN_TITLE)
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(msg))
-                        .setContentText(msg);
+                        .setContentText(msg)
+                        .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
+                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+
 
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+    }
+
+    private String constructMsg(Bundle extras){
+        String sensor = extras.getString(Constants.SENSOR_NAME);
+        String sensorValue = extras.getString(Constants.SENSOR_VALUE);
+        String msgText = "Alert Threshold Reached";
+        if(sensor.equalsIgnoreCase(Constants.SENSOR_CAMERA)){
+            msgText = "Image Captured!";
+        }else if(sensor.equalsIgnoreCase(Constants.SENSOR_CAMERA)){
+            msgText = "Activity Detected!";
+        }
+        return String.format("%s : %s", sensor.toUpperCase(), msgText);
     }
 }
