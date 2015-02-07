@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
@@ -66,12 +67,18 @@ public class MainActivity extends FragmentActivity {
         if (savedInstanceState != null) {
             bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));
         }
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
+        //Check if we're starting from Pending Intent(From a Push Notifcation)
+        if(getIntent().getBooleanExtra(Constants.PN_FROM_PENDING_INTENT, false)){
+            Log.e("kjbndv", "dsuiofnvrb");
+            SharedPreferences prefs = getApplicationContext().getSharedPreferences("fyp", Context.MODE_PRIVATE);
+            Utils.createDialog(this, prefs.getString(Constants.SENSOR_NAME, ""), prefs.getString(Constants.SENSOR_VALUE, ""));
+        }
     }
 
     @Override

@@ -16,6 +16,7 @@ public interface Constants {
     public static final String SENSOR_CAMERA           = "Camera";
     public static final String SENSOR_NAME             = "sensor";
     public static final String SENSOR_VALUE            = "value";
+    public static final String SENSOR_MEASUREMENT      = "measurement";
 
     //Sensor Measurement
     public static final String SENSOR_MEASUREMENT_PPM     = "ppm";
@@ -84,4 +85,5 @@ public interface Constants {
     //PUSH NOTIFICATIONS
     public static final String GCM_API_KEY = "42480706366";
     public static final String PN_TITLE = "Sensor System";
+    public static final String PN_FROM_PENDING_INTENT = "PN_FROM_PENDING_INTENT";
 }

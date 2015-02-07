@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.os.Bundle;
@@ -96,17 +97,24 @@ public class GcmIntentService extends IntentService {
         mNotificationManager = (NotificationManager)
                 mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
+        Intent mainActivityIntent = new Intent(mContext, MainActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(Constants.PN_FROM_PENDING_INTENT, true);
+        mainActivityIntent.putExtras(bundle);
+
         PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0,
-                new Intent(mContext, MainActivity.class), 0);
+                mainActivityIntent, PendingIntent.FLAG_CANCEL_CURRENT, bundle);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(mContext)
-                        .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher))
+                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setAutoCancel(true)
                         .setContentTitle(Constants.PN_TITLE)
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(msg))
                         .setContentText(msg)
+                        .setPriority(Notification.PRIORITY_MAX)
+                        .setVisibility(Notification.VISIBILITY_PUBLIC)
                         .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
@@ -124,6 +132,12 @@ public class GcmIntentService extends IntentService {
         }else if(sensor.equalsIgnoreCase(Constants.SENSOR_CAMERA)){
             msgText = "Activity Detected!";
         }
+
+        //Store current alert details in SharedPrefs
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences("fyp", Context.MODE_PRIVATE);
+        prefs.edit().putString(Constants.SENSOR_NAME, sensor).apply();
+        prefs.edit().putString(Constants.SENSOR_VALUE, sensorValue).apply();
+
         return String.format("%s : %s", sensor.toUpperCase(), msgText);
     }
 }

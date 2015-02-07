@@ -1,6 +1,10 @@
 package ie.ucc.cs1.fyp;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.util.Log;
+import android.view.Window;
+import android.widget.TextView;
 
 import com.google.gson.GsonBuilder;
 
@@ -44,8 +48,34 @@ public class Utils {
         return min + (int) (Math.random() * max);
     }
 
-    /*public static String getSensorOutputFeedback(){
+    public static void createDialog(Context context,String sensorName, String sensorValue){
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_sensor_output);
 
-    }*/
+        int sensorVal   = Integer.valueOf(sensorValue);
+
+        ((TextView)dialog.findViewById(R.id.dialog_tv_title)).setText(sensorName);
+        ((TextView)dialog.findViewById(R.id.dialog_tv_sensor_output_level)).setText(sensorValue);
+        ((TextView)dialog.findViewById(R.id.dialog_tv_sensor_output_suggestion)).setText(SensorValueManager.getUserFeedback(sensorName, sensorVal, context ));
+
+        int sensorDetailsID = 0;
+        if(sensorName.equalsIgnoreCase(Constants.SENSOR_NAME_MQ7.replace("_", " "))){
+            sensorDetailsID = R.string.sensor_description_mq7;
+            ((TextView)dialog.findViewById(R.id.dialog_tv_sensor_measurement)).setText(Constants.SENSOR_MEASUREMENT_PPM);
+        }else if(sensorName.equalsIgnoreCase(Constants.SENSOR_NAME_MQ2.replace("_", " "))){
+            sensorDetailsID = R.string.sensor_description_mq2;
+            ((TextView)dialog.findViewById(R.id.dialog_tv_sensor_measurement)).setText(Constants.SENSOR_MEASUREMENT_PPM);
+        }else if(sensorName.equalsIgnoreCase(Constants.SENSOR_NAME_MOTION)){
+            sensorDetailsID = R.string.sensor_description_motion;
+        }else if (sensorName.equalsIgnoreCase(Constants.SENSOR_NAME_THERMISTOR)){
+            sensorDetailsID = R.string.sensor_description_thermistor;
+            ((TextView)dialog.findViewById(R.id.dialog_tv_sensor_measurement)).setText(Constants.SENSOR_MEASUREMENT_CELCIUS);
+        }
+
+        ((TextView)dialog.findViewById(R.id.dialog_tv_sensor_details)).setText(context.getString(sensorDetailsID));
+
+        dialog.show();
+    }
 
 }
