@@ -114,5 +114,7 @@
     <!--Motion-->
     <string name="sensor_output_motion_0">No motion currently being detected.</string>
     <string name="sensor_output_motion_1">Motion currently being detected!</string>
+    <string name="config_alert_manager_push_on">Push Notifications On</string>
+    <string name="config_alert_manager_lockdown_on">Lockdown Mode On</string>
 
 </resources>

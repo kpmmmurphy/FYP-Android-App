@@ -57,6 +57,7 @@ public class Utils {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_sensor_output);
 
+        sensorName = sensorName.replace("_", " ");
         int sensorVal   = Integer.valueOf(sensorValue);
 
         ((TextView)dialog.findViewById(R.id.dialog_tv_title)).setText(sensorName);
@@ -77,7 +78,9 @@ public class Utils {
             ((TextView)dialog.findViewById(R.id.dialog_tv_sensor_measurement)).setText(Constants.SENSOR_MEASUREMENT_CELCIUS);
         }
 
-        ((TextView)dialog.findViewById(R.id.dialog_tv_sensor_details)).setText(context.getString(sensorDetailsID));
+        if(sensorDetailsID != 0){
+            ((TextView)dialog.findViewById(R.id.dialog_tv_sensor_details)).setText(context.getString(sensorDetailsID));
+        }
 
         dialog.show();
     }

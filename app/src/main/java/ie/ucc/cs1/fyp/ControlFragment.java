@@ -35,7 +35,7 @@ import ie.ucc.cs1.fyp.Socket.SocketManager;
  */
 public class ControlFragment extends Fragment{
 
-    private static String LOGTAG = "__CAMERA_FRAGMENT";
+    private static String LOGTAG = "__CONTROL_FRAGMENT";
 
     @InjectView(R.id.fragment_control_layout)
     ScrollView controlLayout;
@@ -63,6 +63,10 @@ public class ControlFragment extends Fragment{
     Switch camereOn;
     @InjectView(R.id.switch_alert_manager_video_mode)
     Switch videoMode;
+    @InjectView(R.id.switch_alert_manager_push_on)
+    Switch pushOn;
+    @InjectView(R.id.switch_alert_manager_lockdown_on)
+    Switch lockdownMode;
 
     /*API Manager*/
     @InjectView(R.id.et_api_manager_camera_image_upload_rate)
@@ -203,6 +207,8 @@ public class ControlFragment extends Fragment{
             buzzerOn.setChecked(config.getAlertManager().isBuzzer_on());
             camereOn.setChecked(config.getAlertManager().isCamera_on());
             videoMode.setChecked(config.getAlertManager().isVideo_mode());
+            pushOn.setChecked(config.getAlertManager().isPush_on());
+            lockdownMode.setChecked(config.getAlertManager().isLockdown_on());
 
         /*Sensor Manager*/
             collectionRate.setText(String.valueOf(config.getSensorManager().getCollection_rate()));
@@ -263,6 +269,8 @@ public class ControlFragment extends Fragment{
         config.getAlertManager().setBuzzer_on(buzzerOn.isChecked());
         config.getAlertManager().setCamera_on(camereOn.isChecked());
         config.getAlertManager().setVideo_mode(videoMode.isChecked());
+        config.getAlertManager().setPush_on(pushOn.isChecked());
+        config.getAlertManager().setLockdown_on(lockdownMode.isChecked());
 
         /*----SENSORS----*/
         ArrayList<Sensor> sensors = new ArrayList<Sensor>();
