@@ -14,6 +14,8 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.XLabels;
+import com.github.mikephil.charting.utils.YLabels;
 
 import java.util.ArrayList;
 
@@ -63,6 +65,16 @@ public class GraphFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_graph, container, false);
         ButterKnife.inject(this, view);
+
+        LineChart[] charts = new LineChart[]{lcCurrentHour, lcAggHour, lcAggDay};
+        for(LineChart chart : charts){
+            chart.setHighlightEnabled(false);
+            XLabels xl = chart.getXLabels();
+            YLabels yl = chart.getYLabels();
+            //Style labels here
+        }
+
+
         return view;
     }
 

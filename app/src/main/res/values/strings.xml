@@ -39,6 +39,8 @@
     <string name="config_alert_manager_camera_on">Camera On</string>
     <string name="config_alert_manager_video_mode">Video Mode</string>
     <string name="config_alert_manager_buzzer_on">Alert Buzzer On</string>
+    <string name="config_alert_manager_push_on">Push Notifications On</string>
+    <string name="config_alert_manager_lockdown_on">Lockdown Mode On</string>
     <string name="config_title_api_manager">API Manager</string>
     <string name="config_api_manager_sensor_value_upload_rate">Sensor Value Upload Rate</string>
     <string name="config_api_manager_camera_image_upload_rate">Camera Image Upload Rate</string>
@@ -78,15 +80,15 @@
     <string name="sensor_output_feedback">Sensor Output Feedback</string>
 
     <!--Sensor Descriptions-->
-    <string name="sensor_description_mq2">Flammable Gas Sensor(MQ2) module is useful for gas leakage detecting. It can detect LPG, i-butane, methane, alcohol, Hydrogen and smoke.</string>
-    <string name="sensor_description_mq7">Carbon Monoxide Sensor(MQ7) module is used for Carbon Monoxide detecting.</string>
-    <string name="sensor_description_motion">Infrared Motion Detector Sensor module is used to detect motion from pets/humanoids from about 20 feet away.</string>
-    <string name="sensor_description_thermistor">Thermistor Sensor module is used to measure temperature.</string>
+    <string name="sensor_description_mq2">Flammable Gas Sensor(MQ2) is useful for gas leakage detection. It can detect LPG, I-Butane, Methane, Alcohol, Hydrogen and Smoke.</string>
+    <string name="sensor_description_mq7">Carbon Monoxide Sensor(MQ7) is used for Carbon Monoxide detection.</string>
+    <string name="sensor_description_motion">Infrared Motion Detector is used to detect motion from humanoids/pets from about 20 feet away.</string>
+    <string name="sensor_description_thermistor">Thermistor Sensor is used to measure temperature.</string>
 
     <!--Sensor Output Feedback Text-->
     <string name="sensor_output_normal">Safe Level</string>
     <!--Co-->
-    <string name="sensor_output_mq7_25">Maximum legal amount for the work place.</string>
+    <string name="sensor_output_mq7_25">Maximum legal level for the work place.</string>
     <string name="sensor_output_mq7_35">Headache and Dizziness within 6 to 8 hours of constant exposure.</string>
     <string name="sensor_output_mq7_100">Headache after 1 to 2 hours of constant exposure.</string>
     <string name="sensor_output_mq7_200">Dizziness, Nausea, Fatigue, Headache after 2 to 3 hours of constant exposure.</string>
@@ -100,7 +102,7 @@
     <!--Temperature-->
     <string name="sensor_output_thermistor_sub_zero">Sub-zero, greatly increased risk of Pneumonia.</string>
     <string name="sensor_output_thermistor_0">Close to Freezing, increased risk of Pneumonia.</string>
-    <string name="sensor_output_thermistor_10">Below recommended room temperature, increased risk of Pneumonia.</string>
+    <string name="sensor_output_thermistor_10">Below recommended room temperature, turn on heating to decrease risk of Pneumonia.</string>
     <string name="sensor_output_thermistor_20">Regular room temperature</string>
     <string name="sensor_output_thermistor_30">Above recommend average room temperature.</string>
     <string name="sensor_output_thermistor_40">Possible fire, perform safety checks</string>
@@ -114,7 +116,6 @@
     <!--Motion-->
     <string name="sensor_output_motion_0">No motion currently being detected.</string>
     <string name="sensor_output_motion_1">Motion currently being detected!</string>
-    <string name="config_alert_manager_push_on">Push Notifications On</string>
-    <string name="config_alert_manager_lockdown_on">Lockdown Mode On</string>
+
 
 </resources>

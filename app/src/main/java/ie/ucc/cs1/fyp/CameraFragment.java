@@ -68,6 +68,8 @@ public class CameraFragment extends Fragment{
     Button getBtnRequestStream;
     @InjectView(R.id.camera_direct_controls)
     LinearLayout llCameraControls;
+    @InjectView(R.id.camera_web_content)
+    RelativeLayout rlCameraWebContent;
 
     @OnItemClick(R.id.lv_recent_videos)
     void onItemSelected(int position){
@@ -130,9 +132,11 @@ public class CameraFragment extends Fragment{
         super.onResume();
         Utils.methodDebug(LOGTAG);
         if(Session.getInstance(getActivity()).isConnectedToPi()){
-
-
+            rlCameraWebContent.setVisibility(View.GONE);
+            llCameraControls.setVisibility(View.VISIBLE);
         }else{
+            llCameraControls.setVisibility(View.GONE);
+            rlCameraWebContent.setVisibility(View.VISIBLE);
             API.getInstance(getActivity()).requestListImages(successListener, errorListener);
         }
     }

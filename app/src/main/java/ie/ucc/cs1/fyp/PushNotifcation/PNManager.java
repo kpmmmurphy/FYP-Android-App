@@ -184,10 +184,10 @@ public class PNManager {
     private Response.Listener<APIResponse> regIDSuccessListener = new Response.Listener<APIResponse>() {
         @Override
         public void onResponse(APIResponse response) {
-            Utils.toJson(LOGTAG);
-            if(response.getStatus_code() == Constants.CONNECT_SUCCESS){
-                Log.i(LOGTAG, "Successfully registered PN ID on CS1");
-            }
+        Utils.toJson(LOGTAG);
+        if(response.getStatus_code() == Constants.CONNECT_SUCCESS){
+            Log.i(LOGTAG, "Successfully registered PN ID on CS1");
+        }
         }
     };
 
