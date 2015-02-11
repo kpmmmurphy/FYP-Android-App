@@ -77,6 +77,7 @@ public class MainActivity extends FragmentActivity {
         if(getIntent().getBooleanExtra(Constants.PN_FROM_PENDING_INTENT, false)){
             SharedPreferences prefs = getApplicationContext().getSharedPreferences("fyp", Context.MODE_PRIVATE);
             Utils.createDialog(this, prefs.getString(Constants.SENSOR_NAME, ""), prefs.getString(Constants.SENSOR_VALUE, ""));
+            getIntent().putExtra(Constants.PN_FROM_PENDING_INTENT, false);
         }
     }
 
