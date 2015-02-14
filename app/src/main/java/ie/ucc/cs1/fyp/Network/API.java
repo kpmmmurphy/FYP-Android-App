@@ -150,6 +150,15 @@ public class API {
         GsonRequest<APIResponse> request = new GsonRequest<APIResponse>(URL, APIResponse.class, headers, listener, errorListener);
         addToQueue(request);
     }
+    public void requestImageCapture(Response.Listener<APIResponse> listener, Response.ErrorListener errorListener){
+        Utils.methodDebug(LOGTAG);
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put(Constants.API_REQUEST_HEADER_SERVICE, Constants.API_REQUEST_SERVICE_REQUEST_NEW_IMAGE);
+
+        GsonRequest<APIResponse> request = new GsonRequest<APIResponse>(URL, APIResponse.class, headers, listener, errorListener);
+        addToQueue(request);
+    }
+
 
 
 

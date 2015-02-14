@@ -31,10 +31,8 @@ public class PNManager {
     private Context mContext;
     private GoogleCloudMessaging gcm;
     private String regid;
-    public static final String EXTRA_MESSAGE = "message";
     public static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
-    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     private PNManager(Context mContext) {
         this.mContext = mContext;

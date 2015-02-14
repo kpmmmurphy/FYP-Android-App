@@ -84,7 +84,11 @@ public class CameraFragment extends Fragment{
     @OnClick(R.id.camera_btn_request_image)
     void onClick(){
         Utils.methodDebug(LOGTAG);
-        SocketManager.getInstance(getActivity()).sendPacketToPi(Utils.toJson(new Packet(Constants.SERVICE_REQUEST_IMAGE, null)));
+        if(Session.getInstance(getActivity()).isConnectedToPi()){
+            SocketManager.getInstance(getActivity()).sendPacketToPi(Utils.toJson(new Packet(Constants.SERVICE_REQUEST_IMAGE, null)));
+        }else{
+            API.getInstance(getActivity()).requestImageCapture(captureImageListener, streamErrorListener);
+        }
     }
 
     @OnClick(R.id.camera_btn_request_stream)
@@ -105,8 +109,6 @@ public class CameraFragment extends Fragment{
         }else{
             API.getInstance(getActivity()).requestVideoStream(startStreamListener, streamErrorListener);
         }
-
-
     }
 
     public CameraFragment() {
@@ -201,14 +203,14 @@ public class CameraFragment extends Fragment{
 
                     }
                 }else{
-                    viewWrapper.setVisibility(View.GONE);
+                    /*viewWrapper.setVisibility(View.GONE);
                     errorLayout.setVisibility(View.VISIBLE);
-                    errorText.setText(R.string.camera_no_images_to_display);
+                    errorText.setText(R.string.camera_no_images_to_display);*/
                 }
             }else{
-                viewWrapper.setVisibility(View.GONE);
+                /*viewWrapper.setVisibility(View.GONE);
                 errorLayout.setVisibility(View.VISIBLE);
-                errorText.setText(R.string.camera_no_images_to_display);
+                errorText.setText(R.string.camera_no_images_to_display);*/
             }
         }
     };
@@ -217,9 +219,9 @@ public class CameraFragment extends Fragment{
         @Override
         public void onErrorResponse(VolleyError error) {
             Utils.methodDebug(LOGTAG);
-            viewWrapper.setVisibility(View.GONE);
+            /*viewWrapper.setVisibility(View.GONE);
             errorLayout.setVisibility(View.VISIBLE);
-            errorText.setText(R.string.camera_unable_to_display_images);
+            errorText.setText(R.string.camera_unable_to_display_images);*/
         }
     };
 
@@ -227,15 +229,20 @@ public class CameraFragment extends Fragment{
         @Override
         public void onResponse(APIResponse response) {
             Utils.methodDebug(LOGTAG);
-            if(BuildConfig.DEBUG){
-                Log.e(LOGTAG,"It worked" );
-            }
             piPublicIP = response.pi_public_ip;
             String uri = String.format("%s%s:%d/", "http://", piPublicIP, Constants.VIDEO_STREAM_PORT);
             if(BuildConfig.DEBUG){
                 Log.d(LOGTAG, "Streaming at URL : " + uri);
             }
             playURIWithVV(currentVideo, uri);
+        }
+    };
+
+    private Response.Listener<APIResponse> captureImageListener = new Response.Listener<APIResponse>() {
+        @Override
+        public void onResponse(APIResponse response) {
+            Utils.methodDebug(LOGTAG);
+            API.getInstance(getActivity()).requestListImages(successListener, errorListener);
         }
     };
 

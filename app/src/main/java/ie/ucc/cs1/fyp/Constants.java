@@ -74,9 +74,10 @@ public interface Constants {
     public final static String API_REQUEST_SERVICE_LIST_IMAGES       = "list_images";
     public final static String API_REQUEST_SERVICE_CURRENT_HOUR_SENSOR_VALUES = "get_current_hour_sensor_values";
     public final static String API_REQUEST_SERVICE_AGG_SENSOR_VALUES_PER_HOUR = "get_agg_sensor_values_per_hour";
-    public final static String API_REQUEST_SERVICE_AGG_SENSOR_VALUES_PER_DAY = "get_agg_sensor_values_per_day";
-    public final static String API_REQUEST_SERVICE_REG_PN_ID = "insert_reg_ids";
-    public static final String API_REQUEST_SERVICE_REQUEST_STREAM  = "request_video_stream";
+    public final static String API_REQUEST_SERVICE_AGG_SENSOR_VALUES_PER_DAY  = "get_agg_sensor_values_per_day";
+    public final static String API_REQUEST_SERVICE_REG_PN_ID          = "insert_reg_ids";
+    public static final String API_REQUEST_SERVICE_REQUEST_STREAM     = "request_video_stream";
+    public static final String API_REQUEST_SERVICE_REQUEST_NEW_IMAGE  = "requesting_new_image";
 
     //GRAPHING
     public static final int GRAPH_DATE_TIME_TYPE_HOUR_WITH_SECOND = 1;
