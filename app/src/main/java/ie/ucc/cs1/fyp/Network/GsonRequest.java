@@ -15,7 +15,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import ie.ucc.cs1.fyp.BuildConfig;
-import ie.ucc.cs1.fyp.Model.CurrentSensorValuesFromServer;
 import ie.ucc.cs1.fyp.Utils;
 
 /**
@@ -59,9 +58,9 @@ public class GsonRequest<T> extends JsonRequest<T> {
             String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
             //For some reason, my API PHP manager is producing responses encapsulated with '[]'
             //Just remove the first and last chars should do the trick
-            if (clazz.equals(CurrentSensorValuesFromServer.class)){
-                json = json.substring(1 , json.length() - 1);
-            }
+                /*if (clazz.equals(CurrentSensorValuesFromServer.class)){
+                    json = json.substring(1 , json.length() - 1);
+                }*/
 
             if(BuildConfig.DEBUG){
                 Log.d(LOGTAG, "Response :: " + json);

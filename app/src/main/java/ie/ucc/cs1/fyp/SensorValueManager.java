@@ -49,34 +49,56 @@ public class SensorValueManager {
     }
 
     public void setCurrentSensorValuesFromServer(CurrentSensorValuesFromServer currentSensorValuesFromServer) {
-        String data_and_time = currentSensorValuesFromServer.getDate_and_time();
 
-        int temp      = Integer.valueOf(currentSensorValuesFromServer.getTemperature());
+        String data_and_time = "";
+        if(!currentSensorValuesFromServer.getDate_and_time().isEmpty()){
+            data_and_time = currentSensorValuesFromServer.getDate_and_time();
+        }
+
+        int temp = 0;
+        if(!currentSensorValuesFromServer.getTemperature().isEmpty()){
+            temp = Integer.valueOf(currentSensorValuesFromServer.getTemperature());
+        }
+
         int max_temp = 0;
-        if(currentSensorValuesFromServer.getMax_temperature() != null){
+        if(!currentSensorValuesFromServer.getMax_temperature().isEmpty()){
             max_temp  = Integer.valueOf(currentSensorValuesFromServer.getMax_temperature());
         }
+
         int min_temp = 0;
-        if(currentSensorValuesFromServer.getMin_temperature() != null) {
+        if(!currentSensorValuesFromServer.getMin_temperature().isEmpty()) {
             min_temp = Integer.valueOf(currentSensorValuesFromServer.getMin_temperature());
         }
-        int motion            = Integer.valueOf(currentSensorValuesFromServer.getMotion());
+
+        int motion = 0;
+        if(!currentSensorValuesFromServer.getMotion().isEmpty()){
+            motion = Integer.valueOf(currentSensorValuesFromServer.getMotion());
+        }
+
         int motion_percentage = 0;
-        if(currentSensorValuesFromServer.getPercentage_motion() != null){
+        if(!currentSensorValuesFromServer.getPercentage_motion().isEmpty()){
             motion_percentage = Float.valueOf(currentSensorValuesFromServer.getPercentage_motion()).intValue();
         }
 
-        int co        = Integer.valueOf(currentSensorValuesFromServer.getCarbon_monoxide());
+        int co = 0;
+        if(!currentSensorValuesFromServer.getCarbon_monoxide().isEmpty()){
+            co = Integer.valueOf(currentSensorValuesFromServer.getCarbon_monoxide());
+        }
+
         int max_co = 0;
-        if(currentSensorValuesFromServer.getMax_carbon_monoxide() != null){
+        if(!currentSensorValuesFromServer.getMax_carbon_monoxide().isEmpty()){
             max_co  = Integer.valueOf(currentSensorValuesFromServer.getMax_carbon_monoxide());
         }
         int min_co = 0;
-        if(currentSensorValuesFromServer.getMin_carbon_monoxide() != null) {
+        if(!currentSensorValuesFromServer.getMin_carbon_monoxide().isEmpty()) {
             min_co = Integer.valueOf(currentSensorValuesFromServer.getMin_carbon_monoxide());
         }
 
-        int flamm_gas = Integer.valueOf(currentSensorValuesFromServer.getFlammable_gas());
+        int flamm_gas = 0;
+        if (!currentSensorValuesFromServer.getFlammable_gas().isEmpty()){
+            flamm_gas = Integer.valueOf(currentSensorValuesFromServer.getFlammable_gas());
+        }
+
         int max_flam = 0;
         if(currentSensorValuesFromServer.getMax_flammable_gas() != null) {
             max_flam = Integer.valueOf(currentSensorValuesFromServer.getMax_flammable_gas());
