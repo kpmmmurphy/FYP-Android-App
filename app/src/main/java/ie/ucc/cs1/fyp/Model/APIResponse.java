@@ -4,13 +4,11 @@ package ie.ucc.cs1.fyp.Model;
  * Created by kpmmmurphy on 16/01/15.
  */
 public class APIResponse {
-    protected int status_code;
+    //MetaData Params
+    public int status_code;
+    public String pi_public_ip;
 
-    public int getStatus_code() {
-        return status_code;
-    }
+    //Requested Objects
+    public CurrentSensorValuesFromServer sensor_values;
 
-    public void setStatus_code(int status_code) {
-        this.status_code = status_code;
-    }
 }

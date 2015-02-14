@@ -336,7 +336,7 @@ public class ControlFragment extends Fragment{
         @Override
         public void onResponse(APIResponse response) {
             Utils.methodDebug(LOGTAG);
-            if(response.getStatus_code() == Constants.CONNECT_SUCCESS){
+            if(response.status_code == Constants.CONNECT_SUCCESS){
 
             }
             Toast.makeText(getActivity(), getString(R.string.config_upload_success),Toast.LENGTH_LONG).show();

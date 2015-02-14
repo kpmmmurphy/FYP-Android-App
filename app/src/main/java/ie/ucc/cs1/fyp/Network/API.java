@@ -18,7 +18,6 @@ import ie.ucc.cs1.fyp.Constants;
 import ie.ucc.cs1.fyp.Model.APIResponse;
 import ie.ucc.cs1.fyp.Model.CameraResponse;
 import ie.ucc.cs1.fyp.Model.Config;
-import ie.ucc.cs1.fyp.Model.CurrentSensorValuesFromServer;
 import ie.ucc.cs1.fyp.Model.PNRegRequest;
 import ie.ucc.cs1.fyp.Model.SensorValuesHolder;
 import ie.ucc.cs1.fyp.Utils;
@@ -62,13 +61,13 @@ public class API {
     }
 
     //--REQUESTS
-     public void requestSensorValues(Response.Listener<CurrentSensorValuesFromServer> listener, Response.ErrorListener errorListener){
+     public void requestSensorValues(Response.Listener<APIResponse> listener, Response.ErrorListener errorListener){
         Utils.methodDebug(LOGTAG);
 
         Map<String, String> headers = new HashMap<String, String>();
         headers.put(Constants.API_REQUEST_HEADER_SERVICE, Constants.API_REQUEST_SERVICE_GET_SENSOR_VALUES);
 
-        GsonRequest<CurrentSensorValuesFromServer> sensorValueRequest = new GsonRequest<CurrentSensorValuesFromServer>(URL, CurrentSensorValuesFromServer.class, headers, listener, errorListener);
+        GsonRequest<APIResponse> sensorValueRequest = new GsonRequest<APIResponse>(URL, APIResponse.class, headers, listener, errorListener);
         addToQueue(sensorValueRequest);
     }
 
@@ -141,6 +140,15 @@ public class API {
 
         GsonRequest<APIResponse> regPNID = new GsonRequest<APIResponse>(URL, APIResponse.class, headers, Utils.toJson(pnRegRequest), listener, errorListener);
         addToQueue(regPNID);
+    }
+
+    public void requestVideoStream(Response.Listener<APIResponse> listener, Response.ErrorListener errorListener){
+        Utils.methodDebug(LOGTAG);
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put(Constants.API_REQUEST_HEADER_SERVICE, Constants.API_REQUEST_SERVICE_REQUEST_STREAM);
+
+        GsonRequest<APIResponse> request = new GsonRequest<APIResponse>(URL, APIResponse.class, headers, listener, errorListener);
+        addToQueue(request);
     }
 
 

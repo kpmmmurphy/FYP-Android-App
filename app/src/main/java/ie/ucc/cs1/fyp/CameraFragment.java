@@ -29,6 +29,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
+import ie.ucc.cs1.fyp.Model.APIResponse;
 import ie.ucc.cs1.fyp.Model.CameraResponse;
 import ie.ucc.cs1.fyp.Model.Packet;
 import ie.ucc.cs1.fyp.Network.API;
@@ -45,6 +46,7 @@ public class CameraFragment extends Fragment{
     private static final String CAMERA_URL = Constants.API_URL + Constants.API_CAMERA;
     private ArrayList<String> imgList;
     private ArrayList<String> videoList;
+    private String piPublicIP;
 
     @InjectView(R.id.view_wrapper)
     RelativeLayout viewWrapper;
@@ -88,17 +90,23 @@ public class CameraFragment extends Fragment{
     @OnClick(R.id.camera_btn_request_stream)
     void onClickStream(){
         Utils.methodDebug(LOGTAG);
-        SocketManager.getInstance(getActivity()).sendPacketToPi(Utils.toJson(new Packet(Constants.SERVICE_REQUEST_STREAM, null)));
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if(Session.getInstance(getActivity()).isConnectedToPi()){
+            SocketManager.getInstance(getActivity()).sendPacketToPi(Utils.toJson(new Packet(Constants.SERVICE_REQUEST_STREAM, null)));
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            String uri = String.format("%s%s:%d/", "http:/", Session.getInstance(getActivity()).getPiIPAddress().toString(), Constants.VIDEO_STREAM_PORT);
+            if(BuildConfig.DEBUG){
+                Log.d(LOGTAG, "Streaming at URL : " + uri);
+            }
+            playURIWithVV(currentVideo, uri);
+        }else{
+            API.getInstance(getActivity()).requestVideoStream(startStreamListener, streamErrorListener);
         }
-        String uri = String.format("%s%s:%d/", "http:/", Session.getInstance(getActivity()).getPiIPAddress().toString(), Constants.VIDEO_STREAM_PORT);
-        if(BuildConfig.DEBUG){
-            Log.d(LOGTAG, "Streaming at URL : " + uri);
-        }
-        playURIWithVV(currentVideo, uri);
+
+
     }
 
     public CameraFragment() {
@@ -135,7 +143,7 @@ public class CameraFragment extends Fragment{
             rlCameraWebContent.setVisibility(View.GONE);
             llCameraControls.setVisibility(View.VISIBLE);
         }else{
-            llCameraControls.setVisibility(View.GONE);
+            //llCameraControls.setVisibility(View.GONE);
             rlCameraWebContent.setVisibility(View.VISIBLE);
             API.getInstance(getActivity()).requestListImages(successListener, errorListener);
         }
@@ -212,6 +220,29 @@ public class CameraFragment extends Fragment{
             viewWrapper.setVisibility(View.GONE);
             errorLayout.setVisibility(View.VISIBLE);
             errorText.setText(R.string.camera_unable_to_display_images);
+        }
+    };
+
+    private Response.Listener<APIResponse> startStreamListener = new Response.Listener<APIResponse>() {
+        @Override
+        public void onResponse(APIResponse response) {
+            Utils.methodDebug(LOGTAG);
+            if(BuildConfig.DEBUG){
+                Log.e(LOGTAG,"It worked" );
+            }
+            piPublicIP = response.pi_public_ip;
+            String uri = String.format("%s%s:%d/", "http://", piPublicIP, Constants.VIDEO_STREAM_PORT);
+            if(BuildConfig.DEBUG){
+                Log.d(LOGTAG, "Streaming at URL : " + uri);
+            }
+            playURIWithVV(currentVideo, uri);
+        }
+    };
+
+    private Response.ErrorListener streamErrorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Utils.methodDebug(LOGTAG);
         }
     };
 

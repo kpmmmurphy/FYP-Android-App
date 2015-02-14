@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Adapter.GridTileAdapter;
-import ie.ucc.cs1.fyp.Model.CurrentSensorValuesFromServer;
+import ie.ucc.cs1.fyp.Model.APIResponse;
 import ie.ucc.cs1.fyp.Model.SensorOutput;
 import ie.ucc.cs1.fyp.Network.API;
 import ie.ucc.cs1.fyp.Socket.Session;
@@ -115,11 +115,11 @@ public class SensorFragment extends Fragment {
     }
 
     //--API Listeners
-    private Response.Listener<CurrentSensorValuesFromServer> successListener = new Response.Listener<CurrentSensorValuesFromServer>() {
+    private Response.Listener<APIResponse> successListener = new Response.Listener<APIResponse>() {
         @Override
-        public void onResponse(CurrentSensorValuesFromServer response) {
+        public void onResponse(APIResponse response) {
             Utils.methodDebug(LOGTAG);
-            SensorValueManager.getInstance().setCurrentSensorValuesFromServer(response);
+            SensorValueManager.getInstance().setCurrentSensorValuesFromServer(response.sensor_values);
             refreshValues();
         }
     };
