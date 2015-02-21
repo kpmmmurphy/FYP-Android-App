@@ -1,6 +1,10 @@
 package ie.ucc.cs1.fyp;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,10 +33,13 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 
 import butterknife.ButterKnife;
@@ -173,59 +180,117 @@ public class CameraFragment extends Fragment{
         @Override
         public void onResponse(CameraResponse response) {
             Utils.methodDebug(LOGTAG);
-            if(response.getImages() != null){
-                filterAssets(response.getImages());
-                if(imgList.size() > 0){
-                    viewWrapper.setVisibility(View.VISIBLE);
-                    errorLayout.setVisibility(View.GONE);
-
-                    recentImages.removeAllViews();
-                    for(final String imagePath : imgList){
-                        NetworkImageView nIV = new NetworkImageView(getActivity());
-                        nIV.setLayoutParams(new ViewGroup.LayoutParams(450, ViewGroup.LayoutParams.MATCH_PARENT));
-                        API.getInstance(getActivity()).requestImage(CAMERA_URL + imagePath, nIV);
-
-                        if(imgList.indexOf(imagePath) == 0){
-                            API.getInstance(getActivity()).requestImage(CAMERA_URL + imagePath, currentImage);
-                            setTimeAndDate(imagePath);
-                        }
-
-                        nIV.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                YoYo.with(Techniques.Pulse)
-                                        .duration(700)
-                                        .playOn(view);
-                                String imgName = imgList.get(recentImages.indexOfChild(view));
-                                String urlOfImg = CAMERA_URL + imgName;
-                                API.getInstance(getActivity()).requestImage(urlOfImg, currentImage);
-
-                                //currentImage.setVisibility(View.VISIBLE);
-                                currentVideo.setVisibility(View.GONE);
-                                YoYo.with(Techniques.FadeOut).duration(700).playOn(currentVideo);
-                                YoYo.with(Techniques.FadeIn).duration(700).playOn(currentImage);
-                                setTimeAndDate(imgName);
-                            }
-                        });
-                        recentImages.addView(nIV);
-                    }
-                    populateVideoList(videoList);
-                    for(final String videoPath : videoList){
-                        Log.e(LOGTAG, videoPath);
-
-                    }
-                }else{
-                    /*viewWrapper.setVisibility(View.GONE);
-                    errorLayout.setVisibility(View.VISIBLE);
-                    errorText.setText(R.string.camera_no_images_to_display);*/
-                }
-            }else{
-                /*viewWrapper.setVisibility(View.GONE);
-                errorLayout.setVisibility(View.VISIBLE);
-                errorText.setText(R.string.camera_no_images_to_display);*/
-            }
+            displayImagesAndVideos();
         }
     };
+
+    private void displayImagesAndVideos(){
+        if(imgList != null && !imgList.isEmpty()){
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    viewWrapper.setVisibility(View.VISIBLE);
+                    errorLayout.setVisibility(View.GONE);
+                    recentImages.removeAllViews();
+                }
+            });
+
+            boolean isConnectToPi = Session.getInstance(getActivity()).isConnectedToPi();
+
+            for(final String imagePath : imgList){
+                NetworkImageView nIV = new NetworkImageView(getActivity());
+                nIV.setLayoutParams(new ViewGroup.LayoutParams(450, ViewGroup.LayoutParams.MATCH_PARENT));
+
+                //TODO CHANGE
+                if(!isConnectToPi){
+                    File imgFile  = getActivity().getFileStreamPath(imagePath);
+                    Bitmap bitmap = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(imgFile.getAbsolutePath()), 450, 700);
+                    Log.e(LOGTAG, imgFile.toString());
+                    BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
+                    nIV.setBackground(bitmapDrawable);
+                }else{
+                    API.getInstance(getActivity()).requestImage(CAMERA_URL + imagePath, nIV);
+                }
+
+                nIV.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        displayLargeImage(view);
+                    }
+                });
+
+                //Display the latest Image
+                if(imgList.indexOf(imagePath) == 0){
+                    //TODO REMOVE
+                    if(!isConnectToPi){
+                        final File imgFile = getActivity().getFileStreamPath(imagePath);
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Bitmap bitmap = BitmapFactory.decodeFile(imgFile.toString());
+                                BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
+                                currentImage.setBackground(bitmapDrawable);
+                            }
+                        });
+
+                    }else{
+                        API.getInstance(getActivity()).requestImage(CAMERA_URL + imagePath, currentImage);
+                    }
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setTimeAndDate(imagePath);
+                        }
+                    });
+                }
+
+                final NetworkImageView cloneNIV = nIV;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        recentImages.addView(cloneNIV);
+                    }
+                });
+
+            }
+        }
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                populateVideoList(videoList);
+            }
+        });
+
+        for(final String videoPath : videoList){
+            Log.e(LOGTAG, videoPath);
+        }
+    }
+
+    private void displayLargeImage(View view){
+        YoYo.with(Techniques.Pulse)
+                .duration(700)
+                .playOn(view);
+        String imgName = imgList.get(recentImages.indexOfChild(view));
+        //TODO CHANGE
+        if(!Session.getInstance(getActivity()).isConnectedToPi()){
+            File imgFile  = getActivity().getFileStreamPath(imgName);
+            Bitmap bitmap = BitmapFactory.decodeFile(imgFile.toString());
+            BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
+            currentImage.setBackground(bitmapDrawable);
+            //currentImage.setImageDrawable(Drawable.createFromPath(getActivity().getFileStreamPath(imgName).toString()));
+        }else{
+            API.getInstance(getActivity()).requestImage(CAMERA_URL + imgName, currentImage);
+        }
+
+        //currentImage.setVisibility(View.VISIBLE);
+        currentVideo.setVisibility(View.GONE);
+        YoYo.with(Techniques.FadeOut).duration(700).playOn(currentVideo);
+        YoYo.with(Techniques.FadeIn).duration(700).playOn(currentImage);
+        setTimeAndDate(imgName);
+    }
 
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
@@ -270,7 +335,7 @@ public class CameraFragment extends Fragment{
         recentVideos.setAdapter(videoAdaptor);
     }
 
-    private void filterAssets(ArrayList<String> assets){
+    private void filterAssets(List<String> assets){
 
         imgList.clear();
         videoList.clear();
@@ -295,10 +360,15 @@ public class CameraFragment extends Fragment{
         return String.format("%s  %s : %s", items[0], items[1].substring(0,2), items[1].substring(2,4)).replace("-", " - ");
     }
 
-    private void setTimeAndDate(String fileName){
-        YoYo.with(Techniques.FadeOut).duration(500).playOn(imageTimeAndDate);
-        imageTimeAndDate.setText(getString(R.string.tv_captured) + " " + reformatDate(fileName.substring(0, fileName.length() - 4)));
-        YoYo.with(Techniques.FadeIn).duration(500).playOn(imageTimeAndDate);
+    private void setTimeAndDate(final String fileName){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                YoYo.with(Techniques.FadeOut).duration(500).playOn(imageTimeAndDate);
+                imageTimeAndDate.setText(getString(R.string.tv_captured) + " " + reformatDate(fileName.substring(0, fileName.length() - 4)));
+                YoYo.with(Techniques.FadeIn).duration(500).playOn(imageTimeAndDate);
+            }
+        });
     }
 
     private void playURIWithVV(VideoView vv, String uri){
@@ -318,32 +388,20 @@ public class CameraFragment extends Fragment{
 
         @Override
         protected Void doInBackground(Void... voids) {
-            getImagesOverFTP();
+            getBackupedImagesOverFTP();
+            List<String> storedFiles = Arrays.asList(getActivity().getFilesDir().list());
+            filterAssets(storedFiles);
+            displayImagesAndVideos();
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
         }
     }
 
-    private void getImagesOverFTP(){
-        /*FTPSClient ftpClient = new FTPSClient();
-        FileOutputStream fileOutputStream;
-        try {
-            //Log.e(LOGTAG, Session.getInstance(getActivity()).getPiIPAddress().getHostName());
-            //ftpClient.connect(Session.getInstance(getActivity()).getPiIPAddress(), 22);
-            ftpClient.connect("192.168.42.1", 22);
-            ftpClient.login("pi", "111314826", "pi");
-            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-            ftpClient.enterLocalPassiveMode();
-            //ftpClient.changeWorkingDirectory("~/FinalYearProject/camera/still_backup");
-            FTPFile[] files = ftpClient.listDirectories();
-            for(FTPFile file : files){
-                Log.e(LOGTAG, file.getName());
-                fileOutputStream = getActivity().openFileOutput(file.getName(), Context.MODE_PRIVATE);
-                ftpClient.retrieveFile(file.getName(), fileOutputStream);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
+    private void getBackupedImagesOverFTP(){
         String STILLS_DIR = "./still_backup";
         String VIDEOS_DIR = "./video_backup";
         FileOutputStream fileOutputStream;
@@ -362,27 +420,39 @@ public class CameraFragment extends Fragment{
 
             //GET BACKUPED STILLS
             ((ChannelSftp) channel).cd(STILLS_DIR);
+
             @SuppressWarnings("unchecked")
             Vector<ChannelSftp.LsEntry> images = ((ChannelSftp) channel).ls(".");
             for (ChannelSftp.LsEntry image : images) {
                 Log.e(LOGTAG, image.getFilename());
+
                 if( image.getFilename().equals(".") || image.getFilename().equals("..")){
                     continue;
                 }
-                
-                fileOutputStream = getActivity().openFileOutput(image.getFilename(), Context.MODE_PRIVATE);
-                sftpChannel.get(image.getFilename(),fileOutputStream);
+
+                if(!getActivity().getFileStreamPath(image.getFilename()).exists()){
+                    fileOutputStream = getActivity().openFileOutput(image.getFilename(), Context.MODE_PRIVATE);
+                    sftpChannel.get(image.getFilename(),fileOutputStream);
+                }
             }
 
-            Log.e(LOGTAG, getActivity().getFilesDir().list()[3]);
-
+            //GET BACKEDUP VIDEO
+            ((ChannelSftp) channel).cd("..");
+            ((ChannelSftp) channel).cd(VIDEOS_DIR);
 
             @SuppressWarnings("unchecked")
-            Vector<ChannelSftp.LsEntry> videos = ((ChannelSftp) channel).ls("./video_backup");
-            //sftpChannel.get("remotefile.txt", "localfile.txt");
-
+            Vector<ChannelSftp.LsEntry> videos = ((ChannelSftp) channel).ls(".");
             for (ChannelSftp.LsEntry video : videos) {
+                Log.e(LOGTAG, video.getFilename());
 
+                if( video.getFilename().equals(".") || video.getFilename().equals("..")){
+                    continue;
+                }
+
+                if(!getActivity().getFileStreamPath(video.getFilename()).exists()){
+                    fileOutputStream = getActivity().openFileOutput(video.getFilename(), Context.MODE_PRIVATE);
+                    sftpChannel.get(video.getFilename(),fileOutputStream);
+                }
             }
 
             sftpChannel.exit();
@@ -394,8 +464,6 @@ public class CameraFragment extends Fragment{
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
-
     }
 }
 
