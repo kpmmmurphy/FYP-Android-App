@@ -30,6 +30,8 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.7'
     compile 'com.squareup.retrofit:retrofit:1.7.1'
     compile 'com.google.android.gms:play-services:6.5.87'
+    compile 'commons-net:commons-net:3.3'
+    compile 'com.jcraft:jsch:0.1.51'
 
     //Animation
     //compile 'com.nineoldandroids:library:2.4.0'

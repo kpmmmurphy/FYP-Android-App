@@ -1,6 +1,8 @@
 package ie.ucc.cs1.fyp;
 
+import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -21,9 +23,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Vector;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -149,6 +159,8 @@ public class CameraFragment extends Fragment{
             rlCameraWebContent.setVisibility(View.VISIBLE);
             API.getInstance(getActivity()).requestListImages(successListener, errorListener);
         }
+
+        new RetrieveImagesOverFTPTask().execute();
     }
 
     @Override
@@ -300,6 +312,90 @@ public class CameraFragment extends Fragment{
         YoYo.with(Techniques.FadeIn).duration(700).playOn(vv);
         vv.requestFocus();
         vv.start();
+    }
+
+    private class RetrieveImagesOverFTPTask extends AsyncTask<Void, Void, Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            getImagesOverFTP();
+            return null;
+        }
+    }
+
+    private void getImagesOverFTP(){
+        /*FTPSClient ftpClient = new FTPSClient();
+        FileOutputStream fileOutputStream;
+        try {
+            //Log.e(LOGTAG, Session.getInstance(getActivity()).getPiIPAddress().getHostName());
+            //ftpClient.connect(Session.getInstance(getActivity()).getPiIPAddress(), 22);
+            ftpClient.connect("192.168.42.1", 22);
+            ftpClient.login("pi", "111314826", "pi");
+            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+            ftpClient.enterLocalPassiveMode();
+            //ftpClient.changeWorkingDirectory("~/FinalYearProject/camera/still_backup");
+            FTPFile[] files = ftpClient.listDirectories();
+            for(FTPFile file : files){
+                Log.e(LOGTAG, file.getName());
+                fileOutputStream = getActivity().openFileOutput(file.getName(), Context.MODE_PRIVATE);
+                ftpClient.retrieveFile(file.getName(), fileOutputStream);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+
+        String STILLS_DIR = "./still_backup";
+        String VIDEOS_DIR = "./video_backup";
+        FileOutputStream fileOutputStream;
+        JSch jsch = new JSch();
+        com.jcraft.jsch.Session session = null;
+        try {
+            session = jsch.getSession("pi", "192.168.42.1", 22);
+            session.setConfig("StrictHostKeyChecking", "no");
+            session.setPassword("111314826");
+            session.connect();
+
+            Channel channel = session.openChannel("sftp");
+            channel.connect();
+            ChannelSftp sftpChannel = (ChannelSftp) channel;
+            ((ChannelSftp) channel).cd("./FinalYearProject/camera");
+
+            //GET BACKUPED STILLS
+            ((ChannelSftp) channel).cd(STILLS_DIR);
+            @SuppressWarnings("unchecked")
+            Vector<ChannelSftp.LsEntry> images = ((ChannelSftp) channel).ls(".");
+            for (ChannelSftp.LsEntry image : images) {
+                Log.e(LOGTAG, image.getFilename());
+                if( image.getFilename().equals(".") || image.getFilename().equals("..")){
+                    continue;
+                }
+                
+                fileOutputStream = getActivity().openFileOutput(image.getFilename(), Context.MODE_PRIVATE);
+                sftpChannel.get(image.getFilename(),fileOutputStream);
+            }
+
+            Log.e(LOGTAG, getActivity().getFilesDir().list()[3]);
+
+
+            @SuppressWarnings("unchecked")
+            Vector<ChannelSftp.LsEntry> videos = ((ChannelSftp) channel).ls("./video_backup");
+            //sftpChannel.get("remotefile.txt", "localfile.txt");
+
+            for (ChannelSftp.LsEntry video : videos) {
+
+            }
+
+            sftpChannel.exit();
+            session.disconnect();
+        } catch (JSchException e) {
+            e.printStackTrace();
+        } catch (SftpException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }
 

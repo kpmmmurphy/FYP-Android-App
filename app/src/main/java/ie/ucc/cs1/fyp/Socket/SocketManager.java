@@ -64,6 +64,7 @@ public class SocketManager {
         gson = new Gson();
         wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         ourIP = Session.getInstance(mContext).getIp_address();
+        new SetupNetworkingTask().execute();
     }
 
     public static synchronized SocketManager getInstance(Context context){
@@ -94,35 +95,41 @@ public class SocketManager {
                     Log.d(LOGTAG, "Sending Multicast Packet");
                 }
 
-                serverSocket = createServerSocket(ourIP);
+                if(serverSocket == null){
+                    serverSocket = createServerSocket(ourIP);
+                }
+
                 try {
-                    serverSocket.setSoTimeout(ACK_SOCKET_TIMEOUT);
+                    if(serverSocket != null){
+                        serverSocket.setSoTimeout(ACK_SOCKET_TIMEOUT);
+                        //Now wait for ACK
+                        Socket ackSocket = serverSocket.accept();
+                        if (BuildConfig.DEBUG){
+                            Log.d(LOGTAG, "Created ACK Socket :: " + ackSocket.toString());
+                        }
+
+                        String receivedString = readPacket(ackSocket.getInputStream());
+
+                        if (BuildConfig.DEBUG) {
+                            Log.d(LOGTAG, "Received Packet :: " + receivedString);
+                        }
+
+                        Packet packet = gson.fromJson(receivedString, Packet.class);
+                        Log.e(LOGTAG, String.valueOf(packet.getPayload().getPaired().getStatus_code()));
+                        if(packet.getPayload() != null && packet.getService().equals(Constants.SERVICE_PAIRED) && packet.getPayload().getPaired().getStatus_code() == Constants.CONNECT_SUCCESS){
+                            //Set session to connected
+                            if(BuildConfig.DEBUG){
+                                Log.d(LOGTAG, "Connected to Pi");
+                            }
+                            session.setConnectedToPi(true);
+                            session.setPiIPAddress(ackSocket.getInetAddress());
+                        }
+                        ackSocket.close();
+                    }
                 } catch (SocketException e) {
                     e.printStackTrace();
                 }
-                //Now wait for ACK
-                Socket ackSocket = serverSocket.accept();
-                if (BuildConfig.DEBUG){
-                    Log.d(LOGTAG, "Created ACK Socket :: " + ackSocket.toString());
-                }
 
-                String receivedString = readPacket(ackSocket.getInputStream());
-
-                if (BuildConfig.DEBUG) {
-                    Log.d(LOGTAG, "Received Packet :: " + receivedString);
-                }
-
-                Packet packet = gson.fromJson(receivedString, Packet.class);
-                Log.e(LOGTAG, String.valueOf(packet.getPayload().getPaired().getStatus_code()));
-                if(packet.getPayload() != null && packet.getService().equals(Constants.SERVICE_PAIRED) && packet.getPayload().getPaired().getStatus_code() == Constants.CONNECT_SUCCESS){
-                    //Set session to connected
-                    if(BuildConfig.DEBUG){
-                        Log.d(LOGTAG, "Connected to Pi");
-                    }
-                    session.setConnectedToPi(true);
-                    session.setPiIPAddress(ackSocket.getInetAddress());
-                }
-                ackSocket.close();
             } catch (SocketException e) {
                 Log.e("UDP", "Socket Error", e);
             } catch (IOException e) {
@@ -238,13 +245,11 @@ public class SocketManager {
         return ss;
     }
 
-    private class SetupNetworking extends AsyncTask<Void, Void, Void>{
+    private class SetupNetworkingTask extends AsyncTask<Void, Void, Void>{
 
         @Override
         protected Void doInBackground(Void... voids) {
             serverSocket = createServerSocket(ourIP);
-
-
             return null;
         }
     }
