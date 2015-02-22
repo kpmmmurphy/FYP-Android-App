@@ -20,6 +20,11 @@ android {
     dexOptions {
         preDexLibraries = false
     }
+
+    lintOptions {
+        abortOnError false
+    }
+
 }
 
 dependencies {

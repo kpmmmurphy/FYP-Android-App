@@ -104,7 +104,8 @@ public class CameraFragment extends Fragment{
         Utils.methodDebug(LOGTAG);
         Log.e(LOGTAG, "Connected to Pi " + String.valueOf(Session.getInstance(getActivity()).isConnectedToPi()));
         if(Session.getInstance(getActivity()).isConnectedToPi()){
-            SocketManager.getInstance(getActivity()).sendPacketToPi(Utils.toJson(new Packet(Constants.SERVICE_REQUEST_IMAGE, null)));
+            String requestImagePacket = Utils.toJson(new Packet(Constants.SERVICE_REQUEST_IMAGE, null));
+            SocketManager.getInstance(getActivity()).sendPacketToPi(requestImagePacket);
         }else{
             API.getInstance(getActivity()).requestImageCapture(captureImageListener, streamErrorListener);
         }
