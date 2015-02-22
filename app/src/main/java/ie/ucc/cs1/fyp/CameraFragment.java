@@ -91,7 +91,7 @@ public class CameraFragment extends Fragment{
     RelativeLayout rlCameraWebContent;
 
     @OnItemClick(R.id.lv_recent_videos)
-    void onItemSelected(int position){
+    public void onItemSelected(int position){
         Utils.methodDebug(LOGTAG);
         String videoName  = videoList.get(position);
         setTimeAndDate(videoName);
@@ -100,9 +100,8 @@ public class CameraFragment extends Fragment{
     }
 
     @OnClick(R.id.camera_btn_request_image)
-    void onClick(){
+    public void onClick(){
         Utils.methodDebug(LOGTAG);
-        Log.e(LOGTAG, "Connected to Pi " + String.valueOf(Session.getInstance(getActivity()).isConnectedToPi()));
         if(Session.getInstance(getActivity()).isConnectedToPi()){
             String requestImagePacket = Utils.toJson(new Packet(Constants.SERVICE_REQUEST_IMAGE, null));
             SocketManager.getInstance(getActivity()).sendPacketToPi(requestImagePacket);
@@ -324,9 +323,6 @@ public class CameraFragment extends Fragment{
     }
 
     private void filterAssets(List<String> assets){
-        imgList.clear();
-        videoList.clear();
-
         assets.remove(".");
         assets.remove("..");
         assets.remove(".directory");
@@ -389,41 +385,43 @@ public class CameraFragment extends Fragment{
 
         @Override
         protected Void doInBackground(Void... voids) {
+            getLatetestFilesOverFTP();
+            getBackupedFilesOverFTP();
             List<String> storedFiles = Arrays.asList(getActivity().getFilesDir().list());
             filterAssets(storedFiles);
-            displayImagesAndVideos();
-            getBackupedImagesOverFTP();
             displayImagesAndVideos();
             return null;
         }
     }
 
-    private void getBackupedImagesOverFTP(){
-        String CURRENT_STILL_DIR  = "./still";
-        String STILLS_DIR         = "./still_backup";
-        String CURRENT_VIDEOS_DIR = "./video";
-        String VIDEOS_DIR         = "./video_backup";
-
+    private synchronized com.jcraft.jsch.Session connectToFTPServer() throws JSchException {
         JSch jsch = new JSch();
         com.jcraft.jsch.Session session = null;
-        try {
-            session = jsch.getSession("pi", "192.168.42.1", 22);
-            session.setConfig("StrictHostKeyChecking", "no");
-            session.setPassword("111314826");
-            session.connect();
+        session = jsch.getSession("pi", "192.168.42.1", 22);
 
+        session.setConfig("StrictHostKeyChecking", "no");
+        session.setPassword("111314826");
+        session.connect();
+
+        Channel channel = session.openChannel("sftp");
+        channel.connect();
+        return session;
+    }
+
+    private synchronized void getLatetestFilesOverFTP(){
+        String CURRENT_STILL_DIR  = "./still";
+        String CURRENT_VIDEOS_DIR = "./video";
+
+        try {
+            com.jcraft.jsch.Session session = connectToFTPServer();
             Channel channel = session.openChannel("sftp");
             channel.connect();
-            ChannelSftp sftpChannel = (ChannelSftp) channel;
-            ((ChannelSftp) channel).cd("./FinalYearProject/camera");
+            ChannelSftp sftpChannel = (ChannelSftp)channel;
+
+            sftpChannel.cd("./FinalYearProject/camera");
 
             //GET CURRENT IMAGE
             sftpChannel.cd(CURRENT_STILL_DIR);
-            transferAllFileInCurrentDir(sftpChannel);
-
-            //GET BACKUPED STILLS
-            sftpChannel.cd("..");
-            sftpChannel.cd(STILLS_DIR);
             transferAllFileInCurrentDir(sftpChannel);
 
             //GET CURRENT VIDEO
@@ -431,11 +429,45 @@ public class CameraFragment extends Fragment{
             sftpChannel.cd(CURRENT_VIDEOS_DIR);
             transferAllFileInCurrentDir(sftpChannel);
 
+            if(BuildConfig.DEBUG){
+                Log.d(LOGTAG, "Closing SFTPChannel");
+            }
+            sftpChannel.exit();
+            session.disconnect();
+        } catch (JSchException e) {
+            e.printStackTrace();
+        } catch (SftpException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private synchronized void getBackupedFilesOverFTP(){
+        String STILLS_DIR         = "./still_backup";
+        String VIDEOS_DIR         = "./video_backup";
+
+        try {
+            com.jcraft.jsch.Session session = connectToFTPServer();
+            Channel channel = session.openChannel("sftp");
+            channel.connect();
+            ChannelSftp sftpChannel = (ChannelSftp)channel;
+
+            sftpChannel.cd("./FinalYearProject/camera");
+
+            //GET BACKUPED STILLS
+            sftpChannel.cd("..");
+            sftpChannel.cd(STILLS_DIR);
+            transferAllFileInCurrentDir(sftpChannel);
+
             //GET BACKEDUP VIDEO
             sftpChannel.cd("..");
             sftpChannel.cd(VIDEOS_DIR);
             transferAllFileInCurrentDir(sftpChannel);
 
+            if(BuildConfig.DEBUG){
+                Log.d(LOGTAG, "Closing SFTPChannel");
+            }
             sftpChannel.exit();
             session.disconnect();
         } catch (JSchException e) {
@@ -458,7 +490,10 @@ public class CameraFragment extends Fragment{
                 continue;
             }
             fileOutputStream = getActivity().openFileOutput(entry.getFilename(), Context.MODE_PRIVATE);
+            //Transfer the file to local storage
             sftpChannel.get(entry.getFilename(),fileOutputStream);
+            //Remove file from server
+            sftpChannel.rm(entry.getFilename());
         }
     }
 }

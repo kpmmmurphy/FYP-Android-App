@@ -65,6 +65,7 @@ public class SocketManager {
         wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         ourIP = Session.getInstance(mContext).getIp_address();
         new SetupNetworkingTask().execute();
+
     }
 
     public static synchronized SocketManager getInstance(Context context){
@@ -155,7 +156,7 @@ public class SocketManager {
         new ConnectToPi().execute(session);
     }
 
-    public void startPiDirectThread(){
+    public synchronized void startPiDirectThread(){
         sensorValueThread = new Thread(){
             @Override
             public void run() {
@@ -179,7 +180,7 @@ public class SocketManager {
         sensorValueThread.start();
     }
 
-    public void sendPacketToPi(String packet){
+    public synchronized void sendPacketToPi(String packet){
         new SendPacketToPi().execute(packet);
     }
 
