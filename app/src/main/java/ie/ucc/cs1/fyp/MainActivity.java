@@ -106,7 +106,7 @@ public class MainActivity extends FragmentActivity {
         switch (item.getItemId()) {
             case R.id.action_bar_menu_wifi_direct:
                 hideFragments();
-                SocketManager.getInstance(getApplicationContext()).startConnectionToPi(Session.getInstance(this));
+                SocketManager.getInstance(this).startConnectionToPi(Session.getInstance(this));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -128,7 +128,7 @@ public class MainActivity extends FragmentActivity {
             }
             boolean isConnected = intent.getBooleanExtra(Constants.SERVICE_PAIRED, false);
             if(isConnected){
-                SocketManager.getInstance(getApplicationContext()).startPiDirectThread();
+                SocketManager.getInstance(MainActivity.this).startPiDirectThread();
                 Toast.makeText(getApplicationContext(), getString(R.string.connected_to_pi_success), Toast.LENGTH_SHORT).show();
             }else{
                 Toast.makeText(getApplicationContext(), getString(R.string.connected_to_pi_failed), Toast.LENGTH_SHORT).show();

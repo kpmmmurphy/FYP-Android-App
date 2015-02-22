@@ -100,32 +100,34 @@ public class SocketManager {
                 }
 
                 try {
-                    if(serverSocket != null){
-                        serverSocket.setSoTimeout(ACK_SOCKET_TIMEOUT);
-                        //Now wait for ACK
-                        Socket ackSocket = serverSocket.accept();
-                        if (BuildConfig.DEBUG){
-                            Log.d(LOGTAG, "Created ACK Socket :: " + ackSocket.toString());
-                        }
-
-                        String receivedString = readPacket(ackSocket.getInputStream());
-
-                        if (BuildConfig.DEBUG) {
-                            Log.d(LOGTAG, "Received Packet :: " + receivedString);
-                        }
-
-                        Packet packet = gson.fromJson(receivedString, Packet.class);
-                        Log.e(LOGTAG, String.valueOf(packet.getPayload().getPaired().getStatus_code()));
-                        if(packet.getPayload() != null && packet.getService().equals(Constants.SERVICE_PAIRED) && packet.getPayload().getPaired().getStatus_code() == Constants.CONNECT_SUCCESS){
-                            //Set session to connected
-                            if(BuildConfig.DEBUG){
-                                Log.d(LOGTAG, "Connected to Pi");
-                            }
-                            session.setConnectedToPi(true);
-                            session.setPiIPAddress(ackSocket.getInetAddress());
-                        }
-                        ackSocket.close();
+                    serverSocket.setSoTimeout(ACK_SOCKET_TIMEOUT);
+                    //Now wait for ACK
+                    Socket ackSocket = serverSocket.accept();
+                    if (BuildConfig.DEBUG){
+                        Log.d(LOGTAG, "Created ACK Socket :: " + ackSocket.toString());
                     }
+
+                    String receivedString = readPacket(ackSocket.getInputStream());
+
+                    if (BuildConfig.DEBUG) {
+                        Log.d(LOGTAG, "Received Packet :: " + receivedString);
+                    }
+
+                    Packet packet = gson.fromJson(receivedString, Packet.class);
+                    if(BuildConfig.DEBUG){
+                        if(packet.getPayload() != null && packet.getPayload().getPaired() != null)
+                        Log.e(LOGTAG, String.valueOf(packet.getPayload().getPaired().getStatus_code()));
+                    }
+                    if(packet.getPayload() != null && packet.getService().equals(Constants.SERVICE_PAIRED) && packet.getPayload().getPaired().getStatus_code() == Constants.CONNECT_SUCCESS){
+                        //Set session to connected
+                        if(BuildConfig.DEBUG){
+                            Log.d(LOGTAG, "Connected to Pi");
+                        }
+                        session.setConnectedToPi(true);
+                        session.setPiIPAddress(ackSocket.getInetAddress());
+                    }
+                    ackSocket.close();
+
                 } catch (SocketException e) {
                     e.printStackTrace();
                 }
@@ -196,10 +198,13 @@ public class SocketManager {
             if (BuildConfig.DEBUG){
                 Log.d(LOGTAG, "Sending Packet to Pi -> " + packet);
             }
+
             try {
                 Socket socket   = new Socket(Session.getInstance(mContext).getPiIPAddress(), Constants.SOCKET_CLIENT_PORT);
                 PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
                 out.println(packet);
+                out.close();
+                socket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -246,7 +251,6 @@ public class SocketManager {
     }
 
     private class SetupNetworkingTask extends AsyncTask<Void, Void, Void>{
-
         @Override
         protected Void doInBackground(Void... voids) {
             serverSocket = createServerSocket(ourIP);
