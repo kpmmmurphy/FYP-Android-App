@@ -51,15 +51,15 @@ public class SocketManager {
     private MulticastSocket multicastSocket;
     private ServerSocket serverSocket;
     private Thread sensorValueThread;
-    private Socket       piDirectSocket;
-    private DatagramPacket  multicastPacket;
+    private Socket piDirectSocket;
+    private DatagramPacket multicastPacket;
     private String recievedString;
 
     private int ACK_SOCKET_TIMEOUT = 40000;
     private int MULTICAST_TIMEOUT = 10000;
     private int PACKET_MAX_SIZE = 1024;
 
-    private SocketManager(Context context){
+    private SocketManager(Context context) {
         this.mContext = context;
         gson = new Gson();
         wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
@@ -68,14 +68,14 @@ public class SocketManager {
 
     }
 
-    public static synchronized SocketManager getInstance(Context context){
-        if(__instance == null){
+    public static synchronized SocketManager getInstance(Context context) {
+        if (__instance == null) {
             __instance = new SocketManager(context);
         }
         return __instance;
     }
 
-    private class ConnectToPi extends AsyncTask<Session, Void, Boolean>{
+    private class ConnectToPi extends AsyncTask<Session, Void, Boolean> {
 
         private String LOGTAG = "__ConnectToPi";
 
@@ -87,16 +87,17 @@ public class SocketManager {
             try {
                 byte[] connectPacket = PacketFactory.newConnectPacket(session);
                 multicastSocket = createMulticastSocket(mContext);
-                multicastGroup  = InetAddress.getByName(Constants.SOCKET_MULTICAST_GROUP_IP);
-                multicastPacket = new DatagramPacket(connectPacket, connectPacket.length, new InetSocketAddress(multicastGroup, Constants.SOCKET_MULTICAST_PORT));  multicastSocket.setTimeToLive(30);
+                multicastGroup = InetAddress.getByName(Constants.SOCKET_MULTICAST_GROUP_IP);
+                multicastPacket = new DatagramPacket(connectPacket, connectPacket.length, new InetSocketAddress(multicastGroup, Constants.SOCKET_MULTICAST_PORT));
+                multicastSocket.setTimeToLive(30);
                 multicastSocket.send(multicastPacket);
                 multicastSocket.close();
 
-                if (BuildConfig.DEBUG){
+                if (BuildConfig.DEBUG) {
                     Log.d(LOGTAG, "Sending Multicast Packet");
                 }
 
-                if(serverSocket == null){
+                if (serverSocket == null) {
                     serverSocket = createServerSocket(ourIP);
                 }
 
@@ -104,7 +105,7 @@ public class SocketManager {
                     serverSocket.setSoTimeout(ACK_SOCKET_TIMEOUT);
                     //Now wait for ACK
                     Socket ackSocket = serverSocket.accept();
-                    if (BuildConfig.DEBUG){
+                    if (BuildConfig.DEBUG) {
                         Log.d(LOGTAG, "Created ACK Socket :: " + ackSocket.toString());
                     }
 
@@ -115,13 +116,13 @@ public class SocketManager {
                     }
 
                     Packet packet = gson.fromJson(receivedString, Packet.class);
-                    if(BuildConfig.DEBUG){
-                        if(packet.getPayload() != null && packet.getPayload().getPaired() != null)
-                        Log.e(LOGTAG, String.valueOf(packet.getPayload().getPaired().getStatus_code()));
+                    if (BuildConfig.DEBUG) {
+                        if (packet.getPayload() != null && packet.getPayload().getPaired() != null)
+                            Log.e(LOGTAG, String.valueOf(packet.getPayload().getPaired().getStatus_code()));
                     }
-                    if(packet.getPayload() != null && packet.getService().equals(Constants.SERVICE_PAIRED) && packet.getPayload().getPaired().getStatus_code() == Constants.CONNECT_SUCCESS){
+                    if (packet.getPayload() != null && packet.getService().equals(Constants.SERVICE_PAIRED) && packet.getPayload().getPaired().getStatus_code() == Constants.CONNECT_SUCCESS) {
                         //Set session to connected
-                        if(BuildConfig.DEBUG){
+                        if (BuildConfig.DEBUG) {
                             Log.d(LOGTAG, "Connected to Pi");
                         }
                         session.setConnectedToPi(true);
@@ -145,28 +146,28 @@ public class SocketManager {
         protected void onPostExecute(Boolean connected) {
             Utils.methodDebug(LOGTAG);
             //Send broadcast to Main Activity
-            if(BuildConfig.DEBUG){
+            if (BuildConfig.DEBUG) {
                 Log.d(LOGTAG, "Sending Broadcast to MainActivity");
             }
             sendConnectedBroadcast();
         }
     }
 
-    public void startConnectionToPi(Session session){
+    public void startConnectionToPi(Session session) {
         new ConnectToPi().execute(session);
     }
 
-    public synchronized void startPiDirectThread(){
-        sensorValueThread = new Thread(){
+    public synchronized void startPiDirectThread() {
+        sensorValueThread = new Thread() {
             @Override
             public void run() {
                 try {
                     //Request Graph Data Right Away!!
-                    SocketManager.getInstance(mContext).sendPacketToPi(Utils.toJson(new Packet(Constants.JSON_VALUE_WIFI_DIRECT_GET_GRAPH_DATA , null)));
-                    while (!this.isInterrupted()){
+                    SocketManager.getInstance(mContext).sendPacketToPi(Utils.toJson(new Packet(Constants.JSON_VALUE_WIFI_DIRECT_GET_GRAPH_DATA, null)));
+                    while (!this.isInterrupted()) {
                         piDirectSocket = serverSocket.accept();
                         String currentPacket = readPacket(piDirectSocket.getInputStream());
-                        if(BuildConfig.DEBUG){
+                        if (BuildConfig.DEBUG) {
                             Log.d(LOGTAG, "Received :: " + currentPacket);
                         }
                         PacketManager.getInstance(mContext).deliverPacket(gson.fromJson(currentPacket, Packet.class));
@@ -180,15 +181,15 @@ public class SocketManager {
         sensorValueThread.start();
     }
 
-    public synchronized void sendPacketToPi(String packet){
+    public synchronized void sendPacketToPi(String packet) {
         new SendPacketToPi().execute(packet);
     }
 
-    public class SendPacketToPi extends AsyncTask<String, Void, Void>{
+    public class SendPacketToPi extends AsyncTask<String, Void, Void> {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if (BuildConfig.DEBUG){
+            if (BuildConfig.DEBUG) {
                 Log.d(LOGTAG, "Packet Sent to Pi");
             }
         }
@@ -196,12 +197,12 @@ public class SocketManager {
         @Override
         protected Void doInBackground(String... strings) {
             String packet = strings[0];
-            if (BuildConfig.DEBUG){
+            if (BuildConfig.DEBUG) {
                 Log.d(LOGTAG, "Sending Packet to Pi -> " + packet);
             }
 
             try {
-                Socket socket   = new Socket(Session.getInstance(mContext).getPiIPAddress(), Constants.SOCKET_CLIENT_PORT);
+                Socket socket = new Socket(Session.getInstance(mContext).getPiIPAddress(), Constants.SOCKET_CLIENT_PORT);
                 PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
                 out.println(packet);
                 out.close();
@@ -219,14 +220,14 @@ public class SocketManager {
         Utils.methodDebug(LOGTAG);
 
         MulticastSocket multicastSocket = new MulticastSocket(Constants.SOCKET_MULTICAST_PORT);
-        if(wifiManager != null){
+        if (wifiManager != null) {
             WifiManager.MulticastLock lock = wifiManager.createMulticastLock(LOGTAG);
             lock.acquire();
         }
 
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
         int intaddr = wifiInfo.getIpAddress();
-        byte[] byteaddr = new byte[] {
+        byte[] byteaddr = new byte[]{
                 (byte) (intaddr & 0xff),
                 (byte) (intaddr >> 8 & 0xff),
                 (byte) (intaddr >> 16 & 0xff),
@@ -238,11 +239,11 @@ public class SocketManager {
         return multicastSocket;
     }
 
-    private ServerSocket createServerSocket(String connectToIp){
+    private ServerSocket createServerSocket(String connectToIp) {
         ServerSocket ss = null;
         try {
             ss = new ServerSocket(Constants.SOCKET_SERVER_PORT, 0, InetAddress.getByName(connectToIp));
-            if(BuildConfig.DEBUG){
+            if (BuildConfig.DEBUG) {
                 Log.d(LOGTAG, ss.toString());
             }
         } catch (IOException e) {
@@ -251,7 +252,7 @@ public class SocketManager {
         return ss;
     }
 
-    private class SetupNetworkingTask extends AsyncTask<Void, Void, Void>{
+    private class SetupNetworkingTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
             serverSocket = createServerSocket(ourIP);
@@ -259,7 +260,7 @@ public class SocketManager {
         }
     }
 
-    private String readPacket(InputStream inputStream){
+    private String readPacket(InputStream inputStream) {
         String s = "";
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -272,10 +273,10 @@ public class SocketManager {
         return s;
     }
 
-    private byte[] trimPacket(byte[] packet){
+    private byte[] trimPacket(byte[] packet) {
         int count = 0;
-        for(byte charr : packet){
-            if(charr == 0){
+        for (byte charr : packet) {
+            if (charr == 0) {
                 break;
             }
             ++count;
@@ -283,8 +284,8 @@ public class SocketManager {
         return Arrays.copyOf(packet, count);
     }
 
-    private void sendConnectedBroadcast(){
-        if(BuildConfig.DEBUG){
+    private void sendConnectedBroadcast() {
+        if (BuildConfig.DEBUG) {
             Log.d(LOGTAG, "Sending Connected to Pi Intent");
         }
         Intent connectedIntent = new Intent(Constants.INTENT_CONNECTED_TO_PI);

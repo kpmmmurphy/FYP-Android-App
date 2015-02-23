@@ -38,7 +38,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
@@ -158,7 +157,12 @@ public class CameraFragment extends Fragment{
         if(Session.getInstance(getActivity()).isConnectedToPi()){
             new RetrieveImagesOverFTPTask().execute();
         }else{
-            API.getInstance(getActivity()).requestListImages(successListener, errorListener);
+            MyApplication.scheduleTask(new Runnable() {
+                @Override
+                public void run() {
+                    API.getInstance(getActivity()).requestListImages(successListener, errorListener);
+                }
+            }, 0, 10, LOGTAG);
         }
     }
 
@@ -166,6 +170,7 @@ public class CameraFragment extends Fragment{
     public void onPause() {
         super.onPause();
         Utils.methodDebug(LOGTAG);
+        MyApplication.unscheduleTask(LOGTAG);
     }
 
     private Response.Listener<CameraResponse> successListener = new Response.Listener<CameraResponse>() {
@@ -329,13 +334,13 @@ public class CameraFragment extends Fragment{
         for(String item : assets){
             String format = item.substring(item.length() - 3, item.length());
             if(!imgList.contains(item) && format.equalsIgnoreCase("jpg")){
-                imgList.add(item);
+                //Slot new image files at end each time
+                imgList.add(0,item);
             }else if(!videoList.contains(item) && format.equalsIgnoreCase("mp4")){
-                videoList.add(item);
+                //Slot in at end
+                videoList.add(0, item);
             }
         }
-        Collections.reverse(imgList);
-        Collections.reverse(videoList);
     }
 
     private String reformatDate(String date){
