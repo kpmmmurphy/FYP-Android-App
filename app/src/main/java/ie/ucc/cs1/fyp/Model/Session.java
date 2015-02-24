@@ -1,4 +1,4 @@
-package ie.ucc.cs1.fyp.Socket;
+package ie.ucc.cs1.fyp.Model;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
@@ -10,9 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-
-import ie.ucc.cs1.fyp.Model.Config;
-import ie.ucc.cs1.fyp.Model.CurrentSensorValuesFromServer;
 
 /**
  * Created by kpmmmurphy on 07/01/15.

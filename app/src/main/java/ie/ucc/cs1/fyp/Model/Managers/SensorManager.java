@@ -1,4 +1,4 @@
-package ie.ucc.cs1.fyp.Model;
+package ie.ucc.cs1.fyp.Model.Managers;
 
 /**
  * Created by kpmmmurphy on 10/01/15.

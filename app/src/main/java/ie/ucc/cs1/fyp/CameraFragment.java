@@ -49,7 +49,7 @@ import ie.ucc.cs1.fyp.Model.APIResponse;
 import ie.ucc.cs1.fyp.Model.CameraResponse;
 import ie.ucc.cs1.fyp.Model.Packet;
 import ie.ucc.cs1.fyp.Network.API;
-import ie.ucc.cs1.fyp.Socket.Session;
+import ie.ucc.cs1.fyp.Model.Session;
 import ie.ucc.cs1.fyp.Socket.SocketManager;
 
 /**
@@ -323,8 +323,12 @@ public class CameraFragment extends Fragment{
     };
 
     private void populateVideoList(ArrayList<String> videos){
-        ArrayAdapter<String> videoAdaptor = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,videos);
-        recentVideos.setAdapter(videoAdaptor);
+        if(!videos.isEmpty()){
+            ArrayAdapter<String> videoAdaptor = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,videos);
+            recentVideos.setAdapter(videoAdaptor);
+        }else{
+            recentVideos.setAdapter(null);
+        }
     }
 
     private void filterAssets(List<String> assets){
@@ -335,7 +339,7 @@ public class CameraFragment extends Fragment{
             String format = item.substring(item.length() - 3, item.length());
             if(!imgList.contains(item) && format.equalsIgnoreCase("jpg")){
                 //Slot new image files at end each time
-                imgList.add(0,item);
+                imgList.add(0, item);
             }else if(!videoList.contains(item) && format.equalsIgnoreCase("mp4")){
                 //Slot in at end
                 videoList.add(0, item);

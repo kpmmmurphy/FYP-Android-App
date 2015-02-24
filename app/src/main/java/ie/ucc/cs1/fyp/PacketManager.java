@@ -10,7 +10,7 @@ import java.util.Calendar;
 
 import ie.ucc.cs1.fyp.Model.CurrentSensorValues;
 import ie.ucc.cs1.fyp.Model.Packet;
-import ie.ucc.cs1.fyp.Socket.Session;
+import ie.ucc.cs1.fyp.Model.Session;
 
 /**
  * Created by kpmmmurphy on 11/01/15.

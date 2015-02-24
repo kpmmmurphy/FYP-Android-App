@@ -38,19 +38,18 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
                 android:padding="8dp"
-                android:textSize="16sp"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
         </FrameLayout>
-
 
 
         <LinearLayout
             android:id="@+id/camera_direct_controls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/fl_display"
             android:gravity="center"
             android:orientation="horizontal"
-            android:layout_below="@id/fl_display"
             android:visibility="visible">
 
             <Button
@@ -98,26 +97,35 @@
                     android:layout_marginBottom="8dp"
                     android:background="@color/gray" />
 
-                <HorizontalScrollView
-                    android:id="@+id/hsv_Images"
+                <FrameLayout
+                    android:id="@+id/fl_recent_images"
                     android:layout_width="fill_parent"
-                    android:layout_height="124dp"
-                    android:layout_below="@id/view_divider_images"
-                    android:layout_marginBottom="8dp">
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/view_divider_images">
 
-                    <LinearLayout
-                        android:id="@+id/sv_recent_images"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"></LinearLayout>
+                    <HorizontalScrollView
+                        android:id="@+id/hsv_Images"
+                        android:layout_width="fill_parent"
+                        android:layout_height="124dp"
 
-                </HorizontalScrollView>
+                        android:layout_marginBottom="8dp">
+
+                        <LinearLayout
+                            android:id="@+id/sv_recent_images"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"></LinearLayout>
+
+                    </HorizontalScrollView>
+
+                </FrameLayout>
+
 
                 <TextView
                     android:id="@+id/tv_title_videos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/hsv_Images"
+                    android:layout_below="@id/fl_recent_images"
                     android:padding="10dp"
                     android:text="@string/tv_title_videos"
                     android:textAllCaps="true"

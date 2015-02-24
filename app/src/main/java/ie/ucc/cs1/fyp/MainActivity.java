@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Adapter.TabsAdaptor;
 import ie.ucc.cs1.fyp.PushNotifcation.PNManager;
-import ie.ucc.cs1.fyp.Socket.Session;
+import ie.ucc.cs1.fyp.Model.Session;
 import ie.ucc.cs1.fyp.Socket.SocketManager;
 
 
@@ -50,7 +50,7 @@ public class MainActivity extends FragmentActivity {
 
         mViewPager.setId(R.id.view_pager);
         mViewPager.setAdapter(mTabsAdapter);
-        mViewPager.setOffscreenPageLimit(5);
+        //mViewPager.setOffscreenPageLimit(5);
 
         final ActionBar bar = getActionBar();
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);

@@ -13,15 +13,12 @@ import com.android.volley.VolleyError;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 
-import java.util.ArrayList;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Adapter.GridTileAdapter;
 import ie.ucc.cs1.fyp.Model.APIResponse;
-import ie.ucc.cs1.fyp.Model.SensorOutput;
+import ie.ucc.cs1.fyp.Model.Session;
 import ie.ucc.cs1.fyp.Network.API;
-import ie.ucc.cs1.fyp.Socket.Session;
 
 /**
  * Created by kpmmmurphy on 30/10/14.
@@ -29,16 +26,12 @@ import ie.ucc.cs1.fyp.Socket.Session;
 public class SensorFragment extends Fragment {
 
     private static String LOGTAG = "__SensorFragment";
-    private Thread sensorValueReadThread;
 
     @InjectView(R.id.gv_sensor)
     GridView mGridView;
     @InjectView(R.id.tv_last_updated)
     TextView tvLastUpdated;
-
     private GridTileAdapter gridTileAdapter;
-
-    private ArrayList<SensorOutput> sensorOutputs;
 
     public SensorFragment() {
         Utils.methodDebug(LOGTAG);
@@ -53,7 +46,6 @@ public class SensorFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Utils.methodDebug(LOGTAG);
-
         View view = inflater.inflate(R.layout.fragment_sensor, container, false);
         ButterKnife.inject(this, view);
         gridTileAdapter = new GridTileAdapter(getActivity(), Utils.randomSensorOutput());
@@ -72,32 +64,23 @@ public class SensorFragment extends Fragment {
         super.onResume();
         Utils.methodDebug(LOGTAG);
 
-        sensorValueReadThread = new Thread() {
+        MyApplication.scheduleTask(new Runnable() {
             @Override
             public void run() {
-                while (!Thread.currentThread().isInterrupted()) {
-
-                    if (!Session.getInstance(getActivity()).isConnectedToPi()) {
-                        //Networking Stuff
-                        API.getInstance(getActivity()).requestSensorValues(successListener, errorListener);
-                    }else{
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                refreshValues();
-                            }
-                        });
-                    }
-
-                    try {
-                        Thread.sleep(20000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                if (!Session.getInstance(getActivity()).isConnectedToPi()) {
+                    //Networking Stuff
+                    API.getInstance(getActivity()).requestSensorValues(successListener, errorListener);
+                } else {
+                    //Direct Stuff
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            refreshValues();
+                        }
+                    });
                 }
             }
-        };
-        sensorValueReadThread.start();
+        }, 0, 1, LOGTAG);
     }
 
 
@@ -105,13 +88,12 @@ public class SensorFragment extends Fragment {
     public void onPause() {
         super.onPause();
         Utils.methodDebug(LOGTAG);
-        sensorValueReadThread.interrupt();
+        MyApplication.unscheduleTask(LOGTAG);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        sensorValueReadThread = null;
     }
 
     //--API Listeners
@@ -137,10 +119,13 @@ public class SensorFragment extends Fragment {
     private void refreshValues() {
         gridTileAdapter.setSensorOutputs(SensorValueManager.getInstance().getCurrentSensorOutputsList());
         gridTileAdapter.notifyDataSetChanged();
-        if (SensorValueManager.getInstance().getCurrentSensorValues() != null){
-            YoYo.with(Techniques.FadeOut).duration(500).playOn(tvLastUpdated);
-            tvLastUpdated.setText(getString(R.string.sensor_last_updated) + " " + SensorValueManager.getInstance().getCurrentSensorValues().getData_and_time());
-            YoYo.with(Techniques.FadeIn).duration(500).playOn(tvLastUpdated);
+        if (SensorValueManager.getInstance().getCurrentSensorValues() != null) {
+            String dataAndTimeText = String.format( "%s : %s ", getString(R.string.sensor_last_updated), SensorValueManager.getInstance().getCurrentSensorValues().getData_and_time());
+            if (!tvLastUpdated.getText().equals(dataAndTimeText)) {
+                YoYo.with(Techniques.FadeOut).duration(500).playOn(tvLastUpdated);
+                tvLastUpdated.setText(dataAndTimeText);
+                YoYo.with(Techniques.FadeIn).duration(500).playOn(tvLastUpdated);
+            }
         }
     }
 }

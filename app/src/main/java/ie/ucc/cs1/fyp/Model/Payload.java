@@ -2,8 +2,6 @@ package ie.ucc.cs1.fyp.Model;
 
 import java.util.ArrayList;
 
-import ie.ucc.cs1.fyp.Socket.Session;
-
 /**
  * Created by kpmmmurphy on 12/01/15.
  */
@@ -15,7 +13,6 @@ public class Payload {
     protected ArrayList<CurrentSensorValuesFromServer> sensor_list_agg_day;
     protected Config config;
     protected Session session;
-    protected Status status;
     protected Paired paired;
     protected String stream_address;
     protected String image_data;
@@ -42,14 +39,6 @@ public class Payload {
 
     public void setSession(Session session) {
         this.session = session;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 
     public Paired getPaired() {

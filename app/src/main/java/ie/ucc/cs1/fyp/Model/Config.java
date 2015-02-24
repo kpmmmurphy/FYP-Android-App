@@ -4,6 +4,12 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
+import ie.ucc.cs1.fyp.Model.Managers.APIManager;
+import ie.ucc.cs1.fyp.Model.Managers.AlertManager;
+import ie.ucc.cs1.fyp.Model.Managers.SensorManager;
+import ie.ucc.cs1.fyp.Model.Managers.SystemDetailsManager;
+import ie.ucc.cs1.fyp.Model.Managers.WifiDirectManager;
+
 /**
  * Created by kpmmmurphy on 10/01/15.
  */
