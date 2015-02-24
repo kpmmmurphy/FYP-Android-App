@@ -3,7 +3,6 @@ package ie.ucc.cs1.fyp;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +24,8 @@ import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Model.CurrentSensorValuesFromServer;
 import ie.ucc.cs1.fyp.Model.Packet;
 import ie.ucc.cs1.fyp.Model.SensorValuesHolder;
-import ie.ucc.cs1.fyp.Network.API;
 import ie.ucc.cs1.fyp.Model.Session;
+import ie.ucc.cs1.fyp.Network.API;
 import ie.ucc.cs1.fyp.Socket.SocketManager;
 
 public class GraphFragment extends Fragment {
@@ -72,9 +71,8 @@ public class GraphFragment extends Fragment {
             chart.setHighlightEnabled(false);
             XLabels xl = chart.getXLabels();
             YLabels yl = chart.getYLabels();
-            //Style labels here
+            //TODO Style labels here and description
         }
-
 
         return view;
     }
@@ -109,24 +107,6 @@ public class GraphFragment extends Fragment {
                 onCheckedChangeListenerAggHour.onCheckedChanged(rgAggDay,R.id.radio_agg_day_temp);
             }
         }else{
-//            MyApplication.scheduleTask(new Runnable() {
-//                @Override
-//                public void run() {
-//                    API.getInstance(getActivity()).requestCurrentHourSensorValues(currentHourSuccessListener, sensorValuesErrorListener);
-//                }
-//            }, 0, 10, LOGTAG + "0");
-//            MyApplication.scheduleTask(new Runnable() {
-//                @Override
-//                public void run() {
-//                    API.getInstance(getActivity()).requestAggSensorValuesPerHour(sensorValuesAggPerHourSuccessListener, sensorValuesErrorListener);
-//                }
-//            }, 0, 10, LOGTAG + "1");
-//            MyApplication.scheduleTask(new Runnable() {
-//                @Override
-//                public void run() {
-//                    API.getInstance(getActivity()).requestAggSensorValuesPerDay(sensorValuesAggPerDaySuccessListener, sensorValuesErrorListener);
-//                }
-//            }, 0, 10, LOGTAG + "2");
             API.getInstance(getActivity()).requestCurrentHourSensorValues(currentHourSuccessListener, sensorValuesErrorListener);
             API.getInstance(getActivity()).requestAggSensorValuesPerHour(sensorValuesAggPerHourSuccessListener, sensorValuesErrorListener);
             API.getInstance(getActivity()).requestAggSensorValuesPerDay(sensorValuesAggPerDaySuccessListener, sensorValuesErrorListener);

@@ -97,7 +97,8 @@ public class MainActivity extends FragmentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.global, menu);
+        //TODO fix pair functionality
+        //inflater.inflate(R.menu.global, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

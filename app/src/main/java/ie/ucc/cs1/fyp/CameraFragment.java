@@ -94,7 +94,6 @@ public class CameraFragment extends Fragment{
         Utils.methodDebug(LOGTAG);
         String videoName  = videoList.get(position);
         setTimeAndDate(videoName);
-        Log.e(LOGTAG, "PLAYING :: " + videoName);
         playURIWithVV(currentVideo, videoName, false);
     }
 
@@ -215,34 +214,34 @@ public class CameraFragment extends Fragment{
                 });
 
                 //Display the latest Image
-                if(imgList.indexOf(imagePath) == 0){
-                    if(isConnectToPi){
-                        final File imgFile = getActivity().getFileStreamPath(imagePath);
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Bitmap bitmap = BitmapFactory.decodeFile(imgFile.toString());
-                                BitmapDrawable bitmapDrawable = new BitmapDrawable(bitmap);
-                                currentImage.setBackground(bitmapDrawable);
-                            }
-                        });
-
-                    }else{
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                API.getInstance(getActivity()).requestImage(CAMERA_URL + imagePath, currentImage);
-                            }
-                        });
-                    }
-
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setTimeAndDate(imagePath);
-                        }
-                    });
-                }
+//                if(imgList.indexOf(imagePath) == 0){
+//                    if(isConnectToPi){
+//                        final File imgFile = getActivity().getFileStreamPath(imagePath);
+//                        getActivity().runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                Bitmap bitmap = BitmapFactory.decodeFile(imgFile.toString());
+//                                BitmapDrawable bitmapDrawable = new BitmapDrawable(bitmap);
+//                                currentImage.setBackground(bitmapDrawable);
+//                            }
+//                        });
+//
+//                    }else{
+//                        getActivity().runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                API.getInstance(getActivity()).requestImage(CAMERA_URL + imagePath, currentImage);
+//                            }
+//                        });
+//                    }
+//
+//                    getActivity().runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            setTimeAndDate(imagePath);
+//                        }
+//                    });
+//                }
 
                 final NetworkImageView cloneNIV = nIV;
                 getActivity().runOnUiThread(new Runnable() {
@@ -382,6 +381,7 @@ public class CameraFragment extends Fragment{
         if(BuildConfig.DEBUG){
             Log.i(LOGTAG, "Playing URI :: " + uri.toString());
         }
+        imageTimeAndDate.setText(String.format( "Streaming from URI : %s", uri));
         vv.setVideoURI(uri);
         vv.setVisibility(View.VISIBLE);
         YoYo.with(Techniques.FadeOut).duration(700).playOn(currentImage);

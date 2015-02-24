@@ -19,6 +19,13 @@
             android:layout_height="342dp"
             android:layout_marginTop="12dp">
 
+            <ImageView
+                style="@style/Text_GridItemName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:src="@drawable/icn_camera"/>
+
             <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/iv_current_image"
                 android:layout_width="match_parent"

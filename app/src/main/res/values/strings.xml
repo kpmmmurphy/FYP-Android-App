@@ -117,6 +117,7 @@
     <string name="sensor_output_motion_0">No motion currently being detected.</string>
     <string name="sensor_output_motion_1">Motion currently being detected!</string>
     <string name="camera_no_videos">No Videos to Display</string>
+    <string name="camera_fragment_no_image_selected">No Image or Video Selected</string>
 
 
 </resources>
