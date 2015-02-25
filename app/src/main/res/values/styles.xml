@@ -8,9 +8,9 @@
     <!-- ActionBar styles -->
     <style name="MyActionBar"
         parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">@color/blue_standard</item>
         <item name="android:titleTextStyle">@style/Text_ActionBarTitle</item>
         <item name="android:icon">@drawable/ic_launcher</item>
+        <item name="android:background">@drawable/abc_tab_indicator_mtrl_alpha</item>
     </style>
 
     <style name="AppTheme.ExtendedActionBar"></style>

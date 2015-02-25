@@ -103,9 +103,9 @@ public class SocketManager {
                 }
 
                 try {
-                    serverSocket.setSoTimeout(ACK_SOCKET_TIMEOUT);
                     //Now wait for ACK
                     Socket ackSocket = serverSocket.accept();
+                    ackSocket.setSoTimeout(ACK_SOCKET_TIMEOUT);
                     if (BuildConfig.DEBUG) {
                         Log.d(LOGTAG, "Created ACK Socket :: " + ackSocket.toString());
                     }

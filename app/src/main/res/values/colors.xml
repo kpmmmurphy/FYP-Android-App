@@ -3,6 +3,7 @@
     <!--App theme Colors-->
     <color name="primary">@color/blue_standard</color>
     <color name="primaryDark">@color/blue_standard</color>
+    <color name="accent">@color/blue_lightest</color>
 
     <!--Fragments-->
     <color name="fragment_background">#F3F3F3</color>

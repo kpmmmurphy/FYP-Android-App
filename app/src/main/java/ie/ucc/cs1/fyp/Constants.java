@@ -40,6 +40,7 @@ public interface Constants {
     public static final String SERVICE_PAIRED       = "paired";
     public static final String SERVICE_REQUEST_STREAM  = "request_stream";
     public static final String SERVICE_REQUEST_IMAGE   = "request_image";
+    public static final String JSON_VALUE_WIFI_DIRECT_SYSTEM_CONFIG_UPDATED = "system_config_updated";
     public static final String JSON_VALUE_WIFI_DIRECT_GET_GRAPH_DATA = "get_graph_data";
     public static final String GRAPH_DATA_CUR_HOUR         = "sensor_list_current_hour";
     public static final String GRAPH_DATA_CUR_DAY_AGG_HOUR = "sensor_list_current_day_agg_hour";
@@ -49,7 +50,8 @@ public interface Constants {
     public static final int CONNECT_SUCCESS  = 200;
 
     //Custom Intents
-    public static final String INTENT_CONNECTED_TO_PI = "INTENT_CONNECTED_TO_PI";
+    public static final String INTENT_CONNECTED_TO_PI   = "INTENT_CONNECTED_TO_PI";
+    public static final String INTENT_PI_CONFIG_UPDATED = "INTENT_PI_CONFIG_UPDATED";
 
     //Config
     public static final String CONFIG_SENSOR_MANAGER = "{'sensor_manager': {'collection_priority': 1, 'collection_rate': 15}";

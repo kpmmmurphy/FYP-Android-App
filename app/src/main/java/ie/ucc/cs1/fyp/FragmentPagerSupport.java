@@ -32,7 +32,7 @@ public class FragmentPagerSupport extends FragmentActivity {
 
         final ActionBar bar = getActionBar();
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        bar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
+        bar.setDisplayOptions(0, ActionBar.DISPLAY_USE_LOGO);
 
         mTabsAdapter = new TabsAdaptor(this, getSupportFragmentManager(), getActionBar(), mViewPager  );
         mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section1)), SensorFragment.class, null);

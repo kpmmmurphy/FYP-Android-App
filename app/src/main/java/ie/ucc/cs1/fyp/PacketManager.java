@@ -1,6 +1,8 @@
 package ie.ucc.cs1.fyp;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -71,12 +73,16 @@ public class PacketManager {
                     Log.d(LOGTAG, "SERVICE_REQUEST_STREAM");
                 }
                 session.setStreamAddress(packet.getPayload().getStream_address());
+            }else if(packet.getService().equals(Constants.JSON_VALUE_WIFI_DIRECT_SYSTEM_CONFIG_UPDATED)){
+                if(BuildConfig.DEBUG){
+                    Log.d(LOGTAG,"Response");
+                }
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast( new Intent(Constants.INTENT_PI_CONFIG_UPDATED));
+
             }else if(packet.getService().equals(Constants.SERVICE_RESPONSE)){
                 if(BuildConfig.DEBUG){
                     Log.d(LOGTAG,"Response");
                 }
-                //PiResponse piResponse = gson.fromJson(currentPacket.getPayload(), PiResponse.class);
-                //Toast.makeText(mContext, piResponse.getMsg_response(), Toast.LENGTH_SHORT).show();
             }
         }
     }

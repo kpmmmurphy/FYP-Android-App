@@ -19,8 +19,8 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Adapter.TabsAdaptor;
-import ie.ucc.cs1.fyp.PushNotifcation.PNManager;
 import ie.ucc.cs1.fyp.Model.Session;
+import ie.ucc.cs1.fyp.PushNotifcation.PNManager;
 import ie.ucc.cs1.fyp.Socket.SocketManager;
 
 
@@ -38,6 +38,7 @@ public class MainActivity extends FragmentActivity {
     protected TabsAdaptor mTabsAdapter;
 
     private ConnectedToPiReceiver connectedToPiReceiver;
+    private PiConfigUpdatedReciever piConfigUpdatedReciever;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,27 +52,28 @@ public class MainActivity extends FragmentActivity {
         mViewPager.setId(R.id.view_pager);
         mViewPager.setAdapter(mTabsAdapter);
 
-        final ActionBar bar = getActionBar();
+        ActionBar bar = getActionBar();
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        mTabsAdapter = new TabsAdaptor(this, getSupportFragmentManager(), getActionBar(), mViewPager);
+        mTabsAdapter = new TabsAdaptor(this, getSupportFragmentManager(), bar, mViewPager);
         mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section1)), SensorFragment.class, null);
         mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section2)), CameraFragment.class, null);
         mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section4)), GraphFragment.class, null);
         mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section3)), ControlFragment.class, null);
 
-        connectedToPiReceiver = new ConnectedToPiReceiver();
+        connectedToPiReceiver   = new ConnectedToPiReceiver();
+        piConfigUpdatedReciever = new PiConfigUpdatedReciever();
         LocalBroadcastManager.getInstance(this).registerReceiver(connectedToPiReceiver, new IntentFilter(Constants.INTENT_CONNECTED_TO_PI));
+        LocalBroadcastManager.getInstance(this).registerReceiver(piConfigUpdatedReciever, new IntentFilter(Constants.INTENT_PI_CONFIG_UPDATED));
 
-        if (savedInstanceState != null) {
-            bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));
-        }
+
+        bar.setSelectedNavigationItem(0);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //Check if we're starting from Pending Intent(From a Push Notifcation)
+        //Check if we're starting from Pending Intent(From a Push Notification)
         if(getIntent().getBooleanExtra(Constants.PN_FROM_PENDING_INTENT, false)){
             SharedPreferences prefs = getApplicationContext().getSharedPreferences("fyp", Context.MODE_PRIVATE);
             Utils.createDialog(this, prefs.getString(Constants.SENSOR_NAME, ""), prefs.getString(Constants.SENSOR_VALUE, ""));
@@ -88,13 +90,13 @@ public class MainActivity extends FragmentActivity {
     protected void onDestroy() {
         super.onDestroy();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(connectedToPiReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(piConfigUpdatedReciever);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
-        //TODO fix pair functionality
         inflater.inflate(R.menu.global, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -136,13 +138,24 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
+    public class PiConfigUpdatedReciever extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(BuildConfig.DEBUG){
+                Log.d(LOGTAG, "Broadcast received");
+            }
+            Toast.makeText(MainActivity.this, getString(R.string.config_upload_success), Toast.LENGTH_LONG).show();
+        }
+    }
+
     private void hideFragments(){
         mViewPager.removeAllViews();
     }
     private void updateFragments(){
         mViewPager.setAdapter(null);
-        mViewPager.setAdapter(mTabsAdapter);
         mTabsAdapter.clearTabInfo();
+        getActionBar().removeAllTabs();
+        mViewPager.setAdapter(mTabsAdapter);
         mTabsAdapter.updateTab(getActionBar().newTab().setText(getString(R.string.title_section1)), SensorFragment.class, null);
         mTabsAdapter.updateTab(getActionBar().newTab().setText(getString(R.string.title_section2)), CameraFragment.class, null);
         mTabsAdapter.updateTab(getActionBar().newTab().setText(getString(R.string.title_section4)), GraphFragment.class, null);

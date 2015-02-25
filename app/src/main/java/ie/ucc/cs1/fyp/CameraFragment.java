@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -48,8 +49,8 @@ import butterknife.OnItemClick;
 import ie.ucc.cs1.fyp.Model.APIResponse;
 import ie.ucc.cs1.fyp.Model.CameraResponse;
 import ie.ucc.cs1.fyp.Model.Packet;
-import ie.ucc.cs1.fyp.Network.API;
 import ie.ucc.cs1.fyp.Model.Session;
+import ie.ucc.cs1.fyp.Network.API;
 import ie.ucc.cs1.fyp.Socket.SocketManager;
 
 /**
@@ -115,7 +116,7 @@ public class CameraFragment extends Fragment{
             SocketManager.getInstance(getActivity().getApplicationContext()).sendPacketToPi(Utils.toJson(new Packet(Constants.SERVICE_REQUEST_STREAM, null)));
             String uri = String.format("%s%s:%d/", "http:/", Session.getInstance(getActivity()).getPiIPAddress().toString(), Constants.VIDEO_STREAM_PORT);
             if(BuildConfig.DEBUG){
-                Log.d(LOGTAG, "Streaming at URL : " + uri);
+                Log.i(LOGTAG, "Streaming at URL : " + uri);
             }
             playURIWithVV(currentVideo, uri, true);
         }else{
@@ -154,7 +155,13 @@ public class CameraFragment extends Fragment{
         super.onResume();
         Utils.methodDebug(LOGTAG);
         if(Session.getInstance(getActivity()).isConnectedToPi()){
-            new RetrieveImagesOverFTPTask().execute();
+            new RetrieveImagesOverFTPTask().execute(true);
+            MyApplication.scheduleTask(new Runnable() {
+                @Override
+                public void run() {
+                    new RetrieveImagesOverFTPTask().execute(false);
+                }
+            }, 10, 10, LOGTAG);
         }else{
             MyApplication.scheduleTask(new Runnable() {
                 @Override
@@ -287,9 +294,6 @@ public class CameraFragment extends Fragment{
         @Override
         public void onErrorResponse(VolleyError error) {
             Utils.methodDebug(LOGTAG);
-            /*viewWrapper.setVisibility(View.GONE);
-            errorLayout.setVisibility(View.VISIBLE);
-            errorText.setText(R.string.camera_unable_to_display_images);*/
         }
     };
 
@@ -300,7 +304,7 @@ public class CameraFragment extends Fragment{
             piPublicIP = response.pi_public_ip;
             String uri = String.format("%s%s:%d/", "http://", piPublicIP, Constants.VIDEO_STREAM_PORT);
             if(BuildConfig.DEBUG){
-                Log.d(LOGTAG, "Streaming at URL : " + uri);
+                Log.i(LOGTAG, "Streaming at URL : " + uri);
             }
             playURIWithVV(currentVideo, uri, true);
         }
@@ -378,24 +382,35 @@ public class CameraFragment extends Fragment{
                 uri = Uri.parse(CAMERA_URL + videoName);
             }
         }
-        if(BuildConfig.DEBUG){
-            Log.i(LOGTAG, "Playing URI :: " + uri.toString());
-        }
+
         imageTimeAndDate.setText(String.format( "Streaming from URI : %s", uri));
         vv.setVideoURI(uri);
         vv.setVisibility(View.VISIBLE);
         YoYo.with(Techniques.FadeOut).duration(700).playOn(currentImage);
         YoYo.with(Techniques.FadeIn).duration(700).playOn(vv);
         vv.requestFocus();
-        vv.start();
+        final VideoView vv_final = vv;
+        final Uri uri_final = uri;
+        vv.setOnPreparedListener( new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                if(BuildConfig.DEBUG){
+                    Log.i(LOGTAG, "Playing URI :: " + uri_final.toString());
+                }
+                vv_final.start();
+            }
+        });
     }
 
-    private class RetrieveImagesOverFTPTask extends AsyncTask<Void, Void, Void>{
+    private class RetrieveImagesOverFTPTask extends AsyncTask<Boolean, Void, Void>{
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Void doInBackground(Boolean... bools) {
             getLatetestFilesOverFTP();
-            getBackupedFilesOverFTP();
+            //On first call we must get any previously stored images.
+            if(bools[0]){
+                getBackupedFilesOverFTP();
+            }
             List<String> storedFiles = Arrays.asList(getActivity().getFilesDir().list());
             filterAssets(storedFiles);
             displayImagesAndVideos();
@@ -493,7 +508,9 @@ public class CameraFragment extends Fragment{
         @SuppressWarnings("unchecked")
         Vector<ChannelSftp.LsEntry> entries = sftpChannel.ls(".");
         for (ChannelSftp.LsEntry entry : entries) {
-            Log.e(LOGTAG, entry.getFilename());
+            if(BuildConfig.DEBUG){
+                Log.i(LOGTAG, "Retrieving File : " + entry.getFilename());
+            }
             File file = getActivity().getFileStreamPath(entry.getFilename());
             if( file.exists() || entry.getFilename().equals(".") || entry.getFilename().equals("..")){
                 continue;
