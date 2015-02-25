@@ -50,11 +50,9 @@ public class MainActivity extends FragmentActivity {
 
         mViewPager.setId(R.id.view_pager);
         mViewPager.setAdapter(mTabsAdapter);
-        //mViewPager.setOffscreenPageLimit(5);
 
         final ActionBar bar = getActionBar();
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        bar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
 
         mTabsAdapter = new TabsAdaptor(this, getSupportFragmentManager(), getActionBar(), mViewPager);
         mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section1)), SensorFragment.class, null);
@@ -68,7 +66,6 @@ public class MainActivity extends FragmentActivity {
         if (savedInstanceState != null) {
             bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));
         }
-
     }
 
     @Override
@@ -98,7 +95,7 @@ public class MainActivity extends FragmentActivity {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
         //TODO fix pair functionality
-        //inflater.inflate(R.menu.global, menu);
+        inflater.inflate(R.menu.global, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
