@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import ie.ucc.cs1.fyp.Constants;
+
 /**
  * Created by kpmmmurphy on 07/01/15.
  */
@@ -29,6 +31,7 @@ public class Session {
     protected String time_stamp;
     protected String ip_address;
     protected String device_id;
+    protected String type;
     protected transient boolean connectedToPi = false;
 
     private Session(Context context){
@@ -37,6 +40,7 @@ public class Session {
         device_id = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
         time_stamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
         graphData = new HashMap<String, ArrayList<CurrentSensorValuesFromServer>>();
+        type = Constants.SESSION_TYPE_ANDROID;
     }
 
     public static synchronized Session getInstance(Context context){
