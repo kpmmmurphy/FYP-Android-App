@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -148,19 +149,30 @@ public class SensorFragment extends Fragment {
             ArrayList<PeripheralSensorValues> peripheralSensorValues = currentSensorValues.getPeripheral_sensor_values();
 
             if(peripheralSensorValues != null && !peripheralSensorValues.isEmpty()){
+                llDeviceSelector.removeAllViews();
                 //Firstly, add the Raspberry Pi
-                TextView textView = new TextView(getActivity());
+                RelativeLayout rlDeviceSelector = (RelativeLayout)getLayoutInflater(null).inflate(R.layout.list_item_device_selector, null, false);
+                TextView textView = (TextView)rlDeviceSelector.findViewById(R.id.tv_device_selector_name);
                 textView.setText(Session.getInstance(getActivity()).getConfig().getSystemDetailsManager().getName());
+                textView.setPadding(12,12,12,12);
                 textView.setOnClickListener(selectDeviceClickListener);
-                llDeviceSelector.addView(textView);
+                llDeviceSelector.addView(rlDeviceSelector);
 
                 int count = 1;
                 for(PeripheralSensorValues values : peripheralSensorValues){
-                    //Device id should be dynamic
-                    textView = new TextView(getActivity());
+                    //Create Divider First
+                    View view = new View(getActivity());
+                    view.setLayoutParams( new ViewGroup.LayoutParams(1, ViewGroup.LayoutParams.MATCH_PARENT));
+                    view.setBackgroundColor(getResources().getColor(R.color.accent));
+                    llDeviceSelector.addView(view);
+
+                    rlDeviceSelector = (RelativeLayout)getLayoutInflater(null).inflate(R.layout.list_item_device_selector, null, false);
+                    textView = (TextView)rlDeviceSelector.findViewById(R.id.tv_device_selector_name);
+                    textView.setText(Session.getInstance(getActivity()).getConfig().getSystemDetailsManager().getName());
                     textView.setText("Peripheral " + count++);
-                    textView.setOnClickListener(selectDeviceClickListener);
-                    llDeviceSelector.addView(textView);
+                    llDeviceSelector.setOnClickListener(selectDeviceClickListener);
+                    llDeviceSelector.addView(rlDeviceSelector);
+
                 }
             }
         }
@@ -172,7 +184,7 @@ public class SensorFragment extends Fragment {
         @Override
         public void onClick(View view) {
             Utils.methodDebug(LOGTAG);
-            CharSequence text = ((TextView)view).getText();
+            CharSequence text = ((TextView)view.findViewById(R.id.tv_device_selector_name)).getText();
             //This should be dynamic
             if(Session.getInstance(getActivity()).getConfig().getSystemDetailsManager().getName().equals(text)){
                 currentlySelectedDeviceID = 0;
