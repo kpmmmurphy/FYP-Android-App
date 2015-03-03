@@ -1,4 +1,4 @@
-package ie.ucc.cs1.fyp;
+package ie.ucc.cs1.fyp.Socket;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,9 +10,13 @@ import com.google.gson.Gson;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import ie.ucc.cs1.fyp.BuildConfig;
+import ie.ucc.cs1.fyp.Constants;
 import ie.ucc.cs1.fyp.Model.CurrentSensorValues;
 import ie.ucc.cs1.fyp.Model.Packet;
 import ie.ucc.cs1.fyp.Model.Session;
+import ie.ucc.cs1.fyp.SensorValueManager;
+import ie.ucc.cs1.fyp.Utils;
 
 /**
  * Created by kpmmmurphy on 11/01/15.

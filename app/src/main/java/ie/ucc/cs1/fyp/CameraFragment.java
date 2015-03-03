@@ -207,8 +207,7 @@ public class CameraFragment extends Fragment{
                 if(isConnectToPi){
                     File imgFile  = getActivity().getFileStreamPath(imagePath);
                     Bitmap bitmap = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(imgFile.getAbsolutePath()), 450, 700);
-                    BitmapDrawable bitmapDrawable = new BitmapDrawable(bitmap);
-                    nIV.setBackground(bitmapDrawable);
+                    nIV.setBackground(new BitmapDrawable(getResources(),bitmap));
                 }else{
                     API.getInstance(getActivity()).requestImage(CAMERA_URL + imagePath, nIV);
                 }
@@ -219,36 +218,6 @@ public class CameraFragment extends Fragment{
                         displayLargeImage(view);
                     }
                 });
-
-                //Display the latest Image
-//                if(imgList.indexOf(imagePath) == 0){
-//                    if(isConnectToPi){
-//                        final File imgFile = getActivity().getFileStreamPath(imagePath);
-//                        getActivity().runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                Bitmap bitmap = BitmapFactory.decodeFile(imgFile.toString());
-//                                BitmapDrawable bitmapDrawable = new BitmapDrawable(bitmap);
-//                                currentImage.setBackground(bitmapDrawable);
-//                            }
-//                        });
-//
-//                    }else{
-//                        getActivity().runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                API.getInstance(getActivity()).requestImage(CAMERA_URL + imagePath, currentImage);
-//                            }
-//                        });
-//                    }
-//
-//                    getActivity().runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            setTimeAndDate(imagePath);
-//                        }
-//                    });
-//                }
 
                 final NetworkImageView cloneNIV = nIV;
                 getActivity().runOnUiThread(new Runnable() {

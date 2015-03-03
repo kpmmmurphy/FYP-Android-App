@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import ie.ucc.cs1.fyp.Model.CurrentSensorValues;
 import ie.ucc.cs1.fyp.Model.CurrentSensorValuesFromServer;
+import ie.ucc.cs1.fyp.Model.PeripheralSensorValues;
 import ie.ucc.cs1.fyp.Model.SensorOutput;
 import ie.ucc.cs1.fyp.Network.API;
 
@@ -109,7 +110,10 @@ public class SensorValueManager {
             min_flam = Integer.valueOf(currentSensorValuesFromServer.getMin_flammable_gas());
         }
 
-        CurrentSensorValues values = new CurrentSensorValues(data_and_time, temp, co, motion, flamm_gas, min_temp, max_temp, min_co, max_co, min_flam, max_flam, motion_percentage);
+        //Just create an empty array list
+        ArrayList<PeripheralSensorValues> peripheralSensorValues = new ArrayList<PeripheralSensorValues>();
+
+        CurrentSensorValues values = new CurrentSensorValues(data_and_time, temp, co, motion, flamm_gas, min_temp, max_temp, min_co, max_co, min_flam, max_flam, motion_percentage, peripheralSensorValues);
         this.setCurrentSensorValues(values);
     }
 
@@ -122,6 +126,20 @@ public class SensorValueManager {
             sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_THERMISTOR, Constants.SENSOR_MEASUREMENT_CELCIUS, currentSensorValues.getTemperature(), currentSensorValues.getMax_temperature(), currentSensorValues.getMin_temperature()));
         }else{
             sensorOutputs = Utils.randomSensorOutput();
+        }
+
+        return sensorOutputs;
+    }
+
+    public ArrayList<SensorOutput> getCurrentPeripheralSensorOutputsList(long peripheralDeviceID){
+        ArrayList<SensorOutput> sensorOutputs = new ArrayList<SensorOutput>();
+        for (PeripheralSensorValues peripheralSensorValues : currentSensorValues.getPeripheral_sensor_values()){
+            if(peripheralSensorValues.getDevice_id() == peripheralDeviceID){
+                sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_THERMISTOR, Constants.SENSOR_MEASUREMENT_CELCIUS, peripheralSensorValues.getTemperature(), null, null));
+                sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_LIGHT, null, peripheralSensorValues.getLight(), null, null));
+            }else{
+                sensorOutputs = Utils.randomSensorOutput();
+            }
         }
 
         return sensorOutputs;

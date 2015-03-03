@@ -13,6 +13,7 @@ public interface Constants {
     public static final String SENSOR_NAME_MQ2         = "Flammable_Gas";
     public static final String SENSOR_NAME_MOTION      = "Motion";
     public static final String SENSOR_NAME_THERMISTOR  = "Temperature";
+    public static final String SENSOR_NAME_LIGHT       = "Light";
     public static final String SENSOR_CAMERA           = "Camera";
     public static final String SENSOR_NAME             = "sensor";
     public static final String SENSOR_VALUE            = "value";

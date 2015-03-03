@@ -1,5 +1,7 @@
 package ie.ucc.cs1.fyp.Model;
 
+import java.util.ArrayList;
+
 /**
  * Created by kpmmmurphy on 09/01/15.
  */
@@ -18,20 +20,22 @@ public class CurrentSensorValues {
     protected int min_flammable_gas;
     protected int max_flammable_gas;
     protected int precentage_motion;
+    protected ArrayList<PeripheralSensorValues> peripheral_sensor_values;
 
-    public CurrentSensorValues(String data_and_time, int temperature, int carbon_monoxide, int motion, int flammable_gas, int min_temperature, int max_temperature, int min_carbon_monoxide, int max_carbon_monoxide, int min_flammable_gas, int max_flammable_gas, int precentage_motion) {
-        this.data_and_time = data_and_time;
-        this.temperature = temperature;
-        this.carbon_monoxide = carbon_monoxide;
-        this.motion = motion;
-        this.flammable_gas = flammable_gas;
-        this.min_temperature = min_temperature;
-        this.max_temperature = max_temperature;
-        this.min_carbon_monoxide = min_carbon_monoxide;
-        this.max_carbon_monoxide = max_carbon_monoxide;
-        this.min_flammable_gas = min_flammable_gas;
-        this.max_flammable_gas = max_flammable_gas;
-        this.precentage_motion = precentage_motion;
+    public CurrentSensorValues(String data_and_time, int temperature, int carbon_monoxide, int motion, int flammable_gas, int min_temperature, int max_temperature, int min_carbon_monoxide, int max_carbon_monoxide, int min_flammable_gas, int max_flammable_gas, int precentage_motion, ArrayList<PeripheralSensorValues> peripheralSensorValueses) {
+        this.data_and_time          = data_and_time;
+        this.temperature            = temperature;
+        this.carbon_monoxide        = carbon_monoxide;
+        this.motion                 = motion;
+        this.flammable_gas          = flammable_gas;
+        this.min_temperature        = min_temperature;
+        this.max_temperature        = max_temperature;
+        this.min_carbon_monoxide    = min_carbon_monoxide;
+        this.max_carbon_monoxide    = max_carbon_monoxide;
+        this.min_flammable_gas      = min_flammable_gas;
+        this.max_flammable_gas      = max_flammable_gas;
+        this.precentage_motion      = precentage_motion;
+        this.peripheral_sensor_values = peripheralSensorValueses;
     }
 
     public int getTemperature() {
@@ -136,5 +140,13 @@ public class CurrentSensorValues {
 
     public void setPrecentage_motion(int precentage_motion) {
         this.precentage_motion = precentage_motion;
+    }
+
+    public ArrayList<PeripheralSensorValues> getPeripheral_sensor_values() {
+        return peripheral_sensor_values;
+    }
+
+    public void setPeripheral_sensor_values(ArrayList<PeripheralSensorValues> peripheral_sensor_values) {
+        this.peripheral_sensor_values = peripheral_sensor_values;
     }
 }
