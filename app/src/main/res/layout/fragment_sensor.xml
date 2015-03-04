@@ -13,10 +13,10 @@
             android:id="@+id/gv_sensor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
             android:layout_marginBottom="12dp"
             android:columnWidth="@dimen/grid_item_width"
             android:gravity="center_horizontal|center_vertical"
-            android:layout_gravity="center_horizontal|center_vertical"
             android:horizontalSpacing="8dp"
             android:numColumns="auto_fit"
             android:orientation="horizontal"
@@ -24,16 +24,24 @@
             android:verticalSpacing="8dp" />
 
 
-        <GridView
-            android:id="@+id/gv_device_selector"
+        <TextView
+            android:id="@+id/tv_device_name"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:numColumns="auto_fit"
-            android:horizontalSpacing="8dp"
             android:gravity="center_horizontal|center_vertical"
-            android:background="@color/primary_material_light"
-            android:orientation="horizontal"></GridView>
+            android:visibility="gone"/>
+
+        <com.shamanland.fab.FloatingActionButton
+            android:id="@+id/fab_device_select"
+            android:layout_width="50dp"
+              android:layout_height="50dp"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/electronics"
+            android:background="@color/"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_last_updated"
@@ -44,6 +52,6 @@
             android:layout_marginTop="32dp"
             android:padding="30dp" />
 
-        </FrameLayout>
+    </FrameLayout>
 
 </RelativeLayout>

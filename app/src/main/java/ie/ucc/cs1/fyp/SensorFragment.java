@@ -3,9 +3,13 @@ package ie.ucc.cs1.fyp;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
@@ -17,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.shamanland.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -36,14 +41,18 @@ public class SensorFragment extends Fragment {
 
     private static String LOGTAG = "__SensorFragment";
 
-    @InjectView(R.id.gv_device_selector)
-    GridView gvDeviceSelector;
+    @InjectView(R.id.tv_device_name)
+    TextView tvDeviceName;
     @InjectView(R.id.gv_sensor)
     GridView mGridView;
     @InjectView(R.id.tv_last_updated)
     TextView tvLastUpdated;
+    @InjectView(R.id.fab_device_select)
+    FloatingActionButton floatingActionButton;
     private GridTileAdapter gridTileAdapter;
-    private long currentlySelectedDeviceID = 0;
+    private int toggleCount = 0;
+    private long currentlySelectedDeviceID = -1;
+    private ArrayList<String> deviceNames = new ArrayList<String>();
 
     public SensorFragment() {
         Utils.methodDebug(LOGTAG);
@@ -62,6 +71,7 @@ public class SensorFragment extends Fragment {
         ButterKnife.inject(this, view);
         gridTileAdapter = new GridTileAdapter(getActivity(), Utils.randomSensorOutput());
         mGridView.setAdapter(gridTileAdapter);
+        floatingActionButton.setOnClickListener(selectDeviceClickListener);
         return view;
     }
 
@@ -92,7 +102,6 @@ public class SensorFragment extends Fragment {
                 }
             }
         }, 0, 1, LOGTAG);
-        displayAvailableDevices();
     }
 
 
@@ -129,7 +138,8 @@ public class SensorFragment extends Fragment {
     };
 
     private void refreshValues() {
-        if(currentlySelectedDeviceID == 0){
+        checkAvailableDevices();
+        if(currentlySelectedDeviceID == -1){
             gridTileAdapter.setSensorOutputs(SensorValueManager.getInstance().getCurrentSensorOutputsList());
         }else{
             gridTileAdapter.setSensorOutputs(SensorValueManager.getInstance().getCurrentPeripheralSensorOutputsList(currentlySelectedDeviceID));
@@ -145,15 +155,15 @@ public class SensorFragment extends Fragment {
         }
     }
 
-    private void displayAvailableDevices(){
+    private void checkAvailableDevices(){
         Utils.methodDebug(LOGTAG);
-        ArrayList<String> deviceNames = new ArrayList<String>();
         CurrentSensorValues currentSensorValues = SensorValueManager.getInstance().getCurrentSensorValues();
         if(currentSensorValues != null){
             ArrayList<PeripheralSensorValues> peripheralSensorValues = currentSensorValues.getPeripheral_sensor_values();
 
             if(peripheralSensorValues != null && !peripheralSensorValues.isEmpty()){
-                gvDeviceSelector.setVisibility(View.VISIBLE);
+                floatingActionButton.setVisibility(View.VISIBLE);
+                deviceNames.clear();
                 //Firstly, add the Raspberry Pi
                 deviceNames.add(Session.getInstance(getActivity()).getConfig().getSystemDetailsManager().getName());
 
@@ -161,73 +171,31 @@ public class SensorFragment extends Fragment {
                 for(PeripheralSensorValues values : peripheralSensorValues){
                     deviceNames.add("Peripheral " + count++);
                 }
-                gvDeviceSelector.setAdapter( new DeviceSelectAdaptor(getActivity(), deviceNames));
-                gvDeviceSelector.setOnItemClickListener(selectDeviceClickListener);
             }else{
-                gvDeviceSelector.setVisibility(View.GONE);
+                floatingActionButton.setVisibility(View.GONE);
             }
         }else{
-            gvDeviceSelector.setVisibility(View.GONE);
+            floatingActionButton.setVisibility(View.GONE);
         }
     }
 
-    private AdapterView.OnItemClickListener selectDeviceClickListener = new AdapterView.OnItemClickListener() {
+    private View.OnClickListener selectDeviceClickListener = new View.OnClickListener() {
         @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        public void onClick(View view) {
             Utils.methodDebug(LOGTAG);
-            CharSequence text = ((TextView)view.findViewById(R.id.tv_device_selector_name)).getText();
-            //This should be dynamic
-            if(Session.getInstance(getActivity()).getConfig().getSystemDetailsManager().getName().equals(text)){
-                currentlySelectedDeviceID = 0;
+            YoYo.with(Techniques.Pulse).duration(300).playOn(view);
+            ArrayList<PeripheralSensorValues> peripheralSensorValueses = SensorValueManager.getInstance().getCurrentSensorValues().getPeripheral_sensor_values();
+
+            toggleCount++;
+            Log.e(LOGTAG, String.valueOf(toggleCount ));
+            if(toggleCount == peripheralSensorValueses.size()){
+                toggleCount = -1;
+                currentlySelectedDeviceID = -1;
             }else{
-                currentlySelectedDeviceID = SensorValueManager.getInstance().getCurrentSensorValues().getPeripheral_sensor_values().get(0).getDevice_id();
+                currentlySelectedDeviceID = peripheralSensorValueses.get(toggleCount).getDevice_id();
             }
+
+            refreshValues();
         }
     };
-
-    private class DeviceSelectAdaptor extends BaseAdapter {
-        private Context context;
-        private final ArrayList<String> textViewValues;
-
-        public DeviceSelectAdaptor(Context context, ArrayList<String> textViewValues) {
-            this.context = context;
-            this.textViewValues = textViewValues;
-        }
-
-        public View getView(int position, View convertView, ViewGroup parent) {
-            Utils.methodDebug(LOGTAG);
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-            View view;
-
-            if (convertView == null) {
-                view = new View(context);
-                // get layout from mobile.xml
-                view = inflater.inflate(R.layout.list_item_device_selector, null);
-                TextView textView = (TextView) view
-                        .findViewById(R.id.tv_device_selector_name);
-                textView.setText(textViewValues.get(position));
-            } else {
-                view = (View) convertView;
-            }
-
-            return view;
-        }
-
-        @Override
-        public int getCount() {
-            return textViewValues.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return textViewValues.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-    }
 }

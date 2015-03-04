@@ -122,7 +122,4 @@ public class GridTileAdapter extends BaseAdapter {
     public void setSensorOutputs(ArrayList<SensorOutput> sensorOutputs) {
         this.sensorOutputs = sensorOutputs;
     }
-
-
-
 }

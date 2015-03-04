@@ -10,6 +10,10 @@ public class PeripheralSensorValues {
     protected String  time_stamp;
     protected long    device_id;
 
+    public PeripheralSensorValues(long device_id) {
+        this.device_id = device_id;
+    }
+
     public boolean isTouch() {
         return touch;
     }
