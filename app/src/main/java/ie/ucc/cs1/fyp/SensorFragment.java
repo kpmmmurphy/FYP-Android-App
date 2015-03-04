@@ -1,10 +1,13 @@
 package ie.ucc.cs1.fyp;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,8 +36,8 @@ public class SensorFragment extends Fragment {
 
     private static String LOGTAG = "__SensorFragment";
 
-    @InjectView(R.id.ll_device_selector)
-    LinearLayout llDeviceSelector;
+    @InjectView(R.id.gv_device_selector)
+    GridView gvDeviceSelector;
     @InjectView(R.id.gv_sensor)
     GridView mGridView;
     @InjectView(R.id.tv_last_updated)
@@ -89,6 +92,7 @@ public class SensorFragment extends Fragment {
                 }
             }
         }, 0, 1, LOGTAG);
+        displayAvailableDevices();
     }
 
 
@@ -139,50 +143,37 @@ public class SensorFragment extends Fragment {
                 YoYo.with(Techniques.FadeIn).duration(500).playOn(tvLastUpdated);
             }
         }
-        displayAvailableDevices();
     }
 
     private void displayAvailableDevices(){
         Utils.methodDebug(LOGTAG);
+        ArrayList<String> deviceNames = new ArrayList<String>();
         CurrentSensorValues currentSensorValues = SensorValueManager.getInstance().getCurrentSensorValues();
         if(currentSensorValues != null){
             ArrayList<PeripheralSensorValues> peripheralSensorValues = currentSensorValues.getPeripheral_sensor_values();
 
             if(peripheralSensorValues != null && !peripheralSensorValues.isEmpty()){
-                llDeviceSelector.removeAllViews();
+                gvDeviceSelector.setVisibility(View.VISIBLE);
                 //Firstly, add the Raspberry Pi
-                RelativeLayout rlDeviceSelector = (RelativeLayout)getLayoutInflater(null).inflate(R.layout.list_item_device_selector, null, false);
-                TextView textView = (TextView)rlDeviceSelector.findViewById(R.id.tv_device_selector_name);
-                textView.setText(Session.getInstance(getActivity()).getConfig().getSystemDetailsManager().getName());
-                textView.setPadding(12,12,12,12);
-                textView.setOnClickListener(selectDeviceClickListener);
-                llDeviceSelector.addView(rlDeviceSelector);
+                deviceNames.add(Session.getInstance(getActivity()).getConfig().getSystemDetailsManager().getName());
 
                 int count = 1;
                 for(PeripheralSensorValues values : peripheralSensorValues){
-                    //Create Divider First
-                    View view = new View(getActivity());
-                    view.setLayoutParams( new ViewGroup.LayoutParams(1, ViewGroup.LayoutParams.MATCH_PARENT));
-                    view.setBackgroundColor(getResources().getColor(R.color.accent));
-                    llDeviceSelector.addView(view);
-
-                    rlDeviceSelector = (RelativeLayout)getLayoutInflater(null).inflate(R.layout.list_item_device_selector, null, false);
-                    textView = (TextView)rlDeviceSelector.findViewById(R.id.tv_device_selector_name);
-                    textView.setText(Session.getInstance(getActivity()).getConfig().getSystemDetailsManager().getName());
-                    textView.setText("Peripheral " + count++);
-                    llDeviceSelector.setOnClickListener(selectDeviceClickListener);
-                    llDeviceSelector.addView(rlDeviceSelector);
-
+                    deviceNames.add("Peripheral " + count++);
                 }
+                gvDeviceSelector.setAdapter( new DeviceSelectAdaptor(getActivity(), deviceNames));
+                gvDeviceSelector.setOnItemClickListener(selectDeviceClickListener);
+            }else{
+                gvDeviceSelector.setVisibility(View.GONE);
             }
+        }else{
+            gvDeviceSelector.setVisibility(View.GONE);
         }
-
-
     }
 
-    private View.OnClickListener selectDeviceClickListener = new View.OnClickListener() {
+    private AdapterView.OnItemClickListener selectDeviceClickListener = new AdapterView.OnItemClickListener() {
         @Override
-        public void onClick(View view) {
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             Utils.methodDebug(LOGTAG);
             CharSequence text = ((TextView)view.findViewById(R.id.tv_device_selector_name)).getText();
             //This should be dynamic
@@ -193,4 +184,50 @@ public class SensorFragment extends Fragment {
             }
         }
     };
+
+    private class DeviceSelectAdaptor extends BaseAdapter {
+        private Context context;
+        private final ArrayList<String> textViewValues;
+
+        public DeviceSelectAdaptor(Context context, ArrayList<String> textViewValues) {
+            this.context = context;
+            this.textViewValues = textViewValues;
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+            Utils.methodDebug(LOGTAG);
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            View view;
+
+            if (convertView == null) {
+                view = new View(context);
+                // get layout from mobile.xml
+                view = inflater.inflate(R.layout.list_item_device_selector, null);
+                TextView textView = (TextView) view
+                        .findViewById(R.id.tv_device_selector_name);
+                textView.setText(textViewValues.get(position));
+            } else {
+                view = (View) convertView;
+            }
+
+            return view;
+        }
+
+        @Override
+        public int getCount() {
+            return textViewValues.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return textViewValues.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+    }
 }

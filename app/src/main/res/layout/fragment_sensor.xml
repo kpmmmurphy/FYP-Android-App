@@ -24,14 +24,16 @@
             android:verticalSpacing="8dp" />
 
 
-        <LinearLayout
-            android:id="@+id/ll_device_selector"
+        <GridView
+            android:id="@+id/gv_device_selector"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="top"
+            android:numColumns="auto_fit"
+            android:horizontalSpacing="8dp"
             android:gravity="center_horizontal|center_vertical"
             android:background="@color/primary_material_light"
-            android:orientation="horizontal"></LinearLayout>
+            android:orientation="horizontal"></GridView>
 
         <TextView
             android:id="@+id/tv_last_updated"
