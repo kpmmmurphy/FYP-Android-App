@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
@@ -15,7 +16,9 @@ import java.util.ArrayList;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Constants;
+import ie.ucc.cs1.fyp.Model.Sensor;
 import ie.ucc.cs1.fyp.Model.SensorOutput;
+import ie.ucc.cs1.fyp.Model.Session;
 import ie.ucc.cs1.fyp.R;
 import ie.ucc.cs1.fyp.Utils;
 
@@ -73,6 +76,25 @@ public class GridTileAdapter extends BaseAdapter {
             holder.minValue.setText("Min " + String.valueOf(getItem(i).getMinValue()));
         }
 
+        if(Session.getInstance(mContext) != null
+                && Session.getInstance(mContext).getConfig() != null
+                && Session.getInstance(mContext).getConfig().getSensors() != null){
+
+            for(Sensor sensor : Session.getInstance(mContext).getConfig().getSensors()){
+                if(sensor.getName().equalsIgnoreCase(getItem(i).getName())){
+                    if(sensor.getAlert_threshold() <= getItem(i).getValue()){
+                        holder.sensorAlertIcn.setVisibility(View.VISIBLE);
+                        YoYo.with(Techniques.Shake).duration(400).playOn(holder.sensorAlertIcn);
+                    }else{
+                        holder.sensorAlertIcn.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+        }else{
+            holder.sensorAlertIcn.setVisibility(View.GONE);
+        }
+
         view.setOnClickListener(onSensorTileClick);
         view.setOnLongClickListener(onSensorTileLongClick);
 
@@ -90,6 +112,8 @@ public class GridTileAdapter extends BaseAdapter {
         TextView maxValue;
         @InjectView(R.id.tv_sensor_min_value)
         TextView minValue;
+        @InjectView(R.id.im_sensor_alert)
+        ImageView sensorAlertIcn;
 
         public Holder(View view) {
             ButterKnife.inject(this, view);

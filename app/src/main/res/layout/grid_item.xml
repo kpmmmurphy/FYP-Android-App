@@ -6,25 +6,41 @@
     android:layout_height="@dimen/grid_item_height"
     android:background="@android:drawable/dialog_holo_light_frame">
 
+
+    <ImageView
+        android:id="@+id/im_sensor_alert"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/alert"
+        android:tint="@color/blue_dark"
+        android:visibility="gone"
+        android:layout_gravity="start"/>
+
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:gravity="end"
         android:orientation="vertical"
+        android:gravity="end"
         android:padding="8dp">
 
         <TextView
+            android:gravity="end"
+            tools:text="Max 20"
             android:id="@+id/tv_sensor_max_value"
             style="@style/Text_GridItemMaxMin"
             android:fontFamily="sans-serif-thin" />
 
         <TextView
+            android:gravity="end"
+            tools:text="Min 0"
             android:id="@+id/tv_sensor_min_value"
             style="@style/Text_GridItemMaxMin"
             android:fontFamily="sans-serif-thin" />
     </LinearLayout>
+
 
     <TextView
         android:id="@+id/tv_sensor_output_level"
