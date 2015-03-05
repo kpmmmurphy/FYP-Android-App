@@ -27,7 +27,7 @@
 
     <style name="Text_SensingDeviceTitle">
         <item name="android:fontFamily">sans-serif-thin</item>
-        <item name="android:textSize">42sp</item>
+        <item name="android:textSize">52sp</item>
     </style>
 
     <!--SENSOR GRID ITEM-->

@@ -29,7 +29,8 @@
             android:id="@+id/tv_device_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="top|start"
+            android:layout_gravity="top"
+            android:gravity="center_horizontal"
             android:padding="22dp"
             style="@style/Text_SensingDeviceTitle"/>
 
