@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
+
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
@@ -72,7 +75,8 @@ public class GridTileAdapter extends BaseAdapter {
 
         view.setOnClickListener(onSensorTileClick);
         view.setOnLongClickListener(onSensorTileLongClick);
-
+        view.setElevation(mContext.getResources().getDimension(R.dimen.floating_action_button_elevation));
+        YoYo.with(Techniques.ZoomIn).duration(1000).playOn(view);
         return view;
     }
 

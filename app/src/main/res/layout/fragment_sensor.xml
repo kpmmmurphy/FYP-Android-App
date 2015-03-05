@@ -10,6 +10,7 @@
         android:layout_height="match_parent">
 
         <GridView
+            android:animateLayoutChanges="true"
             android:id="@+id/gv_sensor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,19 +29,19 @@
             android:id="@+id/tv_device_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:gravity="center_horizontal|center_vertical"
-            android:visibility="gone"/>
+            android:layout_gravity="top|start"
+            android:padding="22dp"
+            style="@style/Text_SensingDeviceTitle"/>
 
         <com.shamanland.fab.FloatingActionButton
             android:id="@+id/fab_device_select"
-            android:layout_width="50dp"
-              android:layout_height="50dp"
+            android:layout_width="86dp"
+            android:layout_height="86dp"
             android:layout_gravity="end|bottom"
             android:layout_marginBottom="20dp"
             android:layout_marginEnd="20dp"
             android:src="@drawable/electronics"
-            android:background="@color/"
+            android:background="@color/blue_lightest"
             android:visibility="gone" />
 
         <TextView

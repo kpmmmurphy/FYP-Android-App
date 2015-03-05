@@ -19,7 +19,7 @@
     <color name="blue_darkest">#033E6B</color>
 
     <!--Grays-->
-    <color name="gray">#909090</color>
+    <color name="gray">#B6B6B6</color>
 
     <!--Grid Item Colors-->
     <color name="output_normal">@color/gray</color>

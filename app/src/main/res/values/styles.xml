@@ -25,6 +25,11 @@
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
+    <style name="Text_SensingDeviceTitle">
+        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:textSize">42sp</item>
+    </style>
+
     <!--SENSOR GRID ITEM-->
     <style name="Text_GridItemOutput" parent="android:TextAppearance.DeviceDefault.Large">
         <item name="android:textSize">94sp</item>

@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/GridItem"
     android:layout_width="@dimen/grid_item_width"
-    android:layout_height="@dimen/grid_item_height"
-    android:background="@android:drawable/dialog_holo_light_frame">
+    android:layout_height="@dimen/grid_item_height">
 
     <LinearLayout
         android:layout_width="wrap_content"

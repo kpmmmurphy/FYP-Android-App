@@ -3,18 +3,12 @@ package ie.ucc.cs1.fyp;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -69,9 +63,19 @@ public class SensorFragment extends Fragment {
         Utils.methodDebug(LOGTAG);
         View view = inflater.inflate(R.layout.fragment_sensor, container, false);
         ButterKnife.inject(this, view);
+        //Set Device Title
+        Session session = Session.getInstance(getActivity());
+        if(session != null && session.getConfig() != null &&
+           session.getConfig().getSystemDetailsManager() != null &&
+                !TextUtils.isEmpty(session.getConfig().getSystemDetailsManager().getName())){
+            tvDeviceName.setText(Session.getInstance(getActivity()).getConfig().getSystemDetailsManager().getName());
+        }else{
+            tvDeviceName.setText("Raspberry Pi");
+        }
         gridTileAdapter = new GridTileAdapter(getActivity(), Utils.randomSensorOutput());
         mGridView.setAdapter(gridTileAdapter);
         floatingActionButton.setOnClickListener(selectDeviceClickListener);
+        floatingActionButton.setColor(getResources().getColor(R.color.gray));
         return view;
     }
 
@@ -146,7 +150,7 @@ public class SensorFragment extends Fragment {
         }
         gridTileAdapter.notifyDataSetChanged();
         if (SensorValueManager.getInstance().getCurrentSensorValues() != null) {
-            String dataAndTimeText = String.format( "%s : %s ", getString(R.string.sensor_last_updated), SensorValueManager.getInstance().getCurrentSensorValues().getData_and_time());
+            String dataAndTimeText = String.format( "%s : %s ", getResources().getString(R.string.sensor_last_updated), SensorValueManager.getInstance().getCurrentSensorValues().getData_and_time());
             if (!tvLastUpdated.getText().equals(dataAndTimeText)) {
                 YoYo.with(Techniques.FadeOut).duration(500).playOn(tvLastUpdated);
                 tvLastUpdated.setText(dataAndTimeText);
@@ -191,8 +195,12 @@ public class SensorFragment extends Fragment {
             if(toggleCount == peripheralSensorValueses.size()){
                 toggleCount = -1;
                 currentlySelectedDeviceID = -1;
+                //Set the Device Title
+                tvDeviceName.setText(Session.getInstance(getActivity()).getConfig().getSystemDetailsManager().getName());
             }else{
                 currentlySelectedDeviceID = peripheralSensorValueses.get(toggleCount).getDevice_id();
+                //Set the Device Title
+                tvDeviceName.setText( "Peripheral " + (toggleCount + 1));
             }
 
             refreshValues();
