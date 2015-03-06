@@ -11,9 +11,14 @@
         <item name="android:titleTextStyle">@style/Text_ActionBarTitle</item>
         <item name="android:icon">@drawable/ic_launcher</item>
         <item name="android:background">@drawable/abc_tab_indicator_mtrl_alpha</item>
+        <item name="android:radioButtonStyle">@style/CustomRadioButton</item>
     </style>
 
     <style name="AppTheme.ExtendedActionBar"></style>
+
+    <style name="CustomRadioButton" parent="android:Widget.CompoundButton.RadioButton">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
 
     <!-- ActionBar title text -->
     <style name="Text_ActionBarTitle" parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
@@ -65,14 +70,16 @@
         <item name="android:layout_marginBottom">14dp</item>
     </style>
     <style name="Config_Section_Title">
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">28sp</item>
         <item name="android:padding">12dp</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
     <style name="Config_Divider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1px</item>
-        <item name="android:background">@color/blue_lightest</item>
+        <item name="android:background">@color/gray</item>
+        <item name="android:layout_marginBottom">4dp</item>
     </style>
 
     <style name="Config_Sensor_Section_Title">

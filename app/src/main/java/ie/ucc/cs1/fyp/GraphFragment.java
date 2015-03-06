@@ -1,6 +1,7 @@
 package ie.ucc.cs1.fyp;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -71,7 +72,11 @@ public class GraphFragment extends Fragment {
             chart.setHighlightEnabled(false);
             XLabels xl = chart.getXLabels();
             YLabels yl = chart.getYLabels();
+            xl.setTypeface(Typeface.SANS_SERIF);
+            yl.setTypeface(Typeface.SANS_SERIF);
             //TODO Style labels here and description
+            chart.setDescription("");
+            chart.setNoDataTextDescription("");
         }
 
         return view;
@@ -233,25 +238,33 @@ public class GraphFragment extends Fragment {
                 xVals.add(xValString);
                 ++count;
             }
+
+            String measurement = Constants.SENSOR_MEASUREMENT_PPM;
+            if(sensor.equalsIgnoreCase(Constants.SENSOR_NAME_THERMISTOR)){
+                measurement = Constants.SENSOR_MEASUREMENT_CELCIUS;
+            }else if (sensor.equalsIgnoreCase(Constants.SENSOR_NAME_MOTION)){
+                measurement = Constants.SENSOR_MEASUREMENT_PERCENTAGE;
+            }
+
             if(minData.size() > 0) {
-                LineDataSet set1 = new LineDataSet(minData, "Min: " + sensor.replace("_", " "));
+                LineDataSet set1 = new LineDataSet(minData, String.format("Min of  %s (%s)", sensor.replace("_", " "), measurement.toUpperCase()));
                 set1.setColor(getResources().getColor(R.color.graph_min));
                 set1.setCircleColor(getResources().getColor(R.color.graph_min));
                 lineDataSets.add(set1);
             }
             if(maxData.size() > 0){
-                LineDataSet set2 = new LineDataSet(maxData, "Max: " +  sensor.replace("_", " "));
+                LineDataSet set2 = new LineDataSet(maxData, String.format("Max  %s (%s)", sensor.replace("_", " "), measurement.toUpperCase()));
                 set2.setColor(getResources().getColor(R.color.graph_max));
                 set2.setCircleColor(getResources().getColor(R.color.graph_max));
                 lineDataSets.add(set2);
             }
             if(avgData.size() > 0){
-                LineDataSet set3 = new LineDataSet(avgData, "Avg: " +  sensor.replace("_", " "));
+                LineDataSet set3 = new LineDataSet(avgData, String.format("Avg  %s (%s)", sensor.replace("_", " "), measurement.toUpperCase()));
                 lineDataSets.add(set3);
             }
 
             if(normalData.size() > 0){
-                LineDataSet set4 = new LineDataSet(normalData, "Level of " +  sensor.replace("_", " "));
+                LineDataSet set4 = new LineDataSet(normalData,String.format("Level of  %s (%s)", sensor.replace("_", " "), measurement.toUpperCase()));
                 lineDataSets.add(set4);
             }
 
