@@ -189,10 +189,6 @@ public class SensorFragment extends Fragment {
             Utils.methodDebug(LOGTAG);
             YoYo.with(Techniques.Pulse).duration(300).playOn(view);
 
-            //Send a packet to Pi to flash LED on Galileo
-            String requestPeripheralLEDflash = Utils.toJson(new Packet(Constants.PERIPHERAL_SERVICE_FlASH_LED, null));
-            SocketManager.getInstance(getActivity()).sendPacketToPi(requestPeripheralLEDflash);
-
             ArrayList<PeripheralSensorValues> peripheralSensorValueses = SensorValueManager.getInstance().getCurrentSensorValues().getPeripheral_sensor_values();
 
             toggleCount++;
@@ -202,6 +198,10 @@ public class SensorFragment extends Fragment {
                 //Set the Device Title
                 tvDeviceName.setText(Session.getInstance(getActivity()).getConfig().getSystemDetailsManager().getName());
             }else{
+                //Send a packet to Pi to flash LED on Galileo
+                String requestPeripheralLEDFlash = Utils.toJson(new Packet(Constants.PERIPHERAL_SERVICE_FlASH_LED, null));
+                SocketManager.getInstance(getActivity()).sendPacketToPi(requestPeripheralLEDFlash);
+
                 currentlySelectedDeviceID = peripheralSensorValueses.get(toggleCount).getDevice_id();
                 //Set the Device Title
                 tvDeviceName.setText( "Peripheral " + (toggleCount + 1));
