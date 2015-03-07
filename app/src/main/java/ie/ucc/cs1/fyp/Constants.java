@@ -44,11 +44,13 @@ public interface Constants {
     public static final String SERVICE_REQUEST_STREAM  = "request_stream";
     public static final String SERVICE_REQUEST_IMAGE   = "request_image";
     public static final String JSON_VALUE_WIFI_DIRECT_SYSTEM_CONFIG_UPDATED = "system_config_updated";
-    public static final String JSON_VALUE_WIFI_DIRECT_GET_GRAPH_DATA = "get_graph_data";
-    public static final String GRAPH_DATA_CUR_HOUR         = "sensor_list_current_hour";
-    public static final String GRAPH_DATA_CUR_DAY_AGG_HOUR = "sensor_list_current_day_agg_hour";
-    public static final String GRAPH_DATA_AGG_DAY          = "sensor_list_agg_day";
-    public static final String SESSION_TYPE_ANDROID        = "android";
+    public static final String JSON_VALUE_WIFI_DIRECT_GET_GRAPH_DATA        = "get_graph_data";
+    public static final String GRAPH_DATA_CUR_HOUR          = "sensor_list_current_hour";
+    public static final String GRAPH_DATA_CUR_DAY_AGG_HOUR  = "sensor_list_current_day_agg_hour";
+    public static final String GRAPH_DATA_AGG_DAY           = "sensor_list_agg_day";
+    public static final String SESSION_TYPE_ANDROID         = "android";
+    public static final String PERIPHERAL_SERVICE_FlASH_LED = "flash_led";
+
 
     //Pi Response Values
     public static final int CONNECT_SUCCESS  = 200;

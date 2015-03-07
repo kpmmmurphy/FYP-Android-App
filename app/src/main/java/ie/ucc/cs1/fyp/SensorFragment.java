@@ -1,10 +1,8 @@
 package ie.ucc.cs1.fyp;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +22,11 @@ import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Adapter.GridTileAdapter;
 import ie.ucc.cs1.fyp.Model.APIResponse;
 import ie.ucc.cs1.fyp.Model.CurrentSensorValues;
+import ie.ucc.cs1.fyp.Model.Packet;
 import ie.ucc.cs1.fyp.Model.PeripheralSensorValues;
 import ie.ucc.cs1.fyp.Model.Session;
 import ie.ucc.cs1.fyp.Network.API;
+import ie.ucc.cs1.fyp.Socket.SocketManager;
 
 /**
  * Created by kpmmmurphy on 30/10/14.
@@ -188,10 +188,14 @@ public class SensorFragment extends Fragment {
         public void onClick(View view) {
             Utils.methodDebug(LOGTAG);
             YoYo.with(Techniques.Pulse).duration(300).playOn(view);
+
+            //Send a packet to Pi to flash LED on Galileo
+            String requestPeripheralLEDflash = Utils.toJson(new Packet(Constants.PERIPHERAL_SERVICE_FlASH_LED, null));
+            SocketManager.getInstance(getActivity()).sendPacketToPi(requestPeripheralLEDflash);
+
             ArrayList<PeripheralSensorValues> peripheralSensorValueses = SensorValueManager.getInstance().getCurrentSensorValues().getPeripheral_sensor_values();
 
             toggleCount++;
-            Log.e(LOGTAG, String.valueOf(toggleCount ));
             if(toggleCount == peripheralSensorValueses.size()){
                 toggleCount = -1;
                 currentlySelectedDeviceID = -1;
