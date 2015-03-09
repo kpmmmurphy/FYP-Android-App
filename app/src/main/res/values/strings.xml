@@ -84,6 +84,7 @@
     <string name="sensor_description_mq7">Carbon Monoxide Sensor(MQ7) is used for Carbon Monoxide detection.</string>
     <string name="sensor_description_motion">Infrared Motion Detector is used to detect motion from humanoids/pets from about 20 feet away.</string>
     <string name="sensor_description_thermistor">Thermistor Sensor is used to measure temperature.</string>
+    <string name="sensor_description_light">Light sensor is used to measure luminous flux per unit area.</string>
 
     <!--Sensor Output Feedback Text-->
     <string name="sensor_output_normal">Safe Level</string>
@@ -116,8 +117,21 @@
     <!--Motion-->
     <string name="sensor_output_motion_0">No motion currently being detected.</string>
     <string name="sensor_output_motion_1">Motion currently being detected!</string>
+
+    <!--Light-->
+    <string name="sensor_light_0">Typical level for a moonless night</string>
+    <string name="sensor_light_1">Typical level for a full moon on a clear night</string>
+    <string name="sensor_light_5">Typical level around twilight period</string>
+    <string name="sensor_light_50">Typical level family living room lights</string>
+    <string name="sensor_light_80">Typical level office building hallways/bath rooms</string>
+    <string name="sensor_light_100">Typical level for a dark overcast day</string>
+    <string name="sensor_light_300">Typical level for office lighting</string>
+    <string name="sensor_light_400">Typical level for sunset or sunrise on a clear day</string>
+    <string name="sensor_light_1000">Typical level for overcast day, or TV studio lighting</string>
+    <string name="sensor_light_10000">Typical level for full daylight</string>
+    <string name="sensor_light_30000">Typical level for direct sunlight</string>
+
     <string name="camera_no_videos">No Videos to Display</string>
     <string name="camera_fragment_no_image_selected">No Image or Video Selected</string>
-
 
 </resources>

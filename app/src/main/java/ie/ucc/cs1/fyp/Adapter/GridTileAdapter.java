@@ -70,10 +70,25 @@ public class GridTileAdapter extends BaseAdapter {
         if(getItem(i).getName().equalsIgnoreCase(Constants.SENSOR_NAME_MOTION)){
             if(getItem(i).getMaxValue() != null)
                 holder.maxValue.setText(getItem(i).getMaxValue() + "%");
-        }else{
-            holder.maxValue.setText("Max " + String.valueOf(getItem(i).getMaxValue()));
 
-            holder.minValue.setText("Min " + String.valueOf(getItem(i).getMinValue()));
+            Session session = Session.getInstance(mContext);
+            //Check if in lockdown mode
+            if( session != null &&
+                    session.getConfig() != null &&
+                    session.getConfig().getAlertManager() != null &&
+                    session.getConfig().getAlertManager().isLockdown_on()){
+                holder.sensorAlertIcn.setVisibility(View.VISIBLE);
+                YoYo.with(Techniques.Shake).duration(400).playOn(holder.sensorAlertIcn);
+            }else{
+                holder.sensorAlertIcn.setVisibility(View.GONE);
+            }
+
+        }else{
+            if(getItem(i).getMaxValue() != null)
+                holder.maxValue.setText("Max " + String.valueOf(getItem(i).getMaxValue()));
+
+            if(getItem(i).getMinValue() != null)
+                holder.minValue.setText("Min " + String.valueOf(getItem(i).getMinValue()));
         }
 
         if(Session.getInstance(mContext) != null
@@ -83,8 +98,11 @@ public class GridTileAdapter extends BaseAdapter {
             for(Sensor sensor : Session.getInstance(mContext).getConfig().getSensors()){
                 if(sensor.getName().equalsIgnoreCase(getItem(i).getName())){
                     if(sensor.getAlert_threshold() <= getItem(i).getValue()){
-                        holder.sensorAlertIcn.setVisibility(View.VISIBLE);
-                        YoYo.with(Techniques.Shake).duration(400).playOn(holder.sensorAlertIcn);
+                        if (!getItem(i).getName().equalsIgnoreCase(Constants.SENSOR_NAME_MOTION)){
+                            //Don't show alert icon for motion detection, only when in lockdown mode
+                            holder.sensorAlertIcn.setVisibility(View.VISIBLE);
+                            YoYo.with(Techniques.Shake).duration(400).playOn(holder.sensorAlertIcn);
+                        }
                     }else{
                         holder.sensorAlertIcn.setVisibility(View.GONE);
                     }

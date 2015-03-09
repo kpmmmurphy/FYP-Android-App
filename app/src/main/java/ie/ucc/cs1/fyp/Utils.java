@@ -76,6 +76,9 @@ public class Utils {
         }else if (sensorName.equalsIgnoreCase(Constants.SENSOR_NAME_THERMISTOR)){
             sensorDetailsID = R.string.sensor_description_thermistor;
             ((TextView)dialog.findViewById(R.id.dialog_tv_sensor_measurement)).setText(Constants.SENSOR_MEASUREMENT_CELCIUS);
+        }else if(sensorName.equalsIgnoreCase(Constants.SENSOR_NAME_LIGHT)){
+            sensorDetailsID = R.string.sensor_description_light;
+            ((TextView)dialog.findViewById(R.id.dialog_tv_sensor_measurement)).setText(Constants.SENSOR_MEASUREMENT_LUX);
         }
 
         if(sensorDetailsID != 0){

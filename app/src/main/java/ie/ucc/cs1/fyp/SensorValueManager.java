@@ -136,7 +136,7 @@ public class SensorValueManager {
         for (PeripheralSensorValues peripheralSensorValues : currentSensorValues.getPeripheral_sensor_values()){
             if(peripheralSensorValues.getDevice_id() == peripheralDeviceID){
                 sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_THERMISTOR, Constants.SENSOR_MEASUREMENT_CELCIUS, peripheralSensorValues.getTemperature(), null, null));
-                sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_LIGHT, null, peripheralSensorValues.getLight(), null, null));
+                sensorOutputs.add(new SensorOutput(Constants.SENSOR_NAME_LIGHT, Constants.SENSOR_MEASUREMENT_LUX, peripheralSensorValues.getLight(), null, null));
             }else{
                 sensorOutputs = Utils.randomSensorOutput();
             }
@@ -220,11 +220,45 @@ public class SensorValueManager {
                 feedbackID = R.string.sensor_output_thermistor_40;
 
             if(value >= 50)
-                feedbackID = R.string.sensor_output_thermistor_50;
+                feedbackID =  R.string.sensor_output_thermistor_50;
 
+        }else if(sensor.equalsIgnoreCase(Constants.SENSOR_NAME_LIGHT.replace("_", " "))){
+            if(value <= 0)
+                feedbackID = R.string.sensor_light_0;
+
+            if (value >= 1)
+                feedbackID = R.string.sensor_light_1;
+
+            if (value >= 5)
+                feedbackID = R.string.sensor_light_5;
+
+            if (value >= 50)
+                feedbackID = R.string.sensor_light_50;
+
+            if (value >= 80)
+                feedbackID = R.string.sensor_light_80;
+
+            if (value >= 100)
+                feedbackID = R.string.sensor_light_100;
+
+            if (value >= 300)
+                feedbackID = R.string.sensor_light_300;
+
+            if (value >= 400)
+                feedbackID = R.string.sensor_light_400;
+
+            if (value >= 1000)
+                feedbackID = R.string.sensor_light_1000;
+
+            if (value >= 10000)
+                feedbackID = R.string.sensor_light_10000;
+
+            if (value >= 30000)
+                feedbackID = R.string.sensor_light_30000;
         }
 
-        return context.getString(feedbackID);
+        return context.getResources().getString(feedbackID);
     }
+
 
 }

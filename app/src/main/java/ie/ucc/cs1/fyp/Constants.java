@@ -21,9 +21,10 @@ public interface Constants {
 
 
     //Sensor Measurement
-    public static final String SENSOR_MEASUREMENT_PPM     = "ppm";
-    public static final String SENSOR_MEASUREMENT_CELCIUS = "celcius";
+    public static final String SENSOR_MEASUREMENT_PPM        = "ppm";
+    public static final String SENSOR_MEASUREMENT_CELCIUS    = "celcius";
     public static final String SENSOR_MEASUREMENT_PERCENTAGE = "Percentage";
+    public static final String SENSOR_MEASUREMENT_LUX        = "lux";
 
     //SocketManager
     public static final String SOCKET_MULTICAST_GROUP_IP = "224.1.1.1";
