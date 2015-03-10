@@ -27,6 +27,10 @@ android {
 
 }
 
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
@@ -38,6 +42,7 @@ dependencies {
     compile 'com.shamanland:fab:0.0.8'
     compile 'com.android.support:cardview-v7:+'
     compile 'com.android.support:recyclerview-v7:+'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.0.7'
 
     //Animation
     compile 'com.daimajia.easing:library:1.0.0@aar'

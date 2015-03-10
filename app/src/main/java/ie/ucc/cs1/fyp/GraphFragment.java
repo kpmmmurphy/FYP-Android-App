@@ -247,19 +247,21 @@ public class GraphFragment extends Fragment {
             }
 
             if(minData.size() > 0) {
-                LineDataSet set1 = new LineDataSet(minData, String.format("Min of  %s (%s)", sensor.replace("_", " "), measurement.toUpperCase()));
+                LineDataSet set1 = new LineDataSet(minData, String.format("Min %s (%s)", sensor.replace("_", " "), measurement.toUpperCase()));
                 set1.setColor(getResources().getColor(R.color.graph_min));
                 set1.setCircleColor(getResources().getColor(R.color.graph_min));
                 lineDataSets.add(set1);
             }
+
             if(maxData.size() > 0){
-                LineDataSet set2 = new LineDataSet(maxData, String.format("Max  %s (%s)", sensor.replace("_", " "), measurement.toUpperCase()));
+                LineDataSet set2 = new LineDataSet(maxData, String.format("Max %s (%s)", sensor.replace("_", " "), measurement.toUpperCase()));
                 set2.setColor(getResources().getColor(R.color.graph_max));
                 set2.setCircleColor(getResources().getColor(R.color.graph_max));
                 lineDataSets.add(set2);
             }
+
             if(avgData.size() > 0){
-                LineDataSet set3 = new LineDataSet(avgData, String.format("Avg  %s (%s)", sensor.replace("_", " "), measurement.toUpperCase()));
+                LineDataSet set3 = new LineDataSet(avgData, String.format("Avg %s (%s)", sensor.replace("_", " "), measurement.toUpperCase()));
                 lineDataSets.add(set3);
             }
 

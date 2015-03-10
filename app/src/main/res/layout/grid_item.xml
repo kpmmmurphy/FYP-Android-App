@@ -16,7 +16,7 @@
         android:elevation="6dp"
         android:tint="@android:color/holo_orange_light"
         android:visibility="gone"
-        android:layout_gravity="center"/>
+        android:layout_gravity="start"/>
 
     <LinearLayout
         android:layout_width="match_parent"

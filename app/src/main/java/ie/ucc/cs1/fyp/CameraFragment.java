@@ -64,6 +64,7 @@ public class CameraFragment extends Fragment{
     private ArrayList<String> imgList;
     private ArrayList<String> videoList;
     private String piPublicIP;
+    private MediaController mediaController;
 
     @InjectView(R.id.view_wrapper)
     RelativeLayout viewWrapper;
@@ -337,7 +338,7 @@ public class CameraFragment extends Fragment{
 
     private void playURIWithVV(VideoView vv, String videoName, boolean isStream){
         Utils.methodDebug(LOGTAG);
-        MediaController mediaController = new MediaController(getActivity());
+        mediaController = new MediaController(getActivity());
         mediaController.setAnchorView(vv);
         vv.setMediaController(mediaController);
 

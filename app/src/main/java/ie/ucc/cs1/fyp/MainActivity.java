@@ -49,6 +49,9 @@ public class MainActivity extends FragmentActivity {
         //Register for Push Notifcations
         PNManager.getInstance(this).registerForPN();
 
+        //This will setup the server socket
+        SocketManager.getInstance(getApplicationContext());
+
         mViewPager.setId(R.id.view_pager);
         mViewPager.setAdapter(mTabsAdapter);
 

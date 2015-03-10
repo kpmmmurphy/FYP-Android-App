@@ -242,7 +242,8 @@ public class SocketManager {
     private ServerSocket createServerSocket(String connectToIp) {
         ServerSocket ss = null;
         try {
-            ss = new ServerSocket(Constants.SOCKET_SERVER_PORT, 0, InetAddress.getByName(connectToIp));
+            //ss = new ServerSocket(Constants.SOCKET_SERVER_PORT, 0, InetAddress.getByName(connectToIp));
+            ss = new ServerSocket(Constants.SOCKET_SERVER_PORT);
             if (BuildConfig.DEBUG) {
                 Log.d(LOGTAG, ss.toString());
             }
