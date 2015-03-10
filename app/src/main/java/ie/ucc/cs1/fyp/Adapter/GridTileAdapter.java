@@ -84,11 +84,17 @@ public class GridTileAdapter extends BaseAdapter {
             }
 
         }else{
-            if(getItem(i).getMaxValue() != null)
+            if(getItem(i).getMaxValue() != null){
                 holder.maxValue.setText("Max " + String.valueOf(getItem(i).getMaxValue()));
+            }else{
+                holder.maxValue.setText("");
+            }
 
-            if(getItem(i).getMinValue() != null)
+            if(getItem(i).getMinValue() != null){
                 holder.minValue.setText("Min " + String.valueOf(getItem(i).getMinValue()));
+            }else{
+                holder.minValue.setText("");
+            }
         }
 
         if(Session.getInstance(mContext) != null

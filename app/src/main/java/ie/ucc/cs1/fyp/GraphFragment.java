@@ -1,7 +1,6 @@
 package ie.ucc.cs1.fyp;
 
 import android.app.Activity;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,8 +14,6 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.XLabels;
-import com.github.mikephil.charting.utils.YLabels;
 
 import java.util.ArrayList;
 
@@ -69,11 +66,11 @@ public class GraphFragment extends Fragment {
 
         LineChart[] charts = new LineChart[]{lcCurrentHour, lcAggHour, lcAggDay};
         for(LineChart chart : charts){
-            chart.setHighlightEnabled(false);
+            chart.setHighlightEnabled(false);/*
             XLabels xl = chart.getXLabels();
             YLabels yl = chart.getYLabels();
             xl.setTypeface(Typeface.SANS_SERIF);
-            yl.setTypeface(Typeface.SANS_SERIF);
+            yl.setTypeface(Typeface.SANS_SERIF);*/
             //TODO Style labels here and description
             chart.setDescription("");
             chart.setNoDataTextDescription("");
