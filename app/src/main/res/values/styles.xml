@@ -3,15 +3,16 @@
     <style name="AppTheme" parent="android:Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="android:textViewStyle">@style/CustomTextViewStyle</item>
+        <item name="android:radioButtonStyle">@style/CustomRadioButton</item>
     </style>
 
     <!-- ActionBar styles -->
     <style name="MyActionBar"
         parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:titleTextStyle">@style/Text_ActionBarTitle</item>
-        <item name="android:icon">@drawable/ic_launcher</item>
+        <item name="android:logo">@drawable/ic_launcher</item>
         <item name="android:background">@drawable/abc_tab_indicator_mtrl_alpha</item>
-        <item name="android:radioButtonStyle">@style/CustomRadioButton</item>
+        <item name="android:displayOptions">useLogo</item>
     </style>
 
     <style name="AppTheme.ExtendedActionBar"></style>

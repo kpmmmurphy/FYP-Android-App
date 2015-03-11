@@ -181,7 +181,7 @@ public class SocketManager {
         sensorValueThread.start();
     }
 
-    public synchronized void sendPacketToPi(String packet) {
+    public void sendPacketToPi(String packet) {
         new SendPacketToPi().execute(packet);
     }
 

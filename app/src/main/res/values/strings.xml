@@ -59,7 +59,7 @@
     <string name="tv_title_videos">Videos</string>
     <string name="tv_captured">Captured :: </string>
 
-    <string name="camera_request_image">Capture Image</string>
+    <string name="camera_request_image">Capture</string>
     <string name="camera_request_stream">Start Stream</string>
 
     <!-- General -->
@@ -133,5 +133,6 @@
 
     <string name="camera_no_videos">No Videos to Display</string>
     <string name="camera_fragment_no_image_selected">No Image or Video Selected</string>
+    <string name="camera_refresh">Refresh</string>
 
 </resources>

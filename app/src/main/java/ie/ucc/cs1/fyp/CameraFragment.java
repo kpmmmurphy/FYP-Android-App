@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.MediaController;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -86,10 +87,14 @@ public class CameraFragment extends Fragment{
     Button btnRequestImage;
     @InjectView(R.id.camera_btn_request_stream)
     Button getBtnRequestStream;
+    @InjectView(R.id.camera_btn_refresh)
+    Button btnRefresh;
     @InjectView(R.id.camera_direct_controls)
     LinearLayout llCameraControls;
     @InjectView(R.id.camera_web_content)
     RelativeLayout rlCameraWebContent;
+    @InjectView(R.id.camera_loading)
+    ProgressBar cameraLoading;
 
     @OnItemClick(R.id.lv_recent_videos)
     public void onItemSelected(int position){
@@ -108,6 +113,11 @@ public class CameraFragment extends Fragment{
         }else{
             API.getInstance(getActivity()).requestImageCapture(captureImageListener, streamErrorListener);
         }
+    }
+
+    @OnClick(R.id.camera_btn_refresh)
+    public void onRefreshClick(){
+        retrieveFilesOverFTP(false);
     }
 
     @OnClick(R.id.camera_btn_request_stream)
@@ -156,13 +166,13 @@ public class CameraFragment extends Fragment{
         super.onResume();
         Utils.methodDebug(LOGTAG);
         if(Session.getInstance(getActivity()).isConnectedToPi()){
-            new RetrieveImagesOverFTPTask().execute(true);
-            MyApplication.scheduleTask(new Runnable() {
+            retrieveFilesOverFTP(false);
+            /*MyApplication.scheduleTask(new Runnable() {
                 @Override
                 public void run() {
                     new RetrieveImagesOverFTPTask().execute(false);
                 }
-            }, 10, 10, LOGTAG);
+            }, 10, 10, LOGTAG);*/
         }else{
             MyApplication.scheduleTask(new Runnable() {
                 @Override
@@ -375,6 +385,11 @@ public class CameraFragment extends Fragment{
     private class RetrieveImagesOverFTPTask extends AsyncTask<Boolean, Void, Void>{
 
         @Override
+        protected void onPreExecute() {
+            cameraLoading.setVisibility(View.VISIBLE);
+        }
+
+        @Override
         protected Void doInBackground(Boolean... bools) {
             getLatetestFilesOverFTP();
             //On first call we must get any previously stored images.
@@ -386,6 +401,15 @@ public class CameraFragment extends Fragment{
             displayImagesAndVideos();
             return null;
         }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            cameraLoading.setVisibility(View.GONE);
+        }
+    }
+
+    private synchronized void retrieveFilesOverFTP(boolean getBackedupFiles){
+        new RetrieveImagesOverFTPTask().execute(getBackedupFiles);
     }
 
     private synchronized com.jcraft.jsch.Session connectToFTPServer() throws JSchException {

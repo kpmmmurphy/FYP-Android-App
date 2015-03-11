@@ -57,6 +57,7 @@ public class MainActivity extends FragmentActivity {
 
         ActionBar bar = getActionBar();
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        bar.setIcon(getResources().getDrawable(R.drawable.ic_launcher));
 
         mTabsAdapter = new TabsAdaptor(this, getSupportFragmentManager(), bar, mViewPager);
         mTabsAdapter.addTab(getActionBar().newTab().setText(getString(R.string.title_section1)), SensorFragment.class, null);

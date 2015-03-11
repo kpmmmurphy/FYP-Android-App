@@ -52,9 +52,10 @@
 
         <LinearLayout
             android:id="@+id/camera_direct_controls"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/fl_display"
+            android:layout_centerHorizontal="true"
             android:gravity="center"
             android:orientation="horizontal"
             android:visibility="visible">
@@ -72,7 +73,26 @@
                 android:layout_height="wrap_content"
                 android:padding="12dp"
                 android:text="@string/camera_request_stream" />
+
+            <Button
+                android:id="@+id/camera_btn_refresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:text="@string/camera_refresh" />
+
         </LinearLayout>
+
+
+        <ProgressBar
+            android:id="@+id/camera_loading"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/fl_display"
+            android:layout_marginEnd="50dp"
+            android:padding="12dp"
+            android:visibility="gone" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -87,12 +107,12 @@
                 android:visibility="visible">
 
                 <TextView
-                    style="@style/Config_Section_Title"
                     android:id="@+id/tv_title_images"
+                    style="@style/Config_Section_Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="@string/tv_title_images"/>
+                    android:text="@string/tv_title_images" />
 
                 <View
                     android:id="@+id/view_divider_images"
@@ -126,8 +146,8 @@
 
 
                 <TextView
-                    style="@style/Config_Section_Title"
                     android:id="@+id/tv_title_videos"
+                    style="@style/Config_Section_Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/fl_recent_images"
