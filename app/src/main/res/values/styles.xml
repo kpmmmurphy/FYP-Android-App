@@ -48,9 +48,9 @@
     </style>
 
     <style name="Text_GridItemName" parent="android:TextAppearance.DeviceDefault.Large">
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">26sp</item>
         <item name="android:textColor">@color/output_normal</item>
-        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
     <style name="Text_GridItemMaxMin">

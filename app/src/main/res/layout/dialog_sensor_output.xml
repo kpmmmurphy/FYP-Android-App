@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="320dp"
+    android:layout_width="360dp"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
@@ -14,8 +14,8 @@
         tools:text="Carbon Monoxide" />
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
         style="@style/Config_Divider"/>
 
     <TextView
@@ -48,14 +48,14 @@
         tools:text="Current Level is Safe" />
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
         style="@style/Config_Divider"/>
 
     <TextView
         android:id="@+id/dialog_tv_sensor_details"
         style="@style/Text_GridItemMaxMin"
-        android:padding="12dp"
+        android:padding="16dp"
         android:textAlignment="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

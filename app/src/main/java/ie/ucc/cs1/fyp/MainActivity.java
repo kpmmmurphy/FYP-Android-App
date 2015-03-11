@@ -16,6 +16,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.BuildConfig;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ie.ucc.cs1.fyp.Adapter.TabsAdaptor;
