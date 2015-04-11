@@ -18,7 +18,7 @@ Configuration Fragment:
 Context Sensitive Help:
 ![Image of Sensor Fragment](https://raw.githubusercontent.com/kpmmmurphy/FYP-Android-App/master/images/device-2015-03-12-113449.png)
 
-Click the video below to be redirected to Youtube for a video demo of the applcation in action. 
+Click the image below to be redirected to Youtube for a video demo of the applcation in action. 
 [![Link to UI Video](http://img.youtube.com/vi/qXvZ5G-ph1w/0.jpg)](http://www.youtube.com/watch?v=qXvZ5G-ph1w)
 
 
